@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ngLms"
+    }
+  },
+  "defaultProject": "ngLms",
+  "cli": {
+    "analytics": "b62e3f79-83aa-4aa9-99b3-126b931f2525"
+  }
 }
