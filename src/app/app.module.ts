@@ -1,3 +1,9 @@
+import { BorrowersComponent } from './admin/borrowers/borrowers.component';
+import { PublishersComponent } from './admin/publishers/publishers.component';
+import { LoansComponent } from './admin/loans/loans.component';
+import { BranchesComponent } from './admin/branches/branches.component';
+import { BooksComponent } from './admin/books/books.component';
+import { AuthorsComponent } from './admin/authors/authors.component';
 import { BorrowerComponent } from './borrower/borrower/borrower.component';
 import { AdminComponent } from './admin/admin/admin.component';
 import { LibrarianComponent } from './librarian/librarian/librarian.component';
@@ -18,17 +24,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     HomeComponent,
     PageNotFoundComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    RouterModule.forRoot([
-      { path: 'admin', component: AdminComponent },
-      { path: 'borrower', component: BorrowerComponent },
-      { path: 'librarian', component: LibrarianComponent },
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: '**', component: PageNotFoundComponent },
-    ]),
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],
 })
