@@ -8,12 +8,16 @@ import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
 
-
-
 @NgModule({
-  declarations: [AdminComponent, AuthorsComponent, BooksComponent, PublishersComponent, BranchesComponent, BorrowersComponent, LoansComponent],
-  imports: [
-    CommonModule
-  ]
+  declarations: [
+    AdminComponent,
+    AuthorsComponent,
+    BooksComponent,
+    PublishersComponent,
+    BranchesComponent,
+    BorrowersComponent,
+    LoansComponent,
+  ],
+  imports: [CommonModule],
 })
-export class AdminModule { }
+export class AdminModule {}
