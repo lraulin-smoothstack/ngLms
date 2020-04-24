@@ -8,6 +8,7 @@ import { PublishersComponent } from './publishers/publishers.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { LoansComponent } from './loans/loans.component';
     BranchesComponent,
     BorrowersComponent,
     LoansComponent,
+    TestComponent,
   ],
   imports: [CommonModule, AdminRoutingModule],
 })
