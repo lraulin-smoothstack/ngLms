@@ -1,6 +1,7 @@
+import { AdminRoutingModule } from './admin-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminComponent } from './admin/admin.component';
+import { AdminComponent } from './admin.component';
 import { AuthorsComponent } from './authors/authors.component';
 import { BooksComponent } from './books/books.component';
 import { PublishersComponent } from './publishers/publishers.component';
@@ -18,6 +19,6 @@ import { LoansComponent } from './loans/loans.component';
     BorrowersComponent,
     LoansComponent,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, AdminRoutingModule],
 })
 export class AdminModule {}
