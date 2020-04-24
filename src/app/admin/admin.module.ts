@@ -8,7 +8,13 @@ import { PublishersComponent } from './publishers/publishers.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
-import { TestComponent } from './test/test.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { BookDialogBoxComponent } from './book-dialog-box/book-dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +25,13 @@ import { TestComponent } from './test/test.component';
     BranchesComponent,
     BorrowersComponent,
     LoansComponent,
-    TestComponent,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    BookDialogBoxComponent,
   ],
   imports: [CommonModule, AdminRoutingModule],
 })
