@@ -1,6 +1,6 @@
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
-import { LibrarianComponent } from './librarian/librarian/librarian.component';
+import { LibrarianComponent } from './librarian/librarian.component';
 import { PublishersComponent } from './admin/publishers/publishers.component';
 import { LoansComponent } from './admin/loans/loans.component';
 import { BranchesComponent } from './admin/branches/branches.component';
