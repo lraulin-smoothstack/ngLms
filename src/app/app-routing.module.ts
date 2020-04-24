@@ -1,13 +1,9 @@
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
-<<<<<<< HEAD
 import { LibrarianComponent } from './librarian/librarian.component';
 import { PublishersComponent } from './admin/publishers/publishers.component';
 import { LoansComponent } from './admin/loans/loans.component';
 import { BranchesComponent } from './admin/branches/branches.component';
-=======
-import { LibrarianComponent } from './librarian/librarian/librarian.component';
->>>>>>> 20e08c5684eaafc37a61c10b24ea90c75a21ac69
 import { BorrowerComponent } from './borrower/borrower/borrower.component';
 import { AdminComponent } from './admin/admin.component';
 import { NgModule } from '@angular/core';
