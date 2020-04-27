@@ -17,7 +17,11 @@ const routes: Routes = [
       import(`./admin/admin.module`).then((m) => m.AdminModule),
   },
   { path: 'borrower', component: BorrowerComponent },
-  { path: 'librarian', component: LibrarianComponent },
+  {
+    path: 'librarian',
+    loadChildren: () =>
+      import('./librarian/librarian.module').then((m) => m.LibrarianModule),
+  },
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
