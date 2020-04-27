@@ -1,23 +1,67 @@
-import { Component, OnInit } from '@angular/core';
+import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
 interface Author {
   id: number;
   name: string;
 }
 
+const AUTHORS: Author[] = [
+  { id: 1, name: 'Douglas Murray' },
+  { id: 2, name: 'Steven Pinker' },
+];
+
 @Component({
   selector: 'app-authors',
   templateUrl: './authors.component.html',
   styleUrls: ['./authors.component.css'],
 })
-export class AuthorsComponent implements OnInit {
-  authors: Author[];
-  constructor() {}
+export class AuthorsComponent {
+  displayedColumns: string[] = ['id', 'name', 'action'];
+  dataSource = AUTHORS;
 
-  ngOnInit(): void {
-    this.authors = [
-      { id: 1, name: 'Douglas Murray' },
-      { id: 2, name: 'Steven Pinker' },
-    ];
+  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+
+  constructor(public dialog: MatDialog) {}
+  openDialog(action, obj) {
+    obj.action = action;
+    const dialogRef = this.dialog.open(DialogBoxComponent, {
+      width: '250px',
+      data: obj,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.event === 'Add') {
+        this.addRowData(result.data);
+      } else if (result.event === 'Update') {
+        this.updateRowData(result.data);
+      } else if (result.event === 'Delete') {
+        this.deleteRowData(result.data);
+      }
+    });
+  }
+
+  addRowData(rowObj) {
+    const d = new Date();
+    this.dataSource.push({
+      id: d.getTime(),
+      name: rowObj.name,
+    });
+    this.table.renderRows();
+  }
+  updateRowData(rowObj) {
+    this.dataSource = this.dataSource.filter((value, key) => {
+      if (value.id === rowObj.id) {
+        value.name = rowObj.name;
+      }
+      return true;
+    });
+  }
+  deleteRowData(rowObj) {
+    this.dataSource = this.dataSource.filter((value, key) => {
+      return value.id !== rowObj.id;
+    });
   }
 }

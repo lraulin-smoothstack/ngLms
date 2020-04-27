@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,13 +9,12 @@ import { PublishersComponent } from './publishers/publishers.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { BookDialogBoxComponent } from './book-dialog-box/book-dialog-box.component';
+import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -25,14 +25,18 @@ import { BookDialogBoxComponent } from './book-dialog-box/book-dialog-box.compon
     BranchesComponent,
     BorrowersComponent,
     LoansComponent,
-    BrowserAnimationsModule,
+    DialogBoxComponent,
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
     MatTableModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    BookDialogBoxComponent,
+    FormsModule,
   ],
-  imports: [CommonModule, AdminRoutingModule],
+  entryComponents: [DialogBoxComponent],
 })
 export class AdminModule {}
