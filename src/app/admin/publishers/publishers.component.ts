@@ -1,15 +1,79 @@
-import { Component, OnInit } from '@angular/core';
+import { browser } from 'protractor';
+import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+
+interface Publisher {
+  id: number;
+  address: string;
+  name: string;
+  phoneNumber: string;
+}
+
+const PUBLISHERS: Publisher[] = [
+  {
+    id: 1,
+    name: 'Penguin',
+    address: '6241 Fake Address',
+    phoneNumber: '555-CALL ME',
+  },
+];
 
 @Component({
   selector: 'app-publishers',
   templateUrl: './publishers.component.html',
-  styleUrls: ['./publishers.component.css']
+  styleUrls: ['./publishers.component.css'],
 })
-export class PublishersComponent implements OnInit {
+export class PublishersComponent {
+  displayedColumns: string[] = ['id', 'name', 'address', 'phoneNumber'];
+  dataSource = PUBLISHERS;
 
-  constructor() { }
+  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  ngOnInit(): void {
+  constructor(public dialog: MatDialog) {}
+  openDialog(action, obj) {
+    obj.action = action;
+    const dialogRef = this.dialog.open(DialogBoxComponent, {
+      width: '250px',
+      data: obj,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.event === 'Add') {
+        this.addRowData(result.data);
+      } else if (result.event === 'Update') {
+        this.updateRowData(result.data);
+      } else if (result.event === 'Delete') {
+        this.deleteRowData(result.data);
+      }
+    });
   }
 
+  addRowData(rowObj) {
+    const d = new Date();
+    this.dataSource.push({
+      id: d.getTime(),
+      name: rowObj.name,
+      address: rowObj.address,
+      phoneNumber: rowObj.phoneNumber,
+    });
+    this.table.renderRows();
+  }
+  updateRowData(rowObj) {
+    this.dataSource = this.dataSource.filter((value, key) => {
+      if (value.id === rowObj.id) {
+        value.id = rowObj.id;
+        value.name = rowObj.name;
+        value.address = rowObj.address;
+        value.phoneNumber = rowObj.phoneNumber;
+      }
+      return true;
+    });
+  }
+  deleteRowData(rowObj) {
+    this.dataSource = this.dataSource.filter((value, key) => {
+      return value.id !== rowObj.id;
+    });
+  }
 }
