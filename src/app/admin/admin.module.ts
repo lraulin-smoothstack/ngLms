@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
+import { BooksDialogBoxComponent } from './books-dialog-box/books-dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { DialogBoxComponent } from './dialog-box/dialog-box.component';
     BorrowersComponent,
     LoansComponent,
     DialogBoxComponent,
+    BooksDialogBoxComponent,
   ],
   imports: [
     CommonModule,

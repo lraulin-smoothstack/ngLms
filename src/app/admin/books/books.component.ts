@@ -1,15 +1,8 @@
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { BooksDialogBoxComponent } from '../books-dialog-box/books-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-
-interface Book {
-  id: number;
-  author: string;
-  title: string;
-  publisher: string;
-  genre: string;
-}
+import { Book } from '../types';
 
 const BOOKS: Book[] = [
   {
@@ -34,7 +27,14 @@ const BOOKS: Book[] = [
   styleUrls: ['./books.component.css'],
 })
 export class BooksComponent {
-  displayedColumns: string[] = ['id', 'author', 'title', 'publisher', 'genre'];
+  displayedColumns: string[] = [
+    'id',
+    'author',
+    'title',
+    'publisher',
+    'genre',
+    'action',
+  ];
   dataSource = BOOKS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
@@ -42,7 +42,7 @@ export class BooksComponent {
   constructor(public dialog: MatDialog) {}
   openDialog(action, obj) {
     obj.action = action;
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
+    const dialogRef = this.dialog.open(BooksDialogBoxComponent, {
       width: '250px',
       data: obj,
     });

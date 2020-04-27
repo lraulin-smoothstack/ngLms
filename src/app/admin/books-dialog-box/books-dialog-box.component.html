@@ -1,13 +1,27 @@
 <h1 mat-dialog-title>
-  Row Action :: <strong>{{ action }}</strong>
+  Book Row Action :: <strong>{{ action }}</strong>
 </h1>
 <div mat-dialog-content>
   <mat-form-field *ngIf="action != 'Delete'; else elseTemplate">
     <input
-      *ngFor="let key of getKeys(localData)"
-      placeholder="{{ action }} Name"
+      placeholder="{{ action }} Title"
       matInput
-      [(ngModel)]="localData.name"
+      [(ngModel)]="localData.title"
+    />
+    <input
+      placeholder="{{ action }} Author"
+      matInput
+      [(ngModel)]="localData.author"
+    />
+    <input
+      placeholder="{{ action }} Publisher"
+      matInput
+      [(ngModel)]="localData.publisher"
+    />
+    <input
+      placeholder="{{ action }} Genre"
+      matInput
+      [(ngModel)]="localData.genre"
     />
   </mat-form-field>
   <ng-template #elseTemplate>

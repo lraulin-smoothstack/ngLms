@@ -2,11 +2,7 @@ import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-
-interface Author {
-  id: number;
-  name: string;
-}
+import { Author } from '../types';
 
 const AUTHORS: Author[] = [
   { id: 1, name: 'Douglas Murray' },
