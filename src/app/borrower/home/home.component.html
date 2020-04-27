@@ -1,0 +1,39 @@
+<div *ngIf="borrower; else loading">
+  <div class="jumbotron" >
+    <h1 class="display-4">Welcome {{borrower.name | titlecase }}!</h1>
+    <p class="lead">Here you can check out books, return books, and view available library branches.</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg home" href="#" role="button">Checkout a book</a>
+    <a class="btn btn-primary btn-lg home" href="#" role="button">Return a book</a>
+    <a class="btn btn-primary btn-lg home" href="#" role="button">View branches</a>
+    <a class="btn btn-danger btn-lg home" href="#" role="button" (click)="logout">Logout</a>
+  </div>
+  <h2>Quick Return</h2>
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+      <th scope="col">Due Date</th>
+      <th scope="col">Return</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- <tr *ngFor="let book of borrower.books">
+      <th scope="row">{{book.id}}</th>
+      <td>{{book.title}}</td>
+      <td>{{book.author}}</td>
+      <td>{{book.dueDate}}</td>
+      <td>
+        <button type="button" class="btn btn-danger">Return</button>
+      </td>
+    </tr> -->
+  </tbody>
+</table>
+</div>
+<ng-template #loading>
+  <div class="alert alert-info" role="alert">
+    Loading...
+  </div>
+</ng-template>

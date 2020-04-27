@@ -1,0 +1,13 @@
+<div>
+  <h2>Welcome to SS LMS</h2>
+  <div class="form-wrapper">
+    <form (ngSubmit) = "onSubmit(borrowerId)">
+      <div class="form-group">
+        <label for="login-form">Library card number:</label>
+        <input [(ngModel)]="borrowerId" type="password" class="form-control" id="login-form" name="login-form" aria-describedby="enter-card-number">
+        <small id="enter-card-number" class="form-text text-muted">Please enter your card number to continue.</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
