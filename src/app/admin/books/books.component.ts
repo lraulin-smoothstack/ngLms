@@ -1,15 +1,88 @@
-import { Component, OnInit } from '@angular/core';
+import { BooksDialogBoxComponent } from '../books-dialog-box/books-dialog-box.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { Book } from '../types';
+
+const BOOKS: Book[] = [
+  {
+    id: 1,
+    author: 'Douglas Crockford',
+    title: 'How JavaScript Works',
+    publisher: 'Virgule-Solidus LLC',
+    genre: 'Nonfiction',
+  },
+  {
+    id: 2,
+    author: 'Eric Elliot',
+    title: 'Composing Software',
+    publisher: 'Virgule-Solidus LLC',
+    genre: 'Nonfiction',
+  },
+];
 
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
-  styleUrls: ['./books.component.css']
+  styleUrls: ['./books.component.css'],
 })
-export class BooksComponent implements OnInit {
+export class BooksComponent {
+  displayedColumns: string[] = [
+    'id',
+    'author',
+    'title',
+    'publisher',
+    'genre',
+    'action',
+  ];
+  dataSource = BOOKS;
 
-  constructor() { }
+  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  ngOnInit(): void {
+  constructor(public dialog: MatDialog) {}
+  openDialog(action, obj) {
+    obj.action = action;
+    const dialogRef = this.dialog.open(BooksDialogBoxComponent, {
+      width: '250px',
+      data: obj,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.event === 'Add') {
+        this.addRowData(result.data);
+      } else if (result.event === 'Update') {
+        this.updateRowData(result.data);
+      } else if (result.event === 'Delete') {
+        this.deleteRowData(result.data);
+      }
+    });
   }
 
+  addRowData(rowObj) {
+    const d = new Date();
+    this.dataSource.push({
+      id: d.getTime(),
+      author: rowObj.author,
+      title: rowObj.title,
+      publisher: rowObj.publisher,
+      genre: rowObj.genre,
+    });
+    this.table.renderRows();
+  }
+  updateRowData(rowObj) {
+    this.dataSource = this.dataSource.filter((value, key) => {
+      if (value.id === rowObj.id) {
+        value.author = rowObj.author;
+        value.title = rowObj.title;
+        value.publisher = rowObj.publisher;
+        value.genre = rowObj.genre;
+      }
+      return true;
+    });
+  }
+  deleteRowData(rowObj) {
+    this.dataSource = this.dataSource.filter((value, key) => {
+      return value.id !== rowObj.id;
+    });
+  }
 }
