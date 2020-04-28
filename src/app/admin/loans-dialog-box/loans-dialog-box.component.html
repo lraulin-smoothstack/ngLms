@@ -5,6 +5,7 @@
   <div *ngIf="action != 'Delete'; else elseTemplate">
     <mat-form-field>
       <input
+        type="date"
         placeholder="{{ action }} Returned Date"
         matInput
         [(ngModel)]="localData.dateIn"
@@ -12,6 +13,7 @@
     </mat-form-field>
     <mat-form-field>
       <input
+        type="date"
         placeholder="{{ action }} Borrowed Date"
         matInput
         [(ngModel)]="localData.dateOut"
@@ -19,6 +21,7 @@
     </mat-form-field>
     <mat-form-field>
       <input
+        type="date"
         placeholder="{{ action }} Due Date"
         matInput
         [(ngModel)]="localData.dueDate"
