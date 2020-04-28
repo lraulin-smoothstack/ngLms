@@ -1,5 +1,10 @@
 <h3>Library Branches</h3>
-<ul class="list-group" *ngIf="branchService.branches">
+
+<div *ngIf="branchService.isLoading" className="spinner-border" role="status">
+  <span className="sr-only">Loading...</span>
+</div>
+
+<ul class="list-group" *ngIf="!branchService.isLoading">
   <li
     *ngFor="let branch of branchService.branches; let i = index"
     class="list-group-item"
@@ -16,15 +21,24 @@
     </button>
     <div class="collapse" id="{{ 'branch' + i }}">
       <ul class="list-group">
-        <li class="list-group-item-action">
-          <a routerLink="/librarian/branches/book-copies">
-            Modify Book Copies
-          </a>
+        <li class="list-group-item">
+          {{ branch.address }}
         </li>
         <li class="list-group-item-action">
-          <a href="/librarian/branches/book-copies">
+          <button
+            type="button"
+            routerLink="/librarian/branches/{{ branch.id }}/book-copies"
+          >
+            Modify Book Copies
+          </button>
+        </li>
+        <li class="list-group-item-action">
+          <button
+            type="button"
+            routerLink="/librarian/branches/{{ branch.id }}"
+          >
             Update Library Details
-          </a>
+          </button>
         </li>
       </ul>
     </div>

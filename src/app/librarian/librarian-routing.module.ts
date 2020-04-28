@@ -2,21 +2,28 @@ import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LibrarianComponent } from './librarian.component';
-import { BranchesComponent } from '../admin/branches/branches.component';
+import { BranchesComponent } from './branches/branches.component';
 import { BookCopiesComponent } from './book-copies/book-copies.component';
+import { UpdateLibraryBranchComponent } from './update-library-branch/update-library-branch.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LibrarianComponent,
-  },
-  {
-    path: 'branches',
-    component: BranchesComponent,
-  },
-  {
-    path: 'branches/book-copies',
-    component: BookCopiesComponent,
+    children: [
+      {
+        path: '',
+        component: BranchesComponent,
+      },
+      {
+        path: 'branches/:id',
+        component: UpdateLibraryBranchComponent,
+      },
+      {
+        path: 'branches/:id/book-copies',
+        component: BookCopiesComponent,
+      },
+    ],
   },
 ];
 

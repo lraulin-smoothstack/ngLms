@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LibraryBranch } from '../models/library-branch.model';
+import { LibraryBranch } from '../models/library-branch.interface';
 import { LibraryBranchesService } from '../services/library-branches.service';
 
 @Component({
