@@ -1,0 +1,32 @@
+<h3>Library Branches</h3>
+<ul class="list-group" *ngIf="branchService.branches">
+  <li
+    *ngFor="let branch of branchService.branches; let i = index"
+    class="list-group-item"
+  >
+    <button
+      class="btn btn-primary"
+      type="button"
+      [attr.data-toggle]="'collapse'"
+      [attr.data-target]="'#branch' + i"
+      [attr.aria-expanded]="false"
+      [attr.aria-controls]="'branch' + i"
+    >
+      {{ branch.name }}
+    </button>
+    <div class="collapse" id="{{ 'branch' + i }}">
+      <ul class="list-group">
+        <li class="list-group-item-action">
+          <a routerLink="/librarian/branches/book-copies">
+            Modify Book Copies
+          </a>
+        </li>
+        <li class="list-group-item-action">
+          <a href="/librarian/branches/book-copies">
+            Update Library Details
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+</ul>
