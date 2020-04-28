@@ -1,22 +1,18 @@
 import { Component, OnInit, Optional, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-interface Author {
-  id: number;
-  name: string;
-}
+import { Author } from '../types';
 
 @Component({
-  selector: 'app-dialog-box',
-  templateUrl: './dialog-box.component.html',
-  styleUrls: ['./dialog-box.component.css'],
+  selector: 'app-authors-dialog-box',
+  templateUrl: './authors-dialog-box.component.html',
+  styleUrls: ['./authors-dialog-box.component.css'],
 })
-export class DialogBoxComponent {
+export class AuthorsDialogBoxComponent {
   action: string;
   localData: any;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogBoxComponent>,
+    public dialogRef: MatDialogRef<AuthorsDialogBoxComponent>,
     // @Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Author
   ) {
@@ -31,11 +27,5 @@ export class DialogBoxComponent {
 
   closeDialog() {
     this.dialogRef.close({ event: 'Cancel' });
-  }
-
-  getKeys(obj) {
-    console.log('HEY!!!!!!');
-    console.log(Object.keys(obj));
-    return Object.keys(obj);
   }
 }

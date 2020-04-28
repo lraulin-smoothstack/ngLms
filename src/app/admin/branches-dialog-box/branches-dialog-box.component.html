@@ -5,30 +5,16 @@
   <div *ngIf="action != 'Delete'; else elseTemplate">
     <mat-form-field>
       <input
-        placeholder="{{ action }} Title"
+        placeholder="{{ action }} Name"
         matInput
-        [(ngModel)]="localData.title"
+        [(ngModel)]="localData.name"
       />
     </mat-form-field>
     <mat-form-field>
       <input
-        placeholder="{{ action }} Author"
+        placeholder="{{ action }} Address"
         matInput
-        [(ngModel)]="localData.author"
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <input
-        placeholder="{{ action }} Publisher"
-        matInput
-        [(ngModel)]="localData.publisher"
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <input
-        placeholder="{{ action }} Genre"
-        matInput
-        [(ngModel)]="localData.genre"
+        [(ngModel)]="localData.address"
       />
     </mat-form-field>
   </div>

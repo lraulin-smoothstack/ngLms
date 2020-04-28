@@ -1,7 +1,8 @@
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { BranchesDialogBoxComponent } from './../branches-dialog-box/branches-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { Branch } from '../types';
 
 import { Borrower } from '../types';
 
@@ -24,7 +25,7 @@ const BRANCHES: Branch[] = [
   styleUrls: ['./branches.component.css'],
 })
 export class BranchesComponent {
-  displayedColumns: string[] = ['id', 'name', 'address'];
+  displayedColumns: string[] = ['id', 'name', 'address', 'action'];
   dataSource = BRANCHES;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
@@ -32,7 +33,7 @@ export class BranchesComponent {
   constructor(public dialog: MatDialog) {}
   openDialog(action, obj) {
     obj.action = action;
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
+    const dialogRef = this.dialog.open(BranchesDialogBoxComponent, {
       width: '250px',
       data: obj,
     });

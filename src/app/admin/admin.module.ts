@@ -14,12 +14,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 import { BooksDialogBoxComponent } from './books-dialog-box/books-dialog-box.component';
 import { BorrowersDialogBoxComponent } from './borrowers-dialog-box/borrowers-dialog-box.component';
 import { BranchesDialogBoxComponent } from './branches-dialog-box/branches-dialog-box.component';
 import { LoansDialogBoxComponent } from './loans-dialog-box/loans-dialog-box.component';
 import { PublishersDialogBoxComponent } from './publishers-dialog-box/publishers-dialog-box.component';
+import { AuthorsDialogBoxComponent } from './authors-dialog-box/authors-dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -30,12 +30,12 @@ import { PublishersDialogBoxComponent } from './publishers-dialog-box/publishers
     BranchesComponent,
     BorrowersComponent,
     LoansComponent,
-    DialogBoxComponent,
     BooksDialogBoxComponent,
     BorrowersDialogBoxComponent,
     BranchesDialogBoxComponent,
     LoansDialogBoxComponent,
     PublishersDialogBoxComponent,
+    AuthorsDialogBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -47,6 +47,13 @@ import { PublishersDialogBoxComponent } from './publishers-dialog-box/publishers
     MatButtonModule,
     FormsModule,
   ],
-  entryComponents: [DialogBoxComponent],
+  entryComponents: [
+    BooksDialogBoxComponent,
+    BorrowersDialogBoxComponent,
+    BranchesDialogBoxComponent,
+    LoansDialogBoxComponent,
+    PublishersDialogBoxComponent,
+    AuthorsDialogBoxComponent,
+  ],
 })
 export class AdminModule {}

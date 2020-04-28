@@ -4,7 +4,6 @@
 <div mat-dialog-content>
   <mat-form-field *ngIf="action != 'Delete'; else elseTemplate">
     <input
-      *ngFor="let key of getKeys(localData)"
       placeholder="{{ action }} Name"
       matInput
       [(ngModel)]="localData.name"

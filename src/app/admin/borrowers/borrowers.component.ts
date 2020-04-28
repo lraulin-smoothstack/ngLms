@@ -1,5 +1,5 @@
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { BorrowersDialogBoxComponent } from './../borrowers-dialog-box/borrowers-dialog-box.component';
+import { Component, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Borrower } from '../types';
@@ -25,7 +25,13 @@ const BORROWERS: Borrower[] = [
   styleUrls: ['./borrowers.component.css'],
 })
 export class BorrowersComponent {
-  displayedColumns: string[] = ['id', 'name', 'address', 'phoneNumber'];
+  displayedColumns: string[] = [
+    'id',
+    'name',
+    'address',
+    'phoneNumber',
+    'action',
+  ];
   dataSource = BORROWERS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
@@ -33,7 +39,7 @@ export class BorrowersComponent {
   constructor(public dialog: MatDialog) {}
   openDialog(action, obj) {
     obj.action = action;
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
+    const dialogRef = this.dialog.open(BorrowersDialogBoxComponent, {
       width: '250px',
       data: obj,
     });

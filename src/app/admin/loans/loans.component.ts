@@ -1,5 +1,4 @@
-import { browser } from 'protractor';
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { LoansDialogBoxComponent } from './../loans-dialog-box/loans-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,6 +30,7 @@ export class LoansComponent {
     'borrower',
     'branchName',
     'bookTitle',
+    'action',
   ];
   dataSource = LOANS;
 
@@ -39,7 +39,7 @@ export class LoansComponent {
   constructor(public dialog: MatDialog) {}
   openDialog(action, obj) {
     obj.action = action;
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
+    const dialogRef = this.dialog.open(LoansDialogBoxComponent, {
       width: '250px',
       data: obj,
     });

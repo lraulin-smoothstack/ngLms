@@ -1,5 +1,4 @@
-import { browser } from 'protractor';
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { PublishersDialogBoxComponent } from './../publishers-dialog-box/publishers-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,7 +19,13 @@ const PUBLISHERS: Publisher[] = [
   styleUrls: ['./publishers.component.css'],
 })
 export class PublishersComponent {
-  displayedColumns: string[] = ['id', 'name', 'address', 'phoneNumber'];
+  displayedColumns: string[] = [
+    'id',
+    'name',
+    'address',
+    'phoneNumber',
+    'action',
+  ];
   dataSource = PUBLISHERS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
@@ -28,7 +33,7 @@ export class PublishersComponent {
   constructor(public dialog: MatDialog) {}
   openDialog(action, obj) {
     obj.action = action;
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
+    const dialogRef = this.dialog.open(PublishersDialogBoxComponent, {
       width: '250px',
       data: obj,
     });

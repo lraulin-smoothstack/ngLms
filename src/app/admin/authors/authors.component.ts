@@ -1,5 +1,5 @@
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AuthorsDialogBoxComponent } from './../authors-dialog-box/authors-dialog-box.component';
+import { Component, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Author } from '../types';
@@ -23,7 +23,7 @@ export class AuthorsComponent {
   constructor(public dialog: MatDialog) {}
   openDialog(action, obj) {
     obj.action = action;
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
+    const dialogRef = this.dialog.open(AuthorsDialogBoxComponent, {
       width: '250px',
       data: obj,
     });
