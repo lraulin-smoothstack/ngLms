@@ -1,26 +1,31 @@
+import { AdminService } from './../admin.service';
 import { AuthorsDialogBoxComponent } from './../authors-dialog-box/authors-dialog-box.component';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Author } from '../types';
-
-const AUTHORS: Author[] = [
-  { id: 1, name: 'Douglas Murray' },
-  { id: 2, name: 'Steven Pinker' },
-];
 
 @Component({
   selector: 'app-authors',
   templateUrl: './authors.component.html',
   styleUrls: ['./authors.component.css'],
 })
-export class AuthorsComponent {
+export class AuthorsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'action'];
-  dataSource = AUTHORS;
+  dataSource: Author[] = [];
+  errorMessage: string;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+
+  fetchData(): void {
+    this.adminService.getAuthors().subscribe({
+      next: (authors) => (this.dataSource = authors),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   openDialog(action, obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(AuthorsDialogBoxComponent, {
@@ -40,24 +45,29 @@ export class AuthorsComponent {
   }
 
   addRowData(rowObj) {
-    const d = new Date();
-    this.dataSource.push({
-      id: d.getTime(),
-      name: rowObj.name,
+    this.adminService.addAuthor(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
-    this.table.renderRows();
   }
+
   updateRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.id === rowObj.id) {
-        value.name = rowObj.name;
-      }
-      return true;
+    console.log('Updating author ' + rowObj);
+    this.adminService.editAuthor(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
   }
+
   deleteRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.id !== rowObj.id;
+    console.log('Deleting author ' + rowObj.id + '...');
+    this.adminService.deleteAuthor(rowObj.id).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 }

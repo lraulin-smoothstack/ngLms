@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
 import { NgModule } from '@angular/core';
@@ -46,6 +47,7 @@ import { AuthorsDialogBoxComponent } from './authors-dialog-box/authors-dialog-b
     MatInputModule,
     MatButtonModule,
     FormsModule,
+    HttpClientModule,
   ],
   entryComponents: [
     BooksDialogBoxComponent,

@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
@@ -15,7 +16,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HomeComponent,
     PageNotFoundComponent,
   ],
-  imports: [BrowserAnimationsModule, AppRoutingModule, NgbModule],
+  imports: [
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    NgbModule,
+    HttpClientModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
