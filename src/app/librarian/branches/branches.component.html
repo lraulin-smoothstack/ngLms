@@ -1,5 +1,5 @@
 <h3>Library Branches</h3>
-<!--<ul class="list-group" *ngIf="branchService.branches">
+<ul class="list-group" *ngIf="branchService.branches">
   <li
     *ngFor="let branch of branchService.branches; let i = index"
     class="list-group-item"
@@ -15,9 +15,9 @@
       {{ branch.name }}
     </button>
     <div class="collapse" id="{{ 'branch' + i }}">
-      <ul class="card card-body list-group">
+      <ul class="list-group">
         <li class="list-group-item-action">
-          <a href="/librarian/branches/book-copies">
+          <a routerLink="/librarian/branches/book-copies">
             Modify Book Copies
           </a>
         </li>
@@ -29,24 +29,4 @@
       </ul>
     </div>
   </li>
-</ul>-->
-
-<p>
-  <button
-    class="btn btn-primary"
-    type="button"
-    [attr.data-toggle]="'collapse'"
-    [attr.data-target]="'#collapseExample'"
-    [attr.aria-expanded]="'false'"
-    [attr.aria-controls]="'collapseExample'"
-  >
-    test
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-    richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes
-    anderson cred nesciunt sapiente ea proident.
-  </div>
-</div>
+</ul>
