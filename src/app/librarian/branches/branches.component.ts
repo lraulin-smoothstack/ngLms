@@ -8,11 +8,11 @@ import { LibraryBranchesService } from '../services/library-branches.service';
   styleUrls: ['./branches.component.css'],
 })
 export class BranchesComponent implements OnInit {
-  constructor(public branchService: LibraryBranchesService) {
-    if (branchService.branches.length == 0) {
-      branchService.getBranches();
+  constructor(public branchService: LibraryBranchesService) {}
+
+  ngOnInit(): void {
+    if (this.branchService.branches.length == 0) {
+      this.branchService.getBranches();
     }
   }
-
-  ngOnInit(): void {}
 }

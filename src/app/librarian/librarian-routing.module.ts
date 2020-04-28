@@ -9,13 +9,11 @@ const routes: Routes = [
   {
     path: '',
     component: LibrarianComponent,
-    children: [
-      {
-        path: '/branches',
-        component: BranchesComponent,
-        children: [{ path: '/book-copies', component: BookCopiesComponent }],
-      },
-    ],
+  },
+  {
+    path: '/branches',
+    component: BranchesComponent,
+    children: [{ path: '/book-copies', component: BookCopiesComponent }],
   },
 ];
 
