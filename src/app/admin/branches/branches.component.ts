@@ -3,11 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
-interface Branch {
-  id: number;
-  name: string;
-  address: string;
-}
+import { Borrower } from '../types';
 
 const BRANCHES: Branch[] = [
   {

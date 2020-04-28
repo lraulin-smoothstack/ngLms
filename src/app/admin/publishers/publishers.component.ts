@@ -3,13 +3,7 @@ import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-
-interface Publisher {
-  id: number;
-  address: string;
-  name: string;
-  phoneNumber: string;
-}
+import { Publisher } from '../types';
 
 const PUBLISHERS: Publisher[] = [
   {

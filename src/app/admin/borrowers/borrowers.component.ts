@@ -2,13 +2,7 @@ import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-
-interface Borrower {
-  id: number;
-  name: string;
-  address: string;
-  phoneNumber: string;
-}
+import { Borrower } from '../types';
 
 const BORROWERS: Borrower[] = [
   {

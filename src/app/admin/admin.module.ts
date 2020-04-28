@@ -16,6 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 import { BooksDialogBoxComponent } from './books-dialog-box/books-dialog-box.component';
+import { BorrowersDialogBoxComponent } from './borrowers-dialog-box/borrowers-dialog-box.component';
+import { BranchesDialogBoxComponent } from './branches-dialog-box/branches-dialog-box.component';
+import { LoansDialogBoxComponent } from './loans-dialog-box/loans-dialog-box.component';
+import { PublishersDialogBoxComponent } from './publishers-dialog-box/publishers-dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,10 @@ import { BooksDialogBoxComponent } from './books-dialog-box/books-dialog-box.com
     LoansComponent,
     DialogBoxComponent,
     BooksDialogBoxComponent,
+    BorrowersDialogBoxComponent,
+    BranchesDialogBoxComponent,
+    LoansDialogBoxComponent,
+    PublishersDialogBoxComponent,
   ],
   imports: [
     CommonModule,
