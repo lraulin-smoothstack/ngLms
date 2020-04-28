@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestComponent } from './test.component';
+import { LoansDialogBoxComponent } from './loans-dialog-box.component';
 
-describe('TestComponent', () => {
-  let component: TestComponent;
-  let fixture: ComponentFixture<TestComponent>;
+describe('LoansDialogBoxComponent', () => {
+  let component: LoansDialogBoxComponent;
+  let fixture: ComponentFixture<LoansDialogBoxComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestComponent ]
+      declarations: [ LoansDialogBoxComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestComponent);
+    fixture = TestBed.createComponent(LoansDialogBoxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
