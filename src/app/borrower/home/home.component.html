@@ -3,35 +3,67 @@
     <h1 class="display-4">Welcome {{borrower.name | titlecase }}!</h1>
     <p class="lead">Here you can check out books, return books, and view available library branches.</p>
     <hr class="my-4">
-    <a class="btn btn-primary btn-lg home" href="#" role="button">Checkout a book</a>
-    <a class="btn btn-primary btn-lg home" href="#" role="button">Return a book</a>
-    <a class="btn btn-primary btn-lg home" href="#" role="button">View branches</a>
-    <a class="btn btn-danger btn-lg home" href="#" role="button" (click)="logout">Logout</a>
+    <button type="button" class="btn btn-primary home">Checkout a book</button>
+    <button type="button" class="btn btn-primary home">Return a book</button>
+    <button type="button" class="btn btn-primary home">View branches</button>
+    <button type="button" class="btn btn-danger home" (click)="logout()">Logout</button>
   </div>
   <h2>Quick Return</h2>
   <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Title</th>
-      <th scope="col">Author</th>
-      <th scope="col">Due Date</th>
-      <th scope="col">Return</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- <tr *ngFor="let book of borrower.books">
-      <th scope="row">{{book.id}}</th>
-      <td>{{book.title}}</td>
-      <td>{{book.author}}</td>
-      <td>{{book.dueDate}}</td>
-      <td>
-        <button type="button" class="btn btn-danger">Return</button>
-      </td>
-    </tr> -->
-  </tbody>
-</table>
+    <thead>
+      <tr>
+        <th scope="col">Book Id</th>
+        <th scope="col">Title</th>
+        <th scope="col">Author/s</th>
+        <th scope="col">Genre/s</th>
+        <th scope="col">Due Date</th>
+        <th scope="col">Return</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let loan of loans">
+        <th scope="row">{{loan.id.book.id}}</th>
+        <td>{{loan.id.book.title}}</td>
+        <td><span *ngFor="let author of loan.id.book.authors">{{author.name}}</span></td>
+        <td><span *ngFor="let genre of loan.id.book.genres">{{genre.name}}</span></td>
+        <td>{{loan.dueDate}}</td>
+        <td>
+          <button type="button" class="btn btn-danger">Return</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+  <a
+    class="btn btn-primary"
+    data-toggle="collapse"
+    href="#collapseExample"
+    role="button"
+    aria-expanded="false"
+    aria-controls="collapseExample"
+  >
+    Link with href
+  </a>
+  <button
+    class="btn btn-primary"
+    type="button"
+    data-toggle="collapse"
+    data-target="#collapseExample"
+    aria-expanded="false"
+    aria-controls="collapseExample"
+  >
+    Button with data-target
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+    richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes
+    anderson cred nesciunt sapiente ea proident.
+  </div>
 </div>
+</div>
+
 <ng-template #loading>
   <div class="alert alert-info" role="alert">
     Loading...

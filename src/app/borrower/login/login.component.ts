@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
   /* PRODUCTION: For login once auth server isup. */
   // onSubmit(borrowerId: string) {
-  //   this.borrowerService.postBorrower(borrowerId)
+  //   this.borrowerService.getBorrower(borrowerId)
   //     .subscribe( (borrower) => {
   //       this.cookieService.set(
   //         'borrowerId',
@@ -40,9 +40,9 @@ export class LoginComponent implements OnInit {
   //       this.router.navigate(['/borrower/home']);
   //     });
   // }
-  
+
   onSubmit(id: string) {
-    const borrower = this.borrowerService.postBorrower(id);
+    const borrower = this.borrowerService.getBorrower(id);
     this.cookieService.set(
         'borrowerId',
         String(borrower.id));

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CookieService } from 'ngx-cookie-service';
-
-import { Borrower } from '../entity/borrower';
 import { BorrowerService } from '../service/borrower.service';
+
+import { Loan } from '../entity/loan';
+import { Borrower } from '../entity/borrower';
 
 
 
@@ -16,6 +17,7 @@ import { BorrowerService } from '../service/borrower.service';
 export class HomeComponent implements OnInit {
 
   public borrower: Borrower;
+  public loans: Array<Loan>;
 
   constructor(
     private router: Router,
@@ -29,7 +31,7 @@ export class HomeComponent implements OnInit {
     /* PRODUCTION: For login once auth server isup. */
     // if(cookieExists){
     //   const borrowerId = this.cookieService.get('borrowerId');
-    //   this.borrowerService.postBorrower(borrowerId)
+    //   this.borrowerService.getBorrower(borrowerId)
     //     .subscribe( (borrower) => { this.borrower = borrower; });
     // } else {
     //   this.router.navigate(['/borrower/login']);
@@ -37,17 +39,22 @@ export class HomeComponent implements OnInit {
 
     if(cookieExists){
       const borrowerId = this.cookieService.get('borrowerId');
-      const borrower = this.borrowerService.postBorrower(borrowerId);
+      const borrower = this.borrowerService.getBorrower(borrowerId);
       this.borrower = borrower;
+      this.borrowerService.getLoans(this.borrower.id)
+         .subscribe( (loans) => { this.loans = loans; });
     } else {
       this.router.navigate(['/borrower/login']);
     }
   }
 
+  checkoutBook(): void {
+    this.router.navigate(['/borrower/checkout']);
+  }
+
   logout(): void {
-    console.log("LOGGING OUT");
-    this.cookieService.delete('borrowerId');
-    this.router.navigate(['/borrower/login']);
+    this.cookieService.deleteAll('/');
+    this.router.navigate(['/']);
   }
 
 }

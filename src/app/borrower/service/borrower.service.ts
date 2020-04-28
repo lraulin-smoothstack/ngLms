@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Borrower } from '../entity/borrower';
+import { Loan } from '../entity/loan';
 import { MessageService } from './message.service';
 
 @Injectable({ providedIn: 'root' })
@@ -14,11 +15,12 @@ export class BorrowerService {
   // private borrowersUrl = 'https://5ea4bd242d86f00016b45419.mockapi.io/api/v1/borrowers';
 
   // Temp route just to get return data for login
-  private borrowersUrl = 'http://localhost:8081/lms/borrower//branches/1/borrowers/1';
+  private borrowersUrl = 'http://localhost:8081/lms/borrower/branches/1/borrowers/1';
+  private loansUrl = 'http://localhost:8081/lms/borrower/loans';
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/text' })
-    // headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    // headers: new HttpHeaders({ 'Content-Type': 'application/text' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
   constructor(
@@ -27,14 +29,14 @@ export class BorrowerService {
   ) { }
 
   /* PRODUCTION: For login once auth server isup. */
-  // postBorrower(id: string): Observable<Borrower> {
+  // getBorrower(id: string): Observable<Borrower> {
   //   return this.http.post<Borrower>(this.borrowersUrl, id, this.httpOptions).pipe(
   //     tap((borrower: Borrower) => this.log(`confirmed borrower w/ id=${borrower.id}`)),
   //     catchError(this.handleError<Borrower>('postBorrower'))
   //   );
   // }
 
-  postBorrower(id: string): any {
+  getBorrower(id: string): any {
     const borrower = {
       id: "1",
       address: "1325 S 76TH Ave. Yakima, Washington",
@@ -42,6 +44,14 @@ export class BorrowerService {
       phone_number: "509-287-4787"
     }
     return borrower;
+  }
+
+  getLoans(id: string): Observable<Array<Loan>> {
+    const body = {'id': id };
+    return this.http.post<Array<Loan>>(this.loansUrl, body, this.httpOptions).pipe(
+      tap((loans: Array<Loan>) => console.log(loans)),
+      catchError(this.handleError<Array<Loan>>('postBorrower'))
+    );
   }
 
 
