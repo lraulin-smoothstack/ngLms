@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LibraryBranch } from '../models/library-branch.interface';
 import { BooksService } from '../services/books.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Book } from '../models/book.interface';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BookCopiesService } from '../services/book-copies.service';
@@ -24,7 +24,8 @@ export class BooksComponent implements OnInit {
     public bookService: BooksService,
     public bookCopyService: BookCopiesService,
     private activatedRoute: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {
     this.amount = 0;
   }
@@ -38,6 +39,9 @@ export class BooksComponent implements OnInit {
     this.bookCopyService.addBookCopy(bookCopy, (data) => {
       this.amount = 0;
       this.modalRef.close();
+      this.router.navigate(['../book-copies'], {
+        relativeTo: this.activatedRoute,
+      });
     });
   }
 
@@ -61,10 +65,7 @@ export class BooksComponent implements OnInit {
       const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       this.branchId = parseInt(tempId, 10);
 
-      if (
-        (this.branchId && this.bookService.books.length == 0) ||
-        (this.branchId && this.branchId != this.bookService.books[0].branch.id)
-      ) {
+      if (this.branchId && this.bookService.books.length == 0) {
         this.bookService.getBooks();
       }
     }

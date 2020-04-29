@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BookCopiesService } from '../services/book-copies.service';
 import { BookCopy } from '../models/book-copy.interface';
 import { LibraryBranch } from '../models/library-branch.interface';
+import { LibraryBranchesService } from '../services/library-branches.service';
 
 @Component({
   selector: 'app-book-copies',
@@ -19,6 +20,7 @@ export class BookCopiesComponent implements OnInit {
 
   constructor(
     public bookCopyService: BookCopiesService,
+    public branchService: LibraryBranchesService,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal
   ) {}
@@ -58,16 +60,17 @@ export class BookCopiesComponent implements OnInit {
     if (this.activatedRoute.snapshot.paramMap.has('id')) {
       const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       const id = parseInt(tempId, 10);
+      console.log('Hello world');
 
       if (
         (id && this.bookCopyService.bookCopies.length == 0) ||
         (id && id != this.bookCopyService.bookCopies[0].id.branch.id)
       ) {
         this.bookCopyService.getBookCopies(id, (data: BookCopy[]) => {
-          if (data && data.length > 0) {
-            this.branch = data[0].id.branch;
-          }
+          this.branchService.getBranch(id, (data) => (this.branch = data));
         });
+      } else {
+        this.branchService.getBranch(id, (data) => (this.branch = data));
       }
     }
   }
