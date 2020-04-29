@@ -9,11 +9,13 @@ import { BorrowerService } from './service/borrower.service';
 import { BorrowerRoutingModule } from './borrower-routing.module';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { BookCheckoutComponent } from './book-checkout/book-checkout.component';
+import { BranchSelectComponent } from './branch-select/branch-select.component';
 
 
 
 @NgModule({
-  declarations: [HomeComponent, LoginComponent, ],
+  declarations: [HomeComponent, LoginComponent, BranchSelectComponent, BookCheckoutComponent, ],
   imports: [
     CommonModule,
     HttpClientModule,

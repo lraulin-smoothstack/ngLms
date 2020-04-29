@@ -1,0 +1,79 @@
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/borrower/home">Home</a></li>
+      <li class="breadcrumb-item"><a routerLink="/borrower/branch">Branch</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    </ol>
+  </nav>
+  <h2>Select Book</h2>
+  <div class="form-group">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="branches-addon">Title | Author | Genre:</span>
+      </div>
+      <input #searchBox id="search-box" (input)="search(searchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-search" aria-describedby="book-addon">
+    </div>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Title</th>
+        <th scope="col">Authors</th>
+        <th scope="col">Genres</th>
+        <th scope="col">Publisher</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of searchBooks$ | async">
+        <th scope="row">{{book.id}}</th>
+        <td>{{book.title}}</td>
+        <td>{{book.authors}}</td>
+        <td>{{book.genres}}</td>
+        <td>{{book.publisher.name}}</td>
+        <td>
+          <button (click)="selectedBook({
+            id: book.id,
+            title: book.title,
+            authors: book.authors,
+            genres: book.genres
+          })" type="button" class="btn btn-success" data-toggle="modal" data-target="#checkoutModal">Checkout</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="checkoutModalLabel">Checkout book:</h5>
+          <button (click)="selectedBook(null)" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="book-title" class="col-form-label">TItle</label>
+              <input type="text" class="form-control" id="book-title" disabled placeholder={{book?.title}}>
+            </div>
+            <div class="form-group">
+              <label for="book-authors" class="col-form-label">Authors</label>
+              <input type="text" class="form-control" id="book-authors" disabled placeholder={{book?.authors}}>
+            </div>
+            <div class="form-group">
+              <label for="book-genres" class="col-form-label">Genres</label>
+              <input type="text" class="form-control" id="book-genres" disabled placeholder={{book?.genres.join()}}>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button (click)="selectedBook(null)" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button (click)="checkoutBook()" type="button" class="btn btn-success" data-dismiss="modal">Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,19 +4,16 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Borrower } from '../entity/borrower';
 import { Loan } from '../entity/loan';
-import { MessageService } from './message.service';
+import { Book } from '../entity/book';
+import { Branch } from '../entity/branch';
+import { Borrower } from '../entity/borrower';
+
+
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BorrowerService {
-
-  // Mock API route
-  // private borrowersUrl = 'https://5ea4bd242d86f00016b45419.mockapi.io/api/v1/borrowers';
-
-  // Temp route just to get return data for login
-  private borrowersUrl = 'http://localhost:8081/lms/borrower/branches/1/borrowers/1';
-  private loansUrl = 'http://localhost:8081/lms/borrower/loans';
 
   httpOptions = {
     // headers: new HttpHeaders({ 'Content-Type': 'application/text' })
@@ -25,7 +22,6 @@ export class BorrowerService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
   ) { }
 
   /* PRODUCTION: For login once auth server isup. */
@@ -37,6 +33,8 @@ export class BorrowerService {
   // }
 
   getBorrower(id: string): any {
+    // const url = 'http://localhost:8081/lms/borrower/branches/1/borrowers/1';
+    // Temp route just to get return data for login
     const borrower = {
       id: "1",
       address: "1325 S 76TH Ave. Yakima, Washington",
@@ -46,14 +44,104 @@ export class BorrowerService {
     return borrower;
   }
 
-  getLoans(id: string): Observable<Array<Loan>> {
+  getLoans(id: string): Observable<Loan[]> {
+    const url = 'http://localhost:8080/lms/borrower/loans';
     const body = {'id': id };
-    return this.http.post<Array<Loan>>(this.loansUrl, body, this.httpOptions).pipe(
-      tap((loans: Array<Loan>) => console.log(loans)),
-      catchError(this.handleError<Array<Loan>>('postBorrower'))
+    return this.http.post<Loan[]>(url, body, this.httpOptions).pipe(
+      tap((loans: Loan[]) => console.log(loans)),
+      catchError(this.handleError<Loan[]>('BorrowerSvc::getLoans()'))
     );
   }
 
+  getBranches(): Observable<Branch[]> {
+    const url = 'http://localhost:8080/lms/borrower/branches';
+    return this.http.get<Branch[]>(url, this.httpOptions).pipe(
+      tap((branches: Branch[]) => console.log(branches)),
+      catchError(this.handleError<Branch[]>('BorrowerSvc::getBranches()'))
+    );
+  }
+
+  getAvailableBooks(branchId: string, borrowerId: string): Observable<Book[]> {
+    const url = `http://localhost:8080/lms/borrower/branch/${branchId}/available-books/`;
+    const body = {'id': borrowerId };
+    return this.http.post<Book[]>(url, body, this.httpOptions).pipe(
+      tap((books: Book[]) => console.log(books)),
+      catchError(this.handleError<Book[]>('BorrowerSvc::getAvailableBooks()'))
+    );
+  }
+
+  checkinBook(borrower: Borrower, book: Book): Observable<any> {
+    const url = 'http://localhost:8080/lms/borrower/book/checkin';
+    console.log("BOOK IN CHECKINBOOK SERVICE");
+    console.log(book);
+    const body = {
+    	"book": {
+    		"id": 1,
+    		"title": "Harry Potter and the Goblet of Fire",
+    		"publisher": {
+    			"id": 1,
+    			"name": "Penguin House Inc.",
+    			"address": "1234 Arlington Ave. Fairfax Virginia 27363",
+    			"phoneNumber": "762-282-8787"
+    		},
+    		"authors": [{ "id": 1, "name": "J.K. Rolling" }],
+    		"genres": [{ "id": 1, "name": "Fiction" } ]
+    	},
+    	"borrower": {
+    		"id": 1,
+    		"name": "Joe Smith",
+    		"address": "1325 S 76TH Ave. Yakima, Washington",
+    		"phoneNumber": "509-287-4787"
+    	},
+    	"branch": {
+    		"id": 2,
+    		"name": "Chantilly Regional Library",
+    		"address": "17637 Fairlakes Parkway Fairfax, Virginia"
+    	}
+    }
+
+    return this.http.post<any>(url, body, this.httpOptions).pipe(
+      tap((res: any) => console.log(res)),
+      catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
+    );
+  }
+
+  checkoutBook(borrowerId: string, book: Book): Observable<any> {
+    const url = 'http://localhost:8080/lms/borrower/book/checkout';
+    console.log("BOOK IN CHECKOUTBOOK SERVICE");
+    console.log(book);
+    const body = {
+    	"book": {
+    		"id": 1,
+    		"title": "Harry Potter and the Goblet of Fire",
+    		"publisher": {
+    			"id": 1,
+    			"name": "Penguin House Inc.",
+    			"address": "1234 Arlington Ave. Fairfax Virginia 27363",
+    			"phoneNumber": "762-282-8787"
+    		},
+    		"authors": [{ "id": 1, "name": "J.K. Rolling" }],
+    		"genres": [{ "id": 1, "name": "Fiction" } ]
+    	},
+    	"borrower": {
+    		"id": 1,
+    		"name": "Joe Smith",
+    		"address": "1325 S 76TH Ave. Yakima, Washington",
+    		"phoneNumber": "509-287-4787"
+    	},
+    	"branch": {
+    		"id": 2,
+    		"name": "Chantilly Regional Library",
+    		"address": "17637 Fairlakes Parkway Fairfax, Virginia"
+    	}
+    }
+    console.log(body);
+
+    return this.http.post<any>(url, body, this.httpOptions).pipe(
+      tap((res: any) => console.log(res)),
+      catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
+    );
+  }
 
   /**
    * Handle Http operation that failed.
@@ -67,16 +155,8 @@ export class BorrowerService {
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
-  }
-
-  /** Log a BorrowerService message with the MessageService */
-  private log(message: string) {
-    this.messageService.add(`BorrowerService: ${message}`);
   }
 }

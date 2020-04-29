@@ -1,67 +1,93 @@
 <div *ngIf="borrower; else loading">
   <div class="jumbotron" >
     <h1 class="display-4">Welcome {{borrower.name | titlecase }}!</h1>
-    <p class="lead">Here you can check out books, return books, and view available library branches.</p>
+    <p class="lead">Here you can check out new books or return books previously checked out.</p>
     <hr class="my-4">
-    <button type="button" class="btn btn-primary home">Checkout a book</button>
+    <a routerLink="/borrower/branch" class="btn btn-primary home">Checkout a book</a>
     <button type="button" class="btn btn-primary home">Return a book</button>
-    <button type="button" class="btn btn-primary home">View branches</button>
     <button type="button" class="btn btn-danger home" (click)="logout()">Logout</button>
   </div>
-  <h2>Quick Return</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Book Id</th>
-        <th scope="col">Title</th>
-        <th scope="col">Author/s</th>
-        <th scope="col">Genre/s</th>
-        <th scope="col">Due Date</th>
-        <th scope="col">Return</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let loan of loans">
-        <th scope="row">{{loan.id.book.id}}</th>
-        <td>{{loan.id.book.title}}</td>
-        <td><span *ngFor="let author of loan.id.book.authors">{{author.name}}</span></td>
-        <td><span *ngFor="let genre of loan.id.book.genres">{{genre.name}}</span></td>
-        <td>{{loan.dueDate}}</td>
-        <td>
-          <button type="button" class="btn btn-danger">Return</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <p>
-  <a
-    class="btn btn-primary"
-    data-toggle="collapse"
-    href="#collapseExample"
-    role="button"
-    aria-expanded="false"
-    aria-controls="collapseExample"
-  >
-    Link with href
-  </a>
-  <button
-    class="btn btn-primary"
-    type="button"
-    data-toggle="collapse"
-    data-target="#collapseExample"
-    aria-expanded="false"
-    aria-controls="collapseExample"
-  >
-    Button with data-target
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-    richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes
-    anderson cred nesciunt sapiente ea proident.
+  <router-outlet></router-outlet>
+  <div *ngIf="router.url === '/borrower/home'">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Home</li>
+      </ol>
+    </nav>
+    <h2>Quick Return</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Book Id</th>
+          <th scope="col">Title</th>
+          <th scope="col">Author/s</th>
+          <th scope="col">Genre/s</th>
+          <th scope="col">Due Date</th>
+          <th scope="col">Return</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loan of loans">
+          <th scope="row">{{loan.id.book.id}}</th>
+          <td>{{loan.id.book.title}}</td>
+          <td><span *ngFor="let author of loan.id.book.authors">{{author.name}}</span></td>
+          <td><span *ngFor="let genre of loan.id.book.genres">{{genre.name}}</span></td>
+          <td>{{loan.dueDate}}</td>
+          <td>
+            <button (click)="selectedBook({
+              id: loan.id.book.id,
+              title: loan.id.book.title,
+              authors: loan.id.book.authors,
+              genres: loan.id.book.genres,
+              branch: loan.id.branch,
+              dueDate: loan.dueDate
+            })" type="button" class="btn btn-danger" data-toggle="modal" data-target="#returnModal">Return</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="returnModalLabel">Return book:</h5>
+            <button (click)="selectedBook(null)" type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="book-title" class="col-form-label">TItle</label>
+                <input type="text" class="form-control" id="book-title" disabled placeholder={{book?.title}}>
+              </div>
+              <div class="form-group">
+                <label for="book-authors" class="col-form-label">Authors</label>
+                <input type="text" class="form-control" id="book-authors" disabled placeholder={{book?.authors}}>
+              </div>
+              <div class="form-group">
+                <label for="book-genres" class="col-form-label">Genres</label>
+                <input type="text" class="form-control" id="book-genres" disabled placeholder={{book?.genres}}>
+              </div>
+              <div class="form-group">
+                <label for="book-branch" class="col-form-label">Branch</label>
+                <input type="text" class="form-control" id="book-branch" disabled placeholder={{book?.branch.name}}>
+              </div>
+              <div class="form-group">
+                <label for="book-dueDate" class="col-form-label">Due Date</label>
+                <input type="text" class="form-control" id="book-dueDate" disabled placeholder={{book?.dueDate}}>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button (click)="selectedBook(null)" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button (click)="checkinBook()" type="button" class="btn btn-danger" data-dismiss="modal">Return</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
 </div>
 
 <ng-template #loading>
