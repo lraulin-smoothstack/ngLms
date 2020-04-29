@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { LibraryBranch } from '../models/library-branch.model';
+import { Injectable, Inject } from '@angular/core';
+import { LibraryBranch } from '../models/library-branch.interface';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -7,13 +7,53 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LibraryBranchesService {
   branches: LibraryBranch[];
+  isLoading: boolean;
 
-  constructor(private http: HttpClient) {
-    this.branches = [
-      new LibraryBranch(1, '1284 5th, Ave', 'Seattle Library'),
-      new LibraryBranch(2, '3938 Arlington St.', 'Cheney Local Library'),
-    ];
+  constructor(
+    private http: HttpClient,
+    @Inject('domain') private domain: string
+  ) {
+    this.branches = [];
   }
 
-  getBranches(callback?: any) {}
+  getBranches(callback?: any): void {
+    this.isLoading = true;
+    this.http
+      .get(`${this.domain}/lms/librarian/branches`)
+      .subscribe((data: LibraryBranch[]) => {
+        this.branches = data;
+        this.isLoading = false;
+
+        if (callback) {
+          callback(data);
+        }
+      });
+  }
+
+  getBranch(id: number, callback: any): void {
+    this.isLoading = true;
+    this.http
+      .get(`${this.domain}/lms/librarian/branches/${id}`)
+      .subscribe((data: LibraryBranch) => {
+        this.isLoading = false;
+        callback(data);
+      });
+  }
+
+  updateBranch(id: number, branch: LibraryBranch, callback?: any): void {
+    this.isLoading = true;
+
+    this.http
+      .put(`${this.domain}/lms/librarian/branches/${id}`, branch)
+      .subscribe((data: any) => {
+        const branchToUpdate = this.branches.find((b) => b.id == id);
+        branchToUpdate.name = branch.name;
+        branchToUpdate.address = branch.address;
+        this.isLoading = false;
+
+        if (callback) {
+          callback(data);
+        }
+      });
+  }
 }

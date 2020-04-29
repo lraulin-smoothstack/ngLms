@@ -1,20 +1,14 @@
-<h4>
-  <span *ngIf="branch">{{ branch.name }}</span>
-  Book Copies
-</h4>
-<p *ngIf="branch">{{ branch.address }}</p>
+<h4>Adding Books</h4>
 
-<button type="button" class="btn btn-primary" routerLink="../books">
-  Add Book to Library
+<button type="button" class="btn btn-primary" routerLink="../book-copies">
+  Return to Library Book Copies
 </button>
 
-<div *ngIf="bookCopyService.isLoading" class="spinner-border" role="status">
+<div *ngIf="bookService.isLoading" class="spinner-border" role="status">
   <span className="sr-only">Loading...</span>
 </div>
 
-<div *ngIf="!bookCopyService.isLoading">
-  <hr />
-
+<div *ngIf="!bookService.isLoading">
   <table class="table table-dark">
     <thead>
       <tr>
@@ -23,39 +17,27 @@
         <th>Authors</th>
         <th>Publisher</th>
         <th>Genres</th>
-        <th>Number of Copies</th>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th>Add</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let bookCopy of bookCopyService.bookCopies; let i = index">
+      <tr *ngFor="let book of bookService.books; let i = index">
         <th scope="row">{{ i + 1 }}</th>
-        <td>{{ bookCopy.id.book.title }}</td>
+        <td>{{ book.title }}</td>
         <td>
-          <span *ngFor="let a of bookCopy.id.book.authors">{{ a.name }}, </span>
+          <span *ngFor="let a of book.authors">{{ a.name }}, </span>
         </td>
-        <td>{{ bookCopy.id.book.publisher.name }}</td>
+        <td>{{ book.publisher.name }}</td>
         <td>
-          <span *ngFor="let g of bookCopy.id.book.genres">{{ g.name }}, </span>
+          <span *ngFor="let g of book.genres">{{ g.name }}, </span>
         </td>
-        <td>{{ bookCopy.amount }}</td>
         <td>
           <button
             type="button"
             class="btn btn-primary"
-            (click)="open(editBookCopyModal, bookCopy)"
+            (click)="open(addBookCopyModal, book)"
           >
-            Edit
-          </button>
-        </td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="deleteBookCopy(bookCopy)"
-          >
-            Delete
+            Add Book
           </button>
         </td>
       </tr>
@@ -63,11 +45,11 @@
   </table>
 </div>
 
-<ng-template #editBookCopyModal let-c="close" let-d="dismiss">
+<ng-template #addBookCopyModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit {{ selectedBookCopy.id.book.title }}</h5>
+        <h5 class="modal-title">Add {{ selectedBook.title }}</h5>
         <button
           type="button"
           class="close"
@@ -79,7 +61,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="updateBookCopy()">
+        <form (ngSubmit)="addBookCopy()">
           <div class="form-group">
             <label for="amount" class="col-form-label"
               >Number of Copies:
@@ -88,7 +70,8 @@
               class="form-control"
               name="amount"
               id="amount"
-              [(ngModel)]="selectedBookCopy.amount"
+              [(ngModel)]="amount"
+              required
             />
           </div>
           <input type="submit" class="btn btn-primary" value="Save" />
