@@ -14,7 +14,8 @@ const routes: Routes = [
     path: 'borrower',
     loadChildren: () =>
       import(`./borrower/borrower.module`).then((m) => m.BorrowerModule),
-  },  
+  },
+  {
     path: 'librarian',
     loadChildren: () =>
       import('./librarian/librarian.module').then((m) => m.LibrarianModule),
