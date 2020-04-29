@@ -1,36 +1,31 @@
+import { AdminService } from './../admin.service';
 import { BranchesDialogBoxComponent } from './../branches-dialog-box/branches-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Branch } from '../types';
 
-import { Borrower } from '../types';
-
-const BRANCHES: Branch[] = [
-  {
-    id: 1,
-    name: 'Library of Congress',
-    address: 'Independence Ave SE, Washington, DC 20540',
-  },
-  {
-    id: 2,
-    name: 'Miami-Dade Library',
-    address: '101 W Flagler St, Miami, FL 33130',
-  },
-];
-
 @Component({
   selector: 'app-branches',
   templateUrl: './branches.component.html',
   styleUrls: ['./branches.component.css'],
 })
-export class BranchesComponent {
+export class BranchesComponent implements OnInit {
+  errorMessage: string;
+  dataSource: Branch[];
   displayedColumns: string[] = ['id', 'name', 'address', 'action'];
-  dataSource = BRANCHES;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+
+  fetchData(): void {
+    this.adminService.getBranches().subscribe({
+      next: (branches) => (this.dataSource = branches),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   openDialog(action, obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(BranchesDialogBoxComponent, {
@@ -50,27 +45,29 @@ export class BranchesComponent {
   }
 
   addRowData(rowObj) {
-    const d = new Date();
-    this.dataSource.push({
-      id: d.getTime(),
-      name: rowObj.name,
-      address: rowObj.address,
+    this.adminService.addBranch(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
-    this.table.renderRows();
   }
+
   updateRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.id === rowObj.id) {
-        value.id = rowObj.id;
-        value.name = rowObj.name;
-        value.address = rowObj.address;
-      }
-      return true;
+    console.log('Updating branch ' + rowObj);
+    this.adminService.editBranch(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
   }
+
   deleteRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.id !== rowObj.id;
+    console.log('Deleting branch ' + rowObj.id + '...');
+    this.adminService.deleteBranch(rowObj.id).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 }

@@ -1,24 +1,18 @@
+import { AdminService } from './../admin.service';
 import { PublishersDialogBoxComponent } from './../publishers-dialog-box/publishers-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Publisher } from '../types';
 
-const PUBLISHERS: Publisher[] = [
-  {
-    id: 1,
-    name: 'Penguin',
-    address: '6241 Fake Address',
-    phoneNumber: '555-CALL ME',
-  },
-];
-
 @Component({
   selector: 'app-publishers',
   templateUrl: './publishers.component.html',
   styleUrls: ['./publishers.component.css'],
 })
-export class PublishersComponent {
+export class PublishersComponent implements OnInit {
+  errorMessage: string;
+  dataSource: Publisher[];
   displayedColumns: string[] = [
     'id',
     'name',
@@ -26,11 +20,18 @@ export class PublishersComponent {
     'phoneNumber',
     'action',
   ];
-  dataSource = PUBLISHERS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+
+  fetchData(): void {
+    this.adminService.getPublishers().subscribe({
+      next: (publishers) => (this.dataSource = publishers),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   openDialog(action, obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(PublishersDialogBoxComponent, {
@@ -48,31 +49,30 @@ export class PublishersComponent {
       }
     });
   }
-
   addRowData(rowObj) {
-    const d = new Date();
-    this.dataSource.push({
-      id: d.getTime(),
-      name: rowObj.name,
-      address: rowObj.address,
-      phoneNumber: rowObj.phoneNumber,
+    this.adminService.addPublisher(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
-    this.table.renderRows();
   }
+
   updateRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.id === rowObj.id) {
-        value.id = rowObj.id;
-        value.name = rowObj.name;
-        value.address = rowObj.address;
-        value.phoneNumber = rowObj.phoneNumber;
-      }
-      return true;
+    console.log('Updating publisher ' + rowObj);
+    this.adminService.editPublisher(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
   }
+
   deleteRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.id !== rowObj.id;
+    console.log('Deleting publisher ' + rowObj.id + '...');
+    this.adminService.deletePublisher(rowObj.id).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 }
