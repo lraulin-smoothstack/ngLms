@@ -1,10 +1,10 @@
 <h4>Update Library Branch</h4>
 
-<div *ngIf="!branch" className="spinner-border" role="status">
+<div *ngIf="branchService.isLoading" class="spinner-border" role="status">
   <span className="sr-only">Loading...</span>
 </div>
 
-<div *ngIf="branch">
+<div *ngIf="!branchService.isLoading">
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <div class="form-group">
       <label for="branchName">Branch:</label>
@@ -13,7 +13,6 @@
         class="form-control"
         id="branchName"
         name="name"
-        value="{{ branch.name }}"
         [ngModel]="branch.name"
         required
       />

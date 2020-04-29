@@ -14,8 +14,8 @@ export class UpdateLibraryBranchComponent implements OnInit {
   branch: LibraryBranch;
 
   constructor(
-    private branchService: LibraryBranchesService,
-    private activeRoute: ActivatedRoute,
+    public branchService: LibraryBranchesService,
+    private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -25,20 +25,23 @@ export class UpdateLibraryBranchComponent implements OnInit {
     );
   }
 
-  _setBranch(id: number) {
-    this.branch = this.branchService.branches.find((b) => b.id == id);
-  }
-
   ngOnInit(): void {
-    if (this.activeRoute.snapshot.paramMap.has('id')) {
-      const tempId: string = this.activeRoute.snapshot.paramMap.get('id');
+    if (this.activatedRoute.snapshot.paramMap.has('id')) {
+      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       const id = parseInt(tempId, 10);
 
       if (id) {
-        if (this.branchService.branches.length == 0) {
-          this.branchService.getBranches((data) => this._setBranch(id));
+        if (
+          id &&
+          (this.branchService.branches.length == 0 ||
+            id != this.branchService.branches[0].id)
+        ) {
+          this.branchService.getBranches(
+            (data: LibraryBranch[]) =>
+              (this.branch = data.find((b) => id == b.id))
+          );
         } else {
-          this._setBranch(id);
+          this.branch = this.branchService.branches.find((b) => id == b.id);
         }
       }
     }

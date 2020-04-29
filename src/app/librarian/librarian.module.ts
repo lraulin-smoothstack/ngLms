@@ -10,6 +10,9 @@ import { BranchesComponent } from './branches/branches.component';
 import { BookCopiesComponent } from './book-copies/book-copies.component';
 import { LibraryBranchesService } from './services/library-branches.service';
 import { UpdateLibraryBranchComponent } from './update-library-branch/update-library-branch.component';
+import { BookCopiesService } from './services/book-copies.service';
+import { BooksComponent } from './books/books.component';
+import { BooksService } from './services/books.service';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,7 @@ import { UpdateLibraryBranchComponent } from './update-library-branch/update-lib
     BranchesComponent,
     BookCopiesComponent,
     UpdateLibraryBranchComponent,
+    BooksComponent,
   ],
   imports: [
     CommonModule,
@@ -27,6 +31,8 @@ import { UpdateLibraryBranchComponent } from './update-library-branch/update-lib
   ],
   providers: [
     LibraryBranchesService,
+    BookCopiesService,
+    BooksService,
     { provide: 'domain', useValue: 'http://localhost:8080' },
   ],
 })
