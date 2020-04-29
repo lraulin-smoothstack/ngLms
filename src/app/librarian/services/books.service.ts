@@ -16,10 +16,12 @@ export class BooksService {
     this.books = [];
   }
 
-  getBooks(callback?: any) {
+  getBooks(branchId: number, callback?: any) {
     this.isLoading = true;
     this.http
-      .get(`${this.domain}/lms/librarian/books`)
+      .get(
+        `${this.domain}/lms/librarian/books/book-copies/branches/${branchId}`
+      )
       .subscribe((data: Book[]) => {
         this.books = data;
         this.isLoading = false;

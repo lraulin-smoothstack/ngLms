@@ -65,8 +65,8 @@ export class BooksComponent implements OnInit {
       const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       this.branchId = parseInt(tempId, 10);
 
-      if (this.branchId && this.bookService.books.length == 0) {
-        this.bookService.getBooks();
+      if (this.branchId) {
+        this.bookService.getBooks(this.branchId);
       }
     }
   }
