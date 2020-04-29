@@ -1,30 +1,18 @@
+import { AdminService } from './../admin.service';
 import { BorrowersDialogBoxComponent } from './../borrowers-dialog-box/borrowers-dialog-box.component';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Borrower } from '../types';
-
-const BORROWERS: Borrower[] = [
-  {
-    id: 1,
-    name: 'Joe Shmoe',
-    address: 'Mulberry Lane',
-    phoneNumber: '867-5309',
-  },
-  {
-    id: 2,
-    name: 'Jane Doe',
-    address: 'Rasberry Lane',
-    phoneNumber: '867-5309',
-  },
-];
 
 @Component({
   selector: 'app-borrowers',
   templateUrl: './borrowers.component.html',
   styleUrls: ['./borrowers.component.css'],
 })
-export class BorrowersComponent {
+export class BorrowersComponent implements OnInit {
+  errorMessage: string;
+  dataSource: Borrower[];
   displayedColumns: string[] = [
     'id',
     'name',
@@ -32,11 +20,17 @@ export class BorrowersComponent {
     'phoneNumber',
     'action',
   ];
-  dataSource = BORROWERS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  constructor(public dialog: MatDialog, private adminService: AdminService) {}
 
-  constructor(public dialog: MatDialog) {}
+  fetchData(): void {
+    this.adminService.getBorrowers().subscribe({
+      next: (borrowers) => (this.dataSource = borrowers),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   openDialog(action, obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(BorrowersDialogBoxComponent, {
@@ -56,29 +50,29 @@ export class BorrowersComponent {
   }
 
   addRowData(rowObj) {
-    const d = new Date();
-    this.dataSource.push({
-      id: d.getTime(),
-      name: rowObj.name,
-      address: rowObj.address,
-      phoneNumber: rowObj.phoneNumber,
+    this.adminService.addBorrower(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
-    this.table.renderRows();
   }
+
   updateRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.id === rowObj.id) {
-        value.id = rowObj.id;
-        value.name = rowObj.name;
-        value.address = rowObj.address;
-        value.phoneNumber = rowObj.phoneNumber;
-      }
-      return true;
+    console.log('Updating borrower ' + rowObj);
+    this.adminService.editBorrower(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
   }
+
   deleteRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.id !== rowObj.id;
+    console.log('Deleting borrower ' + rowObj.id + '...');
+    this.adminService.deleteBorrower(rowObj.id).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 }

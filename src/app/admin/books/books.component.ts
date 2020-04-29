@@ -1,32 +1,18 @@
+import { AdminService } from './../admin.service';
 import { BooksDialogBoxComponent } from '../books-dialog-box/books-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Book } from '../types';
 
-const BOOKS: Book[] = [
-  {
-    id: 1,
-    author: 'Douglas Crockford',
-    title: 'How JavaScript Works',
-    publisher: 'Virgule-Solidus LLC',
-    genre: 'Nonfiction',
-  },
-  {
-    id: 2,
-    author: 'Eric Elliot',
-    title: 'Composing Software',
-    publisher: 'Virgule-Solidus LLC',
-    genre: 'Nonfiction',
-  },
-];
-
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
   styleUrls: ['./books.component.css'],
 })
-export class BooksComponent {
+export class BooksComponent implements OnInit {
+  errorMessage: string;
+  dataSource: Book[];
   displayedColumns: string[] = [
     'id',
     'author',
@@ -35,11 +21,18 @@ export class BooksComponent {
     'genre',
     'action',
   ];
-  dataSource = BOOKS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+
+  fetchData(): void {
+    this.adminService.getBooks().subscribe({
+      next: (books) => (this.dataSource = books),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   openDialog(action, obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(BooksDialogBoxComponent, {
@@ -59,30 +52,29 @@ export class BooksComponent {
   }
 
   addRowData(rowObj) {
-    const d = new Date();
-    this.dataSource.push({
-      id: d.getTime(),
-      author: rowObj.author,
-      title: rowObj.title,
-      publisher: rowObj.publisher,
-      genre: rowObj.genre,
+    this.adminService.addBook(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
-    this.table.renderRows();
   }
+
   updateRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.id === rowObj.id) {
-        value.author = rowObj.author;
-        value.title = rowObj.title;
-        value.publisher = rowObj.publisher;
-        value.genre = rowObj.genre;
-      }
-      return true;
+    console.log('Updating book ' + rowObj);
+    this.adminService.editBook(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
   }
+
   deleteRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.id !== rowObj.id;
+    console.log('Deleting book ' + rowObj.id + '...');
+    this.adminService.deleteBook(rowObj.id).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 }

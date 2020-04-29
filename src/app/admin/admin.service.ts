@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Author } from './types';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { Author, Book, Borrower, Branch, Loan, Publisher } from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +39,154 @@ export class AdminService {
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
+  }
+
+  getBooks(): Observable<Book[]> {
+    return this.http.get<Book[]>(this.baseUrl + '/book').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteBook(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/book/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editBook(book: Book): Observable<Book> {
+    return this.http.put<Book>(this.baseUrl + '/book/' + book.id, book).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  addBook(book: Book): Observable<Book> {
+    return this.http.post<Book>(this.baseUrl + '/book', book).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  getBorrowers(): Observable<Borrower[]> {
+    return this.http.get<Borrower[]>(this.baseUrl + '/borrower').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteBorrower(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/borrower/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editBorrower(borrower: Borrower): Observable<Borrower> {
+    return this.http
+      .put<Borrower>(this.baseUrl + '/borrower/' + borrower.id, borrower)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  addBorrower(borrower: Borrower): Observable<Borrower> {
+    return this.http.post<Borrower>(this.baseUrl + '/borrower', borrower).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  getBranches(): Observable<Branch[]> {
+    return this.http.get<Branch[]>(this.baseUrl + '/branch').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteBranch(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/branch/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editBranch(branch: Branch): Observable<Branch> {
+    return this.http
+      .put<Branch>(this.baseUrl + '/branch/' + branch.id, branch)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  addBranch(branch: Branch): Observable<Branch> {
+    return this.http.post<Branch>(this.baseUrl + '/branch', branch).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  getLoans(): Observable<Loan[]> {
+    return this.http.get<Loan[]>(this.baseUrl + '/loan').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteLoan(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/loan/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editLoan(loan: Loan): Observable<Loan> {
+    return this.http.put<Loan>(this.baseUrl + '/loan/' + loan.id, loan).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  addLoan(loan: Loan): Observable<Loan> {
+    return this.http.post<Loan>(this.baseUrl + '/loan', loan).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  getPublishers(): Observable<Publisher[]> {
+    return this.http.get<Publisher[]>(this.baseUrl + '/publisher').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  deletePublisher(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/publisher/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editPublisher(publisher: Publisher): Observable<Publisher> {
+    return this.http
+      .put<Publisher>(this.baseUrl + '/publisher/' + publisher.id, publisher)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  addPublisher(publisher: Publisher): Observable<Publisher> {
+    return this.http
+      .post<Publisher>(this.baseUrl + '/publisher', publisher)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(err: HttpErrorResponse) {

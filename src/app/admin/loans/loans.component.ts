@@ -1,27 +1,18 @@
+import { AdminService } from './../admin.service';
 import { LoansDialogBoxComponent } from './../loans-dialog-box/loans-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Loan } from '../types';
 
-const LOANS: Loan[] = [
-  {
-    id: 1,
-    dateIn: null,
-    dateOut: new Date('April 25, 2020'),
-    dueDate: new Date('May 1, 2020'),
-    borrower: 'Fred',
-    branchName: 'Miami',
-    bookTitle: 'How to Win Friends and Influence People',
-  },
-];
-
 @Component({
   selector: 'app-loans',
   templateUrl: './loans.component.html',
   styleUrls: ['./loans.component.css'],
 })
-export class LoansComponent {
+export class LoansComponent implements OnInit {
+  errorMessage: string;
+  dataSource: Loan[];
   displayedColumns: string[] = [
     'id',
     'dateIn',
@@ -32,11 +23,18 @@ export class LoansComponent {
     'bookTitle',
     'action',
   ];
-  dataSource = LOANS;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+
+  fetchData(): void {
+    this.adminService.getLoans().subscribe({
+      next: (loans) => (this.dataSource = loans),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   openDialog(action, obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(LoansDialogBoxComponent, {
@@ -56,35 +54,29 @@ export class LoansComponent {
   }
 
   addRowData(rowObj) {
-    const d = new Date();
-    this.dataSource.push({
-      id: d.getTime(),
-      dateIn: rowObj.dateIn,
-      dateOut: rowObj.dateOut,
-      dueDate: rowObj.dueDate,
-      borrower: rowObj.borrower,
-      branchName: rowObj.branchName,
-      bookTitle: rowObj.bookTitle,
+    this.adminService.addLoan(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
-    this.table.renderRows();
   }
+
   updateRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.id === rowObj.id) {
-        value.id = rowObj.id;
-        value.dateIn = rowObj.dateIn;
-        value.dateOut = rowObj.dateOut;
-        value.dueDate = rowObj.dueDate;
-        value.borrower = rowObj.borrower;
-        value.branchName = rowObj.branchName;
-        value.bookTitle = rowObj.bookTitle;
-      }
-      return true;
+    console.log('Updating loan ' + rowObj);
+    this.adminService.editLoan(rowObj).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
   }
+
   deleteRowData(rowObj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.id !== rowObj.id;
+    console.log('Deleting loan ' + rowObj.id + '...');
+    this.adminService.deleteLoan(rowObj.id).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 }
