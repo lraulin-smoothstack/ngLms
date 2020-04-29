@@ -1,0 +1,62 @@
+<h1 mat-dialog-title>
+  Loan Action :: <strong>{{ action }}</strong>
+</h1>
+<div mat-dialog-content>
+  <div *ngIf="action != 'Delete'; else elseTemplate">
+    <mat-form-field>
+      <input
+        type="date"
+        placeholder="{{ action }} Returned Date"
+        matInput
+        [(ngModel)]="localData.dateIn"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="date"
+        placeholder="{{ action }} Borrowed Date"
+        matInput
+        [(ngModel)]="localData.dateOut"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="date"
+        placeholder="{{ action }} Due Date"
+        matInput
+        [(ngModel)]="localData.dueDate"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        placeholder="{{ action }} Borrower"
+        matInput
+        [(ngModel)]="localData.borrower"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        placeholder="{{ action }} Book Title"
+        matInput
+        [(ngModel)]="localData.bookTitle"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        placeholder="{{ action }} Branch"
+        matInput
+        [(ngModel)]="localData.branchName"
+      />
+    </mat-form-field>
+  </div>
+  <ng-template #elseTemplate>
+    Sure to delete <b>{{ localData.name }}</b
+    >?
+  </ng-template>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="doAction()">{{ action }}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">
+    Cancel
+  </button>
+</div>
