@@ -6,7 +6,6 @@ export interface Book {
   id: number;
   title: string;
   authors: Array<Author>;
-  genres: Array<Genre>;
-  branch: Branch;
+  genres: Array<Genre>;  
   dueDate: Date;
 }

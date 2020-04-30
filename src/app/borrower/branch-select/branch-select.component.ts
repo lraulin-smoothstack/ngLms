@@ -51,4 +51,9 @@ export class BranchSelectComponent implements OnInit {
      switchMap((term: string) => this.searchBranches(term))
    );
   }
+
+  selectBranch(branch: Branch) {
+    this.borrowerService.branch = branch;
+    this.router.navigate([`borrower/home/branch/${branch.id}/books`])
+  }
 }

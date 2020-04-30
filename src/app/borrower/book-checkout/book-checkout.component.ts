@@ -22,22 +22,21 @@ import { Borrower } from '../entity/borrower';
 })
 export class BookCheckoutComponent implements OnInit {
 
-  branchId: string;
-  borrowerId: string;
-  books: Array<any>;
   book: Book;
+  branch: Branch;
+  books: Array<any>;
+  borrower: Borrower;
+
   searchBooks$: Observable<Book[]>;
   searchTerms = new Subject<string>();
 
   constructor(
     public router: Router,
-    private route: ActivatedRoute,
     private cookieService: CookieService,
     private borrowerService: BorrowerService
   ) {
-    this.route.params.subscribe( params => {
-      this.branchId = params.id;
-    });
+    this.borrower = this.borrowerService.borrower;
+    this.branch = this.borrowerService.branch;
   }
 
   search(term: string): void {
@@ -58,52 +57,50 @@ export class BookCheckoutComponent implements OnInit {
   }
 
   selectedBook(book): void {
-    if(book) {
-      this.book = {
-        id: book.id,
-        title: book.title,
-        authors: book.authors,
-        genres: book.genres,
-        branch: book.branch,
-        dueDate: book.dueDate
-      }
-    } else {
-      this.book = null;
-    }
+    // if(book) {
+    //   this.book = {
+    //     id: book.id,
+    //     title: book.title,
+    //     authors: book.authors,
+    //     genres: book.genres,
+    //     branch: book.branch,
+    //     dueDate: book.dueDate
+    //   }
+    // } else {
+    //   this.book = null;
+    // }
   }
 
   checkoutBook(): void {
     console.log("CHECKING OUT BOOK");
-    this.borrowerService.checkoutBook(this.borrowerId, this.book)
-      .subscribe( (res) => {
-        console.log(res);
-      });
+    // this.borrowerService.checkoutBook(this.borrower.id, this.book)
+    //   .subscribe( (res) => {
+    //     console.log(res);
+    //   });
   }
 
   ngOnInit(): void {
     const cookieExists: boolean = this.cookieService.check('borrowerId');
-    if(cookieExists){
-      this.borrowerId = this.cookieService.get('borrowerId');
-      this.borrowerService.getAvailableBooks(this.borrowerId, this.branchId)
-        .subscribe( (books) => {
-          this.books = books.map( b => {
-            let book = {}
-            book = b;
-            book['authors'] = b.authors.map( author => author.name);
-            book['genres'] = b.genres.map( genre => genre.name);
-            return book;
-          })
-          this.search('');
-      });
-
-      this.searchBooks$ = this.searchTerms.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((term: string) => this.searchBooks(term))
-      );
-
-    } else {
-      this.router.navigate(['/borrower/login']);
-    }
+    // if(!this.borrower || !this.branch){
+    //   this.router.navigate(['/borrower/login']);
+    // } else {
+    //   this.borrowerService.getAvailableBooks(this.branch.id, this.borrower.id)
+    //     .subscribe( (books) => {
+    //       this.books = books.map( b => {
+    //         let book = {}
+    //         book = b;
+    //         book['authors'] = b.authors.map( author => author.name);
+    //         book['genres'] = b.genres.map( genre => genre.name);
+    //         return book;
+    //       })
+    //       this.search('');
+    //   });
+    //
+    //   this.searchBooks$ = this.searchTerms.pipe(
+    //     debounceTime(300),
+    //     distinctUntilChanged(),
+    //     switchMap((term: string) => this.searchBooks(term))
+    //   );
+    // }
   }
 }

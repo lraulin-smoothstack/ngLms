@@ -15,6 +15,9 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class BorrowerService {
 
+  borrower: Borrower;
+  branch: Branch;
+
   httpOptions = {
     // headers: new HttpHeaders({ 'Content-Type': 'application/text' })
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -36,17 +39,18 @@ export class BorrowerService {
     // const url = 'http://localhost:8081/lms/borrower/branches/1/borrowers/1';
     // Temp route just to get return data for login
     const borrower = {
-      id: "1",
+      id: 1,
       address: "1325 S 76TH Ave. Yakima, Washington",
       name: "Joe Smith",
       phone_number: "509-287-4787"
     }
+    this.borrower = borrower;
     return borrower;
   }
 
-  getLoans(id: string): Observable<Loan[]> {
+  getLoans(borrowerId: number): Observable<Loan[]> {
     const url = 'http://localhost:8080/lms/borrower/loans';
-    const body = {'id': id };
+    const body = {'id': borrowerId };
     return this.http.post<Loan[]>(url, body, this.httpOptions).pipe(
       tap((loans: Loan[]) => console.log(loans)),
       catchError(this.handleError<Loan[]>('BorrowerSvc::getLoans()'))
@@ -61,7 +65,7 @@ export class BorrowerService {
     );
   }
 
-  getAvailableBooks(branchId: string, borrowerId: string): Observable<Book[]> {
+  getAvailableBooks(branchId: string, borrowerId: number): Observable<Book[]> {
     const url = `http://localhost:8080/lms/borrower/branch/${branchId}/available-books/`;
     const body = {'id': borrowerId };
     return this.http.post<Book[]>(url, body, this.httpOptions).pipe(
@@ -70,37 +74,9 @@ export class BorrowerService {
     );
   }
 
-  checkinBook(borrower: Borrower, book: Book): Observable<any> {
-    const url = 'http://localhost:8080/lms/borrower/book/checkin';
-    console.log("BOOK IN CHECKINBOOK SERVICE");
-    console.log(book);
-    const body = {
-    	"book": {
-    		"id": 1,
-    		"title": "Harry Potter and the Goblet of Fire",
-    		"publisher": {
-    			"id": 1,
-    			"name": "Penguin House Inc.",
-    			"address": "1234 Arlington Ave. Fairfax Virginia 27363",
-    			"phoneNumber": "762-282-8787"
-    		},
-    		"authors": [{ "id": 1, "name": "J.K. Rolling" }],
-    		"genres": [{ "id": 1, "name": "Fiction" } ]
-    	},
-    	"borrower": {
-    		"id": 1,
-    		"name": "Joe Smith",
-    		"address": "1325 S 76TH Ave. Yakima, Washington",
-    		"phoneNumber": "509-287-4787"
-    	},
-    	"branch": {
-    		"id": 2,
-    		"name": "Chantilly Regional Library",
-    		"address": "17637 Fairlakes Parkway Fairfax, Virginia"
-    	}
-    }
-
-    return this.http.post<any>(url, body, this.httpOptions).pipe(
+  checkinBook(loan: Loan): Observable<any> {
+    const url = 'http://localhost:8080/lms/borrower/checkin';
+    return this.http.post<any>(url, loan.id, this.httpOptions).pipe(
       tap((res: any) => console.log(res)),
       catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
     );

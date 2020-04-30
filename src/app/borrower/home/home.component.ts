@@ -20,8 +20,7 @@ export class HomeComponent implements OnInit {
 
   borrower: Borrower;
   loans: Array<Loan>;
-  book: Book;
-  branch: Branch;
+  loan: Loan;
 
   constructor(
     public router: Router,
@@ -34,8 +33,7 @@ export class HomeComponent implements OnInit {
 
     if(cookieExists){
       const borrowerId = this.cookieService.get('borrowerId');
-      // Temp until auth server up
-      this.borrower = this.borrowerService.getBorrower(borrowerId);
+
       // PROD
       // this.borrowerService.getBorrower(borrowerId)
       //   .subscribe( (borrower) => {
@@ -43,43 +41,43 @@ export class HomeComponent implements OnInit {
       //     this.borrowerService.getLoans(this.borrower.id)
       //       .subscribe( (loans) => { this.loans = loans.filter(loan => loan.dateIn == null); });
       // });
+
+      // DEV: Until auth server is up
+      this.borrower = this.borrowerService.getBorrower(borrowerId);
+      this.borrowerService.getLoans(this.borrower.id)
+        .subscribe( (loans) => {
+          this.loans = loans.filter(loan => loan.dateIn == null);
+         });
+
     } else {
       this.router.navigate(['/borrower/login']);
     }
   }
 
-  selectedBook(book): void {
-    if(book) {
-      this.book = {
-        id: book.id,
-        title: book.title,
-        // authors: book.authors.map( author => author.name ),
-        authors: book.authors.map( author => author.name),
-        genres: book.genres.map( genre => genre.name),
-        branch: book.branch,
-        dueDate: book.dueDate
-      }
-    } else {
-      this.book = null;
-    }
+  selectedLoan(loan): void {
+    this.loan = loan;
   }
 
   checkoutBook(): void {
     this.router.navigate(['/borrower/branch']);
   }
 
-  checkinBook(): void {
-    this.borrowerService.checkinBook(this.borrower, this.book)
+  checkinBook(loan: Loan): void {
+    this.borrowerService.checkinBook(loan)
       .subscribe( (res) => {
-        console.log(res);
         this.borrowerService.getLoans(this.borrower.id)
           .subscribe( (loans) => {
-            console.log("BOOK CHECKED IN");
-            this.loans = loans;
-            console.log("NEW LOANS");
-            console.log(this.loans);
+            this.loans = loans.filter(loan => loan.dateIn == null);
           });
       });
+  }
+
+  getBookAuthors(loan: Loan) {
+    return loan.id.book.authors.map( author => author.name );
+  }
+
+  getBookGenres(loan: Loan) {
+    return loan.id.book.genres.map( genre => genre.name );
   }
 
   logout(): void {
