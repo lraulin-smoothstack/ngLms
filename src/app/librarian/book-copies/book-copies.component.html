@@ -12,6 +12,29 @@
   <span className="sr-only">Loading...</span>
 </div>
 
+<div class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="totalAuthors"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
+
+<div class="ds-l-row ds-u-margin-top--3">
+  <label for="searchInput">Search:</label>
+  <input
+    type="text"
+    id="searchInput"
+    name="searchString"
+    [(ngModel)]="searchString"
+    (input)="searchAuthors()"
+  />
+</div>
+
 <div *ngIf="!bookCopyService.isLoading">
   <hr />
 
