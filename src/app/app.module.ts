@@ -8,6 +8,7 @@ import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PagerService } from './common/services/pager.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [PagerService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
