@@ -1,8 +1,7 @@
 import { AdminService } from './../admin.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTable } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
 import { Publisher } from '../types';
+import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-publishers',
@@ -10,43 +9,59 @@ import { Publisher } from '../types';
   styleUrls: ['./publishers.component.css'],
 })
 export class PublishersComponent implements OnInit {
+  private modalRef: NgbModalRef;
+  items: Publisher[] = [];
+  selectedItem: Publisher;
   errorMessage: string;
-  dataSource: Publisher[];
-  displayedColumns: string[] = [
-    'id',
-    'name',
-    'address',
-    'phoneNumber',
-    'action',
-  ];
+  closeResult: string;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private modalService: NgbModal
+  ) {}
+
+  open(content, item?: Publisher) {
+    this.selectedItem = item
+      ? item
+      : { id: null, name: '', address: '', phoneNumber: '' };
+    this.modalRef = this.modalService.open(content);
+    this.modalRef.result.then(
+      (result) => {
+        this.errorMessage = '';
+        this.closeResult = `Closed with ${result}`;
+      },
+      (reason) => {
+        this.errorMessage = `${reason}`;
+        this.closeResult = `Dismissed`;
+      }
+    );
+  }
 
   fetchData(): void {
     this.adminService.getPublishers().subscribe({
-      next: (publishers) => (this.dataSource = publishers),
+      next: (items) => (this.items = items),
       error: (err) => (this.errorMessage = err),
     });
   }
 
-  addRowData(rowObj) {
-    this.adminService.addPublisher(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+  submit() {
+    if (this.selectedItem.id) {
+      this.adminService.editPublisher(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    } else {
+      this.adminService.addPublisher(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    }
+
+    this.modalRef.close();
   }
 
-  updateRowData(rowObj) {
-    console.log('Updating publisher ' + rowObj);
-    this.adminService.editPublisher(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  deleteRowData(rowObj) {
-    console.log('Deleting publisher ' + rowObj.id + '...');
-    this.adminService.deletePublisher(rowObj.id).subscribe({
+  delete(id: number) {
+    this.adminService.deletePublisher(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });

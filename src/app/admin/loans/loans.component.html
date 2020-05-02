@@ -1,1 +1,122 @@
-<h2>Book Loans</h2>
+<h2>
+  Book Loans
+  <button type="button" class="btn btn-primary" (click)="open(editLoanModal)">
+    Add
+  </button>
+</h2>
+
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Date Out</th>
+      <th>Due Date</th>
+      <th>Date In</th>
+      <th>Borrower</th>
+      <th>Title</th>
+      <th>Branch</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let loan of items; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ loan.dateOut }}</td>
+      <td>{{ loan.dueDate }}</td>
+      <td>{{ loan.dateIn }}</td>
+      <td>{{ loan.borrower }}</td>
+      <td>{{ loan.bookTitle }}</td>
+      <td>{{ loan.branchName }}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="open(editLoanModal, loan)"
+        >
+          Edit
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger" (click)="delete(loan.id)">
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #editLoanModal let-c="close" let-d="dismiss">
+  <div class="ds-c-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ selectedItem ? "Edit" : "Add" }} Loan</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="d()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submit()">
+          <div class="form-group">
+            <label for="dateOut" class="col-form-label">Date Out </label>
+            <input
+              class="form-control"
+              name="dateOut"
+              id="dateOut"
+              type="date"
+              [(ngModel)]="selectedItem.dateOut"
+              required
+            />
+            <label for="dueDate" class="col-form-label">Due Date </label>
+            <input
+              class="form-control"
+              name="dueDate"
+              id="dueDate"
+              type="date"
+              [(ngModel)]="selectedItem.dueDate"
+              required
+            />
+            <label for="dateIn" class="col-form-label">Date In </label>
+            <input
+              class="form-control"
+              name="dateIn"
+              id="dateIn"
+              type="date"
+              [(ngModel)]="selectedItem.dateIn"
+              required
+            />
+            <label for="borrower" class="col-form-label">Borrower </label>
+            <input
+              class="form-control"
+              name="borrower"
+              id="borrower"
+              [(ngModel)]="selectedItem.borrower"
+              required
+            />
+            <label for="bookTitle" class="col-form-label">Title </label>
+            <input
+              class="form-control"
+              name="bookTitle"
+              id="bookTitle"
+              [(ngModel)]="selectedItem.bookTitle"
+              required
+            />
+            <label for="branchName" class="col-form-label">Branch </label>
+            <input
+              class="form-control"
+              name="branchName"
+              id="branchName"
+              [(ngModel)]="selectedItem.branchName"
+              required
+            />
+          </div>
+          <input type="submit" class="btn btn-primary" value="Save" />
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

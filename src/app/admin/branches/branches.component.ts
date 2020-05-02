@@ -44,12 +44,12 @@ export class BranchesComponent implements OnInit {
 
   submit() {
     if (this.selectedItem.id) {
-      this.adminService.editAuthor(this.selectedItem).subscribe({
+      this.adminService.editBranch(this.selectedItem).subscribe({
         next: (_) => this.fetchData(),
         error: (err) => (this.errorMessage = err),
       });
     } else {
-      this.adminService.addAuthor(this.selectedItem).subscribe({
+      this.adminService.addBranch(this.selectedItem).subscribe({
         next: (_) => this.fetchData(),
         error: (err) => (this.errorMessage = err),
       });
@@ -59,7 +59,7 @@ export class BranchesComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.adminService.deleteBorrower(id).subscribe({
+    this.adminService.deleteBranch(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });

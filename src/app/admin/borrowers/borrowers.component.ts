@@ -46,12 +46,12 @@ export class BorrowersComponent implements OnInit {
 
   submit() {
     if (this.selectedItem.id) {
-      this.adminService.editAuthor(this.selectedItem).subscribe({
+      this.adminService.editBorrower(this.selectedItem).subscribe({
         next: (_) => this.fetchData(),
         error: (err) => (this.errorMessage = err),
       });
     } else {
-      this.adminService.addAuthor(this.selectedItem).subscribe({
+      this.adminService.addBorrower(this.selectedItem).subscribe({
         next: (_) => this.fetchData(),
         error: (err) => (this.errorMessage = err),
       });
