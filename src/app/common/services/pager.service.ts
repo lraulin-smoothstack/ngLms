@@ -1,4 +1,15 @@
 import { Injectable } from '@angular/core';
+export interface Pager {
+  totalItems: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  startPage: number;
+  endPage: number;
+  startIndex: number;
+  endIndex: number;
+  pages: number[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +20,8 @@ export class PagerService {
   getPager(totalItems: number, currentPage: number = 1, pageSize: number) {
     // calculate total pages
     const totalPages = Math.ceil(totalItems / pageSize);
-    let startPage: number, endPage: number;
+    let startPage: number;
+    let endPage: number;
     if (totalPages <= 10) {
       // less than 10 total pages so show all
       startPage = 1;
@@ -39,15 +51,15 @@ export class PagerService {
     );
     // return object with all pager properties required by the view
     return {
-      totalItems: totalItems,
-      currentPage: currentPage,
-      pageSize: pageSize,
-      totalPages: totalPages,
-      startPage: startPage,
-      endPage: endPage,
-      startIndex: startIndex,
-      endIndex: endIndex,
-      pages: pages,
+      totalItems,
+      currentPage,
+      pageSize,
+      totalPages,
+      startPage,
+      endPage,
+      startIndex,
+      endIndex,
+      pages,
     };
   }
 }

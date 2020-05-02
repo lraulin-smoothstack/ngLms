@@ -1,3 +1,4 @@
+import { PagerService, Pager } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
 import { Author } from '../types';
@@ -14,10 +15,15 @@ export class AuthorsComponent implements OnInit {
   selectedAuthor: Author;
   errorMessage: string;
   closeResult: string;
+  searchString = '';
+  pager: Pager;
+  pagedItems: Author[];
+  itemsPerPage = 5;
 
   constructor(
     private adminService: AdminService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private pagerService: PagerService
   ) {}
 
   open(content, author?: Author) {
@@ -37,7 +43,10 @@ export class AuthorsComponent implements OnInit {
 
   fetchData(): void {
     this.adminService.getAuthors().subscribe({
-      next: (authors) => (this.authors = authors),
+      next: (authors) => {
+        this.authors = authors;
+        this.setPage(1);
+      },
       error: (err) => (this.errorMessage = err),
     });
   }
@@ -63,6 +72,25 @@ export class AuthorsComponent implements OnInit {
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });
+  }
+
+  setPage(page: number): void {
+    this.pager = this.pagerService.getPager(
+      this.authors.length,
+      page,
+      this.itemsPerPage
+    );
+    console.log('PAGER:');
+    console.log(`totalItems: ${this.authors.length}`);
+    console.log(`page: ${page}`);
+    console.log(`itemsPerPage: ${this.itemsPerPage}`);
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+    this.pagedItems = this.authors.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    );
   }
 
   ngOnInit(): void {

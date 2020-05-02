@@ -1,3 +1,4 @@
+import { PagerService } from './../common/services/pager.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
@@ -10,6 +11,7 @@ import { PublishersComponent } from './publishers/publishers.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,13 @@ import { LoansComponent } from './loans/loans.component';
     BorrowersComponent,
     LoansComponent,
   ],
-  imports: [CommonModule, AdminRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    NgbModule,
+  ],
+  providers: [PagerService],
 })
 export class AdminModule {}
