@@ -10,11 +10,6 @@ import { PublishersComponent } from './publishers/publishers.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -26,16 +21,6 @@ import { MatButtonModule } from '@angular/material/button';
     BorrowersComponent,
     LoansComponent,
   ],
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    MatTableModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    FormsModule,
-    HttpClientModule,
-  ],
+  imports: [CommonModule, AdminRoutingModule, FormsModule, HttpClientModule],
 })
 export class AdminModule {}

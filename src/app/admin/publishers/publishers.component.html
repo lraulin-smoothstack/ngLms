@@ -1,12 +1,5 @@
 <h2>
   Publishers
-  <button
-    type="button"
-    class="btn btn-primary"
-    (click)="open(editPublisherModal)"
-  >
-    Add
-  </button>
 </h2>
 
 <table class="table table-dark">
@@ -14,6 +7,16 @@
     <tr>
       <th>Name</th>
       <th>Address</th>
+      <th></th>
+      <th>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="open(editPublisherModal)"
+        >
+          Add
+        </button>
+      </th>
     </tr>
   </thead>
   <tbody>
