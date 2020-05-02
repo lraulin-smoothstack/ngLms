@@ -1,59 +1,103 @@
-<h2>Books</h2>
-
-<div class="container text-center">
-  <button
-    mat-button
-    (click)="openDialog('Add', {})"
-    mat-flat-button
-    color="primary"
-  >
-    Add Row
+<h2>
+  Books
+  <button type="button" class="btn btn-primary" (click)="open(editBookModal)">
+    Add
   </button>
+</h2>
 
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    #mytable
-    class="my-table mat-elevation-z8"
-  >
-    <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
-
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>ID.</th>
-      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="author">
-      <th mat-header-cell *matHeaderCellDef>Author</th>
-      <td mat-cell *matCellDef="let element">{{ element.author }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef>Title</th>
-      <td mat-cell *matCellDef="let element">{{ element.title }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="publisher">
-      <th mat-header-cell *matHeaderCellDef>Publisher</th>
-      <td mat-cell *matCellDef="let element">{{ element.publisher }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="genre">
-      <th mat-header-cell *matHeaderCellDef>Genre</th>
-      <td mat-cell *matCellDef="let element">{{ element.genre }}</td>
-    </ng-container>
-
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let element" class="action-link">
-        <a (click)="openDialog('Update', element)">Edit</a> |
-        <a (click)="openDialog('Delete', element)">Delete</a>
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Publisher</th>
+      <th>Genre</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let book of books; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+      <td>{{ book.publisher }}</td>
+      <td>{{ book.genre }}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="open(editBookModal, book)"
+        >
+          Edit
+        </button>
       </td>
-    </ng-container>
+      <td>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="deleteBook(book.id)"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</div>
+<ng-template #editBookModal let-c="close" let-d="dismiss">
+  <div class="ds-c-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ selectedBook ? "Edit" : "Add" }} Book</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="d()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submit()">
+          <div class="form-group">
+            <label for="title" class="col-form-label">Title </label>
+            <input
+              class="form-control"
+              name="title"
+              id="title"
+              [(ngModel)]="selectedBook.title"
+              required
+            />
+            <label for="author" class="col-form-label">Author </label>
+            <input
+              class="form-control"
+              name="author"
+              id="author"
+              [(ngModel)]="selectedBook.author"
+              required
+            />
+            <label for="publisher" class="col-form-label">Publisher </label>
+            <input
+              class="form-control"
+              name="publisher"
+              id="publisher"
+              [(ngModel)]="selectedBook.publisher"
+              required
+            />
+            <label for="genre" class="col-form-label">Genre </label>
+            <input
+              class="form-control"
+              name="genre"
+              id="genre"
+              [(ngModel)]="selectedBook.genre"
+              required
+            />
+          </div>
+          <input type="submit" class="btn btn-primary" value="Save" />
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

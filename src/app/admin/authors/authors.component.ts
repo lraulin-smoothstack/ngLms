@@ -1,9 +1,7 @@
 import { AdminService } from './../admin.service';
-import { AuthorsDialogBoxComponent } from './../authors-dialog-box/authors-dialog-box.component';
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { MatTable } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { Author } from '../types';
+import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-authors',
@@ -11,57 +9,57 @@ import { Author } from '../types';
   styleUrls: ['./authors.component.css'],
 })
 export class AuthorsComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'action'];
-  dataSource: Author[] = [];
+  private modalRef: NgbModalRef;
+  authors: Author[] = [];
+  selectedAuthor: Author;
   errorMessage: string;
+  closeResult: string;
 
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  constructor(
+    private adminService: AdminService,
+    private modalService: NgbModal
+  ) {}
 
-  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+  open(content, author?: Author) {
+    this.selectedAuthor = author ? author : { id: null, name: '' };
+    this.modalRef = this.modalService.open(content);
+    this.modalRef.result.then(
+      (result) => {
+        this.errorMessage = '';
+        this.closeResult = `Closed with ${result}`;
+      },
+      (reason) => {
+        this.errorMessage = `${reason}`;
+        this.closeResult = `Dismissed`;
+      }
+    );
+  }
 
   fetchData(): void {
     this.adminService.getAuthors().subscribe({
-      next: (authors) => (this.dataSource = authors),
+      next: (authors) => (this.authors = authors),
       error: (err) => (this.errorMessage = err),
     });
   }
 
-  openDialog(action, obj) {
-    obj.action = action;
-    const dialogRef = this.dialog.open(AuthorsDialogBoxComponent, {
-      width: '250px',
-      data: obj,
-    });
+  submit() {
+    if (this.selectedAuthor.id) {
+      this.adminService.editAuthor(this.selectedAuthor).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    } else {
+      this.adminService.addAuthor(this.selectedAuthor).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.event === 'Add') {
-        this.addRowData(result.data);
-      } else if (result.event === 'Update') {
-        this.updateRowData(result.data);
-      } else if (result.event === 'Delete') {
-        this.deleteRowData(result.data);
-      }
-    });
+    this.modalRef.close();
   }
 
-  addRowData(rowObj) {
-    this.adminService.addAuthor(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  updateRowData(rowObj) {
-    console.log('Updating author ' + rowObj);
-    this.adminService.editAuthor(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  deleteRowData(rowObj) {
-    console.log('Deleting author ' + rowObj.id + '...');
-    this.adminService.deleteAuthor(rowObj.id).subscribe({
+  deleteAuthor(id: number) {
+    this.adminService.deleteAuthor(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });
