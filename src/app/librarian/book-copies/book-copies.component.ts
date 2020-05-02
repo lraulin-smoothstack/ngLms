@@ -33,10 +33,34 @@ export class BookCopiesComponent implements OnInit {
     private pagerService: PagerService
   ) {}
 
+  ngOnInit(): void {
+    if (this.activatedRoute.snapshot.paramMap.has('id')) {
+      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
+      this.branchId = parseInt(tempId, 10);
+
+      if (this.branchId) {
+        this.branchService.getBranch(
+          this.branchId,
+          (data) => (this.branch = data)
+        );
+        this.loadBookCopies();
+      }
+    }
+  }
+
+  loadBookCopies(): void {
+    this.bookCopyService.getBookCopies(this.branchId, (data: BookCopy[]) => {
+      data.map((v, i) => (v['index'] = i));
+      this.totalItems = data.length;
+      this.setPage(1);
+    });
+  }
+
   deleteBookCopy(bookCopy): void {
     this.bookCopyService.deleteBookCopy(
       bookCopy.id.book.id,
-      bookCopy.id.branch.id
+      bookCopy.id.branch.id,
+      (data) => this.setPage(1)
     );
   }
 
@@ -88,23 +112,6 @@ export class BookCopiesComponent implements OnInit {
       this.bookCopyService.bookCopies = this.bookCopyService.bookCopies.filter(
         (bc) => this.searchString == bc.id.book.title
       );
-    }
-  }
-
-  ngOnInit(): void {
-    if (this.activatedRoute.snapshot.paramMap.has('id')) {
-      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
-      this.branchId = parseInt(tempId, 10);
-
-      this.bookCopyService.getBookCopies(this.branchId, (data: BookCopy[]) => {
-        data.map((v, i) => (v['index'] = i));
-        this.branchService.getBranch(
-          this.branchId,
-          (data) => (this.branch = data)
-        );
-        this.totalItems = data.length;
-        this.setPage(1);
-      });
     }
   }
 }

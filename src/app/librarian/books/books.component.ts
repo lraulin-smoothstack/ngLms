@@ -6,6 +6,7 @@ import { Book } from '../models/book.interface';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BookCopiesService } from '../services/book-copies.service';
 import { BookCopy } from '../models/book-copy.interface';
+import { PagerService } from 'src/app/common/services/pager.service';
 
 @Component({
   selector: 'app-books',
@@ -15,19 +16,41 @@ import { BookCopy } from '../models/book-copy.interface';
 export class BooksComponent implements OnInit {
   selectedBook: Book;
   branchId: number;
-  amount: number;
+  amount: number = 0;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
+  totalItems: number;
+  pager: any = {};
+  pagedItems: any[];
+  itemsPerPage = 5;
 
   constructor(
     public bookService: BooksService,
     public bookCopyService: BookCopiesService,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private router: Router
-  ) {
-    this.amount = 0;
+    private router: Router,
+    private pagerService: PagerService
+  ) {}
+
+  ngOnInit(): void {
+    if (this.activatedRoute.snapshot.paramMap.has('id')) {
+      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
+      this.branchId = parseInt(tempId, 10);
+
+      if (this.branchId) {
+        this.loadBooks();
+      }
+    }
+  }
+
+  loadBooks(): void {
+    this.bookService.getBooks(this.branchId, (data) => {
+      data.map((v, i) => (v['index'] = i));
+      this.totalItems = data.length;
+      this.setPage(1);
+    });
   }
 
   addBookCopy(): void {
@@ -60,14 +83,18 @@ export class BooksComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    if (this.activatedRoute.snapshot.paramMap.has('id')) {
-      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
-      this.branchId = parseInt(tempId, 10);
-
-      if (this.branchId) {
-        this.bookService.getBooks(this.branchId);
-      }
+  setPage(page: number): void {
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
     }
+    this.pager = this.pagerService.getPager(
+      this.bookService.books.length,
+      page,
+      this.itemsPerPage
+    );
+    this.pagedItems = this.bookService.books.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    );
   }
 }

@@ -72,7 +72,7 @@
     </tbody>
   </table>
 
-  <div class="ds-l-row ds-u-margin-top--3">
+  <div *ngIf="totalItems > 0" class="ds-l-row ds-u-margin-top--3">
     <div class="ds-l-col--9">
       <ngb-pagination
         [collectionSize]="totalItems"
