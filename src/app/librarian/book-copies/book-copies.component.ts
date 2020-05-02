@@ -19,7 +19,6 @@ export class BookCopiesComponent implements OnInit {
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
-  searchString = '';
   totalItems: number;
   pager: any = {};
   pagedItems: any[];
@@ -101,17 +100,5 @@ export class BookCopiesComponent implements OnInit {
       this.pager.startIndex,
       this.pager.endIndex + 1
     );
-  }
-
-  searchBookCopies(): void {
-    if (this.searchString === '') {
-      if (this.bookCopyService.bookCopies.length != this.totalItems) {
-        this.bookCopyService.getBookCopies(this.branchId);
-      }
-    } else {
-      this.bookCopyService.bookCopies = this.bookCopyService.bookCopies.filter(
-        (bc) => this.searchString == bc.id.book.title
-      );
-    }
   }
 }

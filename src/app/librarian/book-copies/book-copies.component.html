@@ -13,22 +13,10 @@
 </div>
 
 <div *ngIf="!bookCopyService.isLoading">
-  <div class="ds-l-row ds-u-margin-top--3">
-    <label for="searchInput">Search by Title:</label>
-    <input
-      type="text"
-      id="searchInput"
-      name="searchString"
-      [(ngModel)]="searchString"
-      (input)="searchBookCopies()"
-    />
-  </div>
-
   <hr />
   <table class="table table-dark">
     <thead>
       <tr>
-        <th>#</th>
         <th>title</th>
         <th>Authors</th>
         <th>Publisher</th>
@@ -40,7 +28,6 @@
     </thead>
     <tbody>
       <tr *ngFor="let bookCopy of pagedItems">
-        <th scope="row">{{ bookCopy.index + 1 }}</th>
         <td>{{ bookCopy.id.book.title }}</td>
         <td>
           <span *ngFor="let a of bookCopy.id.book.authors">{{ a.name }}, </span>
