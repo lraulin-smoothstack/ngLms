@@ -12,32 +12,19 @@
   <span className="sr-only">Loading...</span>
 </div>
 
-<div class="ds-l-row ds-u-margin-top--3">
-  <div class="ds-l-col--9">
-    <ngb-pagination
-      [collectionSize]="totalAuthors"
-      [(page)]="pager.currentPage"
-      [maxSize]="5"
-      [boundaryLinks]="true"
-      (pageChange)="setPage($event)"
-    ></ngb-pagination>
-  </div>
-</div>
-
-<div class="ds-l-row ds-u-margin-top--3">
-  <label for="searchInput">Search:</label>
-  <input
-    type="text"
-    id="searchInput"
-    name="searchString"
-    [(ngModel)]="searchString"
-    (input)="searchAuthors()"
-  />
-</div>
-
 <div *ngIf="!bookCopyService.isLoading">
-  <hr />
+  <div class="ds-l-row ds-u-margin-top--3">
+    <label for="searchInput">Search by Title:</label>
+    <input
+      type="text"
+      id="searchInput"
+      name="searchString"
+      [(ngModel)]="searchString"
+      (input)="searchBookCopies()"
+    />
+  </div>
 
+  <hr />
   <table class="table table-dark">
     <thead>
       <tr>
@@ -52,8 +39,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let bookCopy of bookCopyService.bookCopies; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
+      <tr *ngFor="let bookCopy of pagedItems">
+        <th scope="row">{{ bookCopy.index + 1 }}</th>
         <td>{{ bookCopy.id.book.title }}</td>
         <td>
           <span *ngFor="let a of bookCopy.id.book.authors">{{ a.name }}, </span>
@@ -84,6 +71,19 @@
       </tr>
     </tbody>
   </table>
+
+  <div class="ds-l-row ds-u-margin-top--3">
+    <div class="ds-l-col--9">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="pager.currentPage"
+        [maxSize]="5"
+        [pageSize]="itemsPerPage"
+        [boundaryLinks]="true"
+        (pageChange)="setPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
 </div>
 
 <ng-template #editBookCopyModal let-c="close" let-d="dismiss">
