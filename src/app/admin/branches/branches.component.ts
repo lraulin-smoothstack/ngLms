@@ -1,5 +1,4 @@
 import { AdminService } from './../admin.service';
-import { BranchesDialogBoxComponent } from './../branches-dialog-box/branches-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,34 +12,13 @@ import { Branch } from '../types';
 export class BranchesComponent implements OnInit {
   errorMessage: string;
   dataSource: Branch[];
-  displayedColumns: string[] = ['id', 'name', 'address', 'action'];
 
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
-
-  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+  constructor(private adminService: AdminService) {}
 
   fetchData(): void {
     this.adminService.getBranches().subscribe({
       next: (branches) => (this.dataSource = branches),
       error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  openDialog(action, obj) {
-    obj.action = action;
-    const dialogRef = this.dialog.open(BranchesDialogBoxComponent, {
-      width: '250px',
-      data: obj,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.event === 'Add') {
-        this.addRowData(result.data);
-      } else if (result.event === 'Update') {
-        this.updateRowData(result.data);
-      } else if (result.event === 'Delete') {
-        this.deleteRowData(result.data);
-      }
     });
   }
 

@@ -1,5 +1,4 @@
 import { AdminService } from './../admin.service';
-import { BorrowersDialogBoxComponent } from './../borrowers-dialog-box/borrowers-dialog-box.component';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,31 +20,12 @@ export class BorrowersComponent implements OnInit {
     'action',
   ];
 
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
-  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+  constructor(private adminService: AdminService) {}
 
   fetchData(): void {
     this.adminService.getBorrowers().subscribe({
       next: (borrowers) => (this.dataSource = borrowers),
       error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  openDialog(action, obj) {
-    obj.action = action;
-    const dialogRef = this.dialog.open(BorrowersDialogBoxComponent, {
-      width: '250px',
-      data: obj,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.event === 'Add') {
-        this.addRowData(result.data);
-      } else if (result.event === 'Update') {
-        this.updateRowData(result.data);
-      } else if (result.event === 'Delete') {
-        this.deleteRowData(result.data);
-      }
     });
   }
 
