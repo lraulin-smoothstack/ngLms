@@ -1,12 +1,5 @@
 <h2>
   Borrowers
-  <button
-    type="button"
-    class="btn btn-primary"
-    (click)="open(editBorrowerModal)"
-  >
-    Add
-  </button>
 </h2>
 <table class="table table-dark">
   <thead>
@@ -14,6 +7,16 @@
       <th>Name</th>
       <th>Address</th>
       <th>Phone Number</th>
+      <th></th>
+      <th>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="open(editBorrowerModal)"
+        >
+          Add
+        </button>
+      </th>
     </tr>
   </thead>
   <tbody>
