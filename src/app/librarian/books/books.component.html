@@ -21,8 +21,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let book of bookService.books; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
+      <tr *ngFor="let book of pagedItems">
+        <th scope="row">{{ book.index + 1 }}</th>
         <td>{{ book.title }}</td>
         <td>
           <span *ngFor="let a of book.authors">{{ a.name }}, </span>
@@ -43,6 +43,19 @@
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="totalItems > 0" class="ds-l-row ds-u-margin-top--3">
+    <div class="ds-l-col--9">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="pager.currentPage"
+        [maxSize]="5"
+        [pageSize]="itemsPerPage"
+        [boundaryLinks]="true"
+        (pageChange)="setPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
 </div>
 
 <ng-template #addBookCopyModal let-c="close" let-d="dismiss">
