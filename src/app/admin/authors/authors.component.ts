@@ -42,19 +42,19 @@ export class AuthorsComponent implements OnInit {
     });
   }
 
-  addAuthor() {
-    this.adminService.addAuthor(this.selectedAuthor).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-    this.modalRef.close();
-  }
+  submit() {
+    if (this.selectedAuthor.id) {
+      this.adminService.editAuthor(this.selectedAuthor).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    } else {
+      this.adminService.addAuthor(this.selectedAuthor).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    }
 
-  editAuthor() {
-    this.adminService.editAuthor(this.selectedAuthor).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
     this.modalRef.close();
   }
 

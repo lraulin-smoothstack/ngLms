@@ -1,8 +1,7 @@
 import { AdminService } from './../admin.service';
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { MatTable } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { Borrower } from '../types';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-borrowers',
@@ -10,43 +9,59 @@ import { Borrower } from '../types';
   styleUrls: ['./borrowers.component.css'],
 })
 export class BorrowersComponent implements OnInit {
+  private modalRef: NgbModalRef;
+  items: Borrower[] = [];
+  selectedItem: Borrower;
   errorMessage: string;
-  dataSource: Borrower[];
-  displayedColumns: string[] = [
-    'id',
-    'name',
-    'address',
-    'phoneNumber',
-    'action',
-  ];
+  closeResult: string;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private modalService: NgbModal
+  ) {}
+
+  open(content, item?: Borrower) {
+    this.selectedItem = item
+      ? item
+      : { id: null, name: '', address: '', phoneNumber: '' };
+    this.modalRef = this.modalService.open(content);
+    this.modalRef.result.then(
+      (result) => {
+        this.errorMessage = '';
+        this.closeResult = `Closed with ${result}`;
+      },
+      (reason) => {
+        this.errorMessage = `${reason}`;
+        this.closeResult = `Dismissed`;
+      }
+    );
+  }
 
   fetchData(): void {
     this.adminService.getBorrowers().subscribe({
-      next: (borrowers) => (this.dataSource = borrowers),
+      next: (items) => (this.items = items),
       error: (err) => (this.errorMessage = err),
     });
   }
 
-  addRowData(rowObj) {
-    this.adminService.addBorrower(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+  submit() {
+    if (this.selectedItem.id) {
+      this.adminService.editAuthor(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    } else {
+      this.adminService.addAuthor(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    }
+
+    this.modalRef.close();
   }
 
-  updateRowData(rowObj) {
-    console.log('Updating borrower ' + rowObj);
-    this.adminService.editBorrower(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  deleteRowData(rowObj) {
-    console.log('Deleting borrower ' + rowObj.id + '...');
-    this.adminService.deleteBorrower(rowObj.id).subscribe({
+  delete(id: number) {
+    this.adminService.deleteBorrower(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });

@@ -50,7 +50,7 @@ export class BooksComponent implements OnInit {
     );
   }
 
-  updateBook() {
+  submit() {
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
         next: (_) => this.fetchData(),
