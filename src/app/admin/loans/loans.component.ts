@@ -1,3 +1,4 @@
+import { Branch, Borrower, Book } from './../types';
 import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
 import { Loan } from '../types';
@@ -13,6 +14,12 @@ export class LoansComponent implements OnInit {
   private modalRef: NgbModalRef;
   items: Loan[] = [];
   selectedItem: Loan;
+  books: Book[] = [];
+  selectedBook: Book;
+  branches: Branch[] = [];
+  selectedBranch: Branch;
+  borrowers: Borrower[] = [];
+  selectedBorrower: Borrower;
   errorMessage: string;
   closeResult: string;
   searchString = '';
@@ -30,13 +37,14 @@ export class LoansComponent implements OnInit {
     this.selectedItem = item
       ? item
       : {
-          id: null,
+          id: {
+            book: null,
+            borrower: null,
+            branch: null,
+          },
           dateIn: null,
           dateOut: null,
           dueDate: null,
-          borrower: '',
-          bookTitle: '',
-          branchName: '',
         };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
@@ -82,6 +90,21 @@ export class LoansComponent implements OnInit {
     });
   }
 
+  fetchMisc(): void {
+    this.adminService.getBorrowers().subscribe({
+      next: (borrower) => (this.borrowers = borrower),
+      error: (err) => (this.errorMessage = err),
+    });
+    this.adminService.getBranches().subscribe({
+      next: (branches) => (this.branches = branches),
+      error: (err) => (this.errorMessage = err),
+    });
+    this.adminService.getBooks().subscribe({
+      next: (books) => (this.books = books),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   submit() {
     if (this.selectedItem.id) {
       this.adminService.editLoan(this.selectedItem).subscribe({
@@ -107,5 +130,6 @@ export class LoansComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchData();
+    this.fetchMisc();
   }
 }

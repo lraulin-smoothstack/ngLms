@@ -138,28 +138,30 @@ export class AdminService {
   }
 
   getLoans(): Observable<Loan[]> {
-    return this.http.get<Loan[]>(this.baseUrl + '/loans').pipe(
+    return this.http.get<Loan[]>(this.baseUrl + '/book-loans').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   deleteLoan(id: number): Observable<{}> {
-    return this.http.delete(this.baseUrl + '/loan/' + id).pipe(
+    return this.http.delete(this.baseUrl + '/book-loan/' + id).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   editLoan(loan: Loan): Observable<Loan> {
-    return this.http.put<Loan>(this.baseUrl + '/loan/' + loan.id, loan).pipe(
-      tap((data) => console.log(JSON.stringify(data))),
-      catchError(this.handleError)
-    );
+    return this.http
+      .put<Loan>(this.baseUrl + '/book-loan/' + loan.id, loan)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
   }
 
   addLoan(loan: Loan): Observable<Loan> {
-    return this.http.post<Loan>(this.baseUrl + '/loan', loan).pipe(
+    return this.http.post<Loan>(this.baseUrl + '/book-loan', loan).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );

@@ -28,9 +28,9 @@
       <td>{{ loan.dateOut }}</td>
       <td>{{ loan.dueDate }}</td>
       <td>{{ loan.dateIn }}</td>
-      <td>{{ loan.borrower }}</td>
-      <td>{{ loan.bookTitle }}</td>
-      <td>{{ loan.branchName }}</td>
+      <td>{{ loan.id.borrower.name }}</td>
+      <td>{{ loan.id.book.title }}</td>
+      <td>{{ loan.id.branch.name }}</td>
       <td>
         <button
           type="button"
@@ -78,7 +78,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="submit()">
+        <form #f="ngForm" (ngSubmit)="submit()">
           <div class="form-group">
             <label for="dateOut" class="col-form-label">Date Out </label>
             <input
@@ -108,29 +108,30 @@
               required
             />
             <label for="borrower" class="col-form-label">Borrower </label>
-            <input
-              class="form-control"
-              name="borrower"
-              id="borrower"
-              [(ngModel)]="selectedItem.borrower"
-              required
-            />
+            <select name="borrower" ngModel>
+              <option value="" disabled>Choose a borrower</option>
+              <option
+                *ngFor="let borrower of borrowers"
+                [ngValue]="selectedBorrower"
+                >{{ borrower.name }}</option
+              ></select
+            >
             <label for="bookTitle" class="col-form-label">Title </label>
-            <input
-              class="form-control"
-              name="bookTitle"
-              id="bookTitle"
-              [(ngModel)]="selectedItem.bookTitle"
-              required
-            />
+            <select name="book" ngModel>
+              <option value="" disabled>Choose a book</option>
+              <option *ngFor="let book of books" [ngValue]="selectedBook">{{
+                book.title
+              }}</option>
+            </select>
             <label for="branchName" class="col-form-label">Branch </label>
-            <input
-              class="form-control"
-              name="branchName"
-              id="branchName"
-              [(ngModel)]="selectedItem.branchName"
-              required
-            />
+            <select name="branch" ngModel>
+              <option value="" disabled>Choose a branch</option>
+              <option
+                *ngFor="let branch of branches"
+                [ngValue]="selectedBranch"
+                >{{ branch.name }}</option
+              >
+            </select>
           </div>
           <input type="submit" class="btn btn-primary" value="Save" />
         </form>
