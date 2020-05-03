@@ -1,5 +1,5 @@
 import { AdminService } from './../admin.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Loan } from '../types';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
