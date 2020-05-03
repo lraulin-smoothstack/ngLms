@@ -24,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let loan of items">
+    <tr *ngFor="let loan of pagedItems">
       <td>{{ loan.dateOut }}</td>
       <td>{{ loan.dueDate }}</td>
       <td>{{ loan.dateIn }}</td>
@@ -48,6 +48,19 @@
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="items.length > 0" class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="items.length"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [pageSize]="itemsPerPage"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
 
 <ng-template #editLoanModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
