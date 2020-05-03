@@ -1,16 +1,10 @@
+import { Author, Publisher, Genre } from './../types';
 import { AdminService } from './../admin.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { Book } from '../types';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
-
-const newBook = (): Book => ({
-  id: null,
-  title: '',
-  author: '',
-  publisher: '',
-  genre: '',
-});
+import { SortableDirective, SortEvent } from '../sortable.directive';
 
 @Component({
   selector: 'app-books',
@@ -21,12 +15,21 @@ export class BooksComponent implements OnInit {
   private modalRef: NgbModalRef;
   books: Book[] = [];
   selectedBook: Book;
+  authors: Author[] = [];
+  selectedAuthor: Author;
+  publishers: Publisher[] = [];
+  selectedPublisher: Publisher;
+  genres: Genre[] = [];
+  selectedGenre: Genre;
   errorMessage: string;
   closeResult: string;
   searchString = '';
   pager: Pager;
   pagedItems: Book[];
   itemsPerPage = 5;
+  arrows = { title: '', author: '', publisher: '', genre: '' };
+
+  @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
 
   constructor(
     private adminService: AdminService,
@@ -34,7 +37,37 @@ export class BooksComponent implements OnInit {
     private pagerService: PagerService
   ) {}
 
-  fetchData(): void {
+  onSort({ column, direction }: SortEvent) {
+    console.log('Sorting...');
+    // resetting other headers
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    this.books = this.sort(this.books, column, direction);
+    this.arrows[column] =
+      direction === 'asc' ? '△' : direction === 'desc' ? '▽' : '';
+    this.setPage(this.pager.currentPage);
+  }
+
+  compare(v1, v2) {
+    return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+  }
+
+  sort(items: Book[], column: string, direction: string): Book[] {
+    if (direction === '') {
+      return items;
+    } else {
+      return [...items].sort((a, b) => {
+        const res = this.compare(a[column], b[column]);
+        return direction === 'asc' ? res : -res;
+      });
+    }
+  }
+
+  fetchBooks(): void {
     this.adminService.getBooks().subscribe({
       next: (books) => {
         this.books = books;
@@ -48,8 +81,40 @@ export class BooksComponent implements OnInit {
     });
   }
 
+  fetchMisc(): void {
+    this.adminService.getAuthors().subscribe({
+      next: (authors) => (this.authors = authors),
+      error: (err) => (this.errorMessage = err),
+    });
+    this.adminService.getPublishers().subscribe({
+      next: (publishers) => (this.publishers = publishers),
+      error: (err) => (this.errorMessage = err),
+    });
+    this.adminService.getGenres().subscribe({
+      next: (genres) => (this.genres = genres),
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   open(content, book?: Book) {
-    this.selectedBook = book ? book : newBook();
+    console.log(this.authors);
+    console.log(this.publishers);
+    console.log(this.genres);
+
+    this.selectedBook = book
+      ? book
+      : {
+          id: null,
+          title: '',
+          authors: [{ id: null, name: '' }],
+          publisher: {
+            id: null,
+            name: '',
+            address: '',
+            phoneNumber: '',
+          },
+          genres: [{ id: null, name: '' }],
+        };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       (result) => {
@@ -83,12 +148,12 @@ export class BooksComponent implements OnInit {
   submit() {
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
-        next: (_) => this.fetchData(),
+        next: (_) => this.fetchBooks(),
         error: (err) => (this.errorMessage = err),
       });
     } else {
       this.adminService.addBook(this.selectedBook).subscribe({
-        next: (_) => this.fetchData(),
+        next: (_) => this.fetchBooks(),
         error: (err) => (this.errorMessage = err),
       });
     }
@@ -98,12 +163,21 @@ export class BooksComponent implements OnInit {
 
   deleteBook(id: number) {
     this.adminService.deleteBook(id).subscribe({
-      next: (_) => this.fetchData(),
+      next: (_) => this.fetchBooks(),
       error: (err) => (this.errorMessage = err),
     });
   }
 
+  getAuthors(book: Book) {
+    return book.authors ? book.authors.map((x) => x.name).join(', ') : '';
+  }
+
+  getGenres(book: Book) {
+    return book.genres ? book.genres.map((x) => x.name).join(', ') : '';
+  }
+
   ngOnInit(): void {
-    this.fetchData();
+    this.fetchBooks();
+    this.fetchMisc();
   }
 }

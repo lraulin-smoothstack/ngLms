@@ -24,9 +24,9 @@
   <tbody>
     <tr *ngFor="let book of pagedItems">
       <td>{{ book.title }}</td>
-      <td>{{ book.author }}</td>
-      <td>{{ book.publisher }}</td>
-      <td>{{ book.genre }}</td>
+      <td>{{ getAuthors(book) }}</td>
+      <td>{{ book.publisher.name }}</td>
+      <td>{{ getGenres(book) }}</td>
       <td>
         <button
           type="button"
@@ -78,7 +78,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="submit()">
+        <form #f="ngForm" (ngSubmit)="submit()">
           <div class="form-group">
             <label for="title" class="col-form-label">Title </label>
             <input
@@ -89,29 +89,30 @@
               required
             />
             <label for="author" class="col-form-label">Author </label>
-            <input
-              class="form-control"
-              name="author"
-              id="author"
-              [(ngModel)]="selectedBook.author"
-              required
-            />
+            <select name="author" ngModel>
+              <option value="" disabled>Choose an author</option>
+              <option
+                *ngFor="let author of authors"
+                [ngValue]="selectedAuthor"
+                >{{ author.name }}</option
+              >
+            </select>
             <label for="publisher" class="col-form-label">Publisher </label>
-            <input
-              class="form-control"
-              name="publisher"
-              id="publisher"
-              [(ngModel)]="selectedBook.publisher"
-              required
-            />
+            <select name="publisher" ngModel>
+              <option value="" disabled>Choose a publisher</option>
+              <option
+                *ngFor="let publisher of publishers"
+                [ngValue]="selectedBook.publisher"
+                >{{ publisher.name }}</option
+              >
+            </select>
             <label for="genre" class="col-form-label">Genre </label>
-            <input
-              class="form-control"
-              name="genre"
-              id="genre"
-              [(ngModel)]="selectedBook.genre"
-              required
-            />
+            <select name="genre" ngModel>
+              <option value="" disabled>Choose a publisher</option>
+              <option *ngFor="let genre of genres" [ngValue]="selectedGenre">{{
+                genre.name
+              }}</option>
+            </select>
           </div>
           <input type="submit" class="btn btn-primary" value="Save" />
         </form>
