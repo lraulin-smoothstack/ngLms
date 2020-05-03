@@ -1,6 +1,7 @@
+import { SortableDirective, SortEvent } from './../sortable.directive';
 import { PagerService, Pager } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { Author } from '../types';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -19,12 +20,45 @@ export class AuthorsComponent implements OnInit {
   pager: Pager;
   pagedItems: Author[];
   itemsPerPage = 5;
+  arrows = { name: '' };
+
+  @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
 
   constructor(
     private adminService: AdminService,
     private modalService: NgbModal,
     private pagerService: PagerService
   ) {}
+
+  onSort({ column, direction }: SortEvent) {
+    console.log('Sorting...');
+    // resetting other headers
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    this.authors = this.sort(this.authors, column, direction);
+    this.arrows[column] =
+      direction === 'asc' ? '△' : direction === 'desc' ? '▽' : '';
+    this.setPage(this.pager.currentPage);
+  }
+
+  compare(v1, v2) {
+    return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+  }
+
+  sort(items: Author[], column: string, direction: string): Author[] {
+    if (direction === '') {
+      return items;
+    } else {
+      return [...items].sort((a, b) => {
+        const res = this.compare(a[column], b[column]);
+        return direction === 'asc' ? res : -res;
+      });
+    }
+  }
 
   open(content, author?: Author) {
     this.selectedAuthor = author ? author : { id: null, name: '' };
@@ -45,6 +79,7 @@ export class AuthorsComponent implements OnInit {
     this.adminService.getAuthors().subscribe({
       next: (authors) => {
         this.authors = authors;
+        console.log(this.authors);
         this.setPage(1);
       },
       error: (err) => (this.errorMessage = err),

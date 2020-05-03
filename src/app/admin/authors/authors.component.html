@@ -5,7 +5,9 @@
 <table class="table table-dark">
   <thead>
     <tr>
-      <th>Name</th>
+      <th sortable="name" scope="col" (sort)="onSort($event)">
+        Name{{ arrows.name }}
+      </th>
       <th></th>
       <th>
         <button

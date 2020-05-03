@@ -12,20 +12,22 @@ import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SortableDirective } from './sortable.directive';
 
 @NgModule({
   declarations: [
     AdminComponent,
     AuthorsComponent,
     BooksComponent,
-    PublishersComponent,
-    BranchesComponent,
     BorrowersComponent,
+    BranchesComponent,
     LoansComponent,
+    PublishersComponent,
+    SortableDirective,
   ],
   imports: [
-    CommonModule,
     AdminRoutingModule,
+    CommonModule,
     FormsModule,
     HttpClientModule,
     NgbModule,
