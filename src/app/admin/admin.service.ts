@@ -2,17 +2,25 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { Author, Book, Borrower, Branch, Loan, Publisher } from './types';
+import {
+  Author,
+  Book,
+  Borrower,
+  Branch,
+  Loan,
+  Publisher,
+  Genre,
+} from './types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  private baseUrl = 'https://5ea8795235f3720016609246.mockapi.io';
+  private baseUrl = 'http://localhost:8080/lms/admin';
   constructor(private http: HttpClient) {}
 
   getAuthors(): Observable<Author[]> {
-    return this.http.get<Author[]>(this.baseUrl + '/author').pipe(
+    return this.http.get<Author[]>(this.baseUrl + '/authors').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -42,7 +50,7 @@ export class AdminService {
   }
 
   getBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(this.baseUrl + '/book').pipe(
+    return this.http.get<Book[]>(this.baseUrl + '/books').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -70,7 +78,7 @@ export class AdminService {
   }
 
   getBorrowers(): Observable<Borrower[]> {
-    return this.http.get<Borrower[]>(this.baseUrl + '/borrower').pipe(
+    return this.http.get<Borrower[]>(this.baseUrl + '/borrowers').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -100,7 +108,7 @@ export class AdminService {
   }
 
   getBranches(): Observable<Branch[]> {
-    return this.http.get<Branch[]>(this.baseUrl + '/branch').pipe(
+    return this.http.get<Branch[]>(this.baseUrl + '/branches').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -130,7 +138,7 @@ export class AdminService {
   }
 
   getLoans(): Observable<Loan[]> {
-    return this.http.get<Loan[]>(this.baseUrl + '/loan').pipe(
+    return this.http.get<Loan[]>(this.baseUrl + '/loans').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -158,7 +166,7 @@ export class AdminService {
   }
 
   getPublishers(): Observable<Publisher[]> {
-    return this.http.get<Publisher[]>(this.baseUrl + '/publisher').pipe(
+    return this.http.get<Publisher[]>(this.baseUrl + '/publishers').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -187,6 +195,13 @@ export class AdminService {
         tap((data) => console.log(JSON.stringify(data))),
         catchError(this.handleError)
       );
+  }
+
+  getGenres(): Observable<Genre[]> {
+    return this.http.get<Genre[]>(this.baseUrl + '/genres').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(err: HttpErrorResponse) {

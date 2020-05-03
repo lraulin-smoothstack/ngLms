@@ -3,13 +3,6 @@ export interface Author {
   name: string;
 }
 
-export interface Book {
-  id: number;
-  author: string;
-  title: string;
-  publisher: string;
-  genre: string;
-}
 export interface Borrower {
   id: number;
   name: string;
@@ -38,4 +31,17 @@ export interface Publisher {
   address: string;
   name: string;
   phoneNumber: string;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface Book {
+  id: number;
+  title: string;
+  authors: Author[];
+  publisher: Publisher;
+  genres: Genre[];
 }
