@@ -20,7 +20,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let branch of items">
+    <tr *ngFor="let branch of pagedItems">
       <td>{{ branch.name }}</td>
       <td>{{ branch.address }}</td>
       <td>
@@ -44,6 +44,19 @@
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="items.length > 0" class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="items.length"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [pageSize]="itemsPerPage"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
 
 <ng-template #editBranchModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
