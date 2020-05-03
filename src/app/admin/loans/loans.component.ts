@@ -1,9 +1,7 @@
 import { AdminService } from './../admin.service';
-import { LoansDialogBoxComponent } from './../loans-dialog-box/loans-dialog-box.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTable } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
 import { Loan } from '../types';
+import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-loans',
@@ -11,66 +9,68 @@ import { Loan } from '../types';
   styleUrls: ['./loans.component.css'],
 })
 export class LoansComponent implements OnInit {
+  private modalRef: NgbModalRef;
+  items: Loan[] = [];
+  selectedItem: Loan;
   errorMessage: string;
-  dataSource: Loan[];
-  displayedColumns: string[] = [
-    'id',
-    'dateIn',
-    'dateOut',
-    'dueDate',
-    'borrower',
-    'branchName',
-    'bookTitle',
-    'action',
-  ];
+  closeResult: string;
 
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  constructor(
+    private adminService: AdminService,
+    private modalService: NgbModal
+  ) {}
 
-  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+  open(content, item?: Loan) {
+    this.selectedItem = item
+      ? item
+      : {
+          id: null,
+          dateIn: null,
+          dateOut: null,
+          dueDate: null,
+          borrower: '',
+          bookTitle: '',
+          branchName: '',
+        };
+    console.log(typeof this.selectedItem.dateIn);
+    this.modalRef = this.modalService.open(content);
+    this.modalRef.result.then(
+      (result) => {
+        this.errorMessage = '';
+        this.closeResult = `Closed with ${result}`;
+      },
+      (reason) => {
+        this.errorMessage = `${reason}`;
+        this.closeResult = `Dismissed`;
+      }
+    );
+  }
 
   fetchData(): void {
     this.adminService.getLoans().subscribe({
-      next: (loans) => (this.dataSource = loans),
+      next: (items) => (this.items = items),
       error: (err) => (this.errorMessage = err),
     });
   }
 
-  openDialog(action, obj) {
-    obj.action = action;
-    const dialogRef = this.dialog.open(LoansDialogBoxComponent, {
-      width: '250px',
-      data: obj,
-    });
+  submit() {
+    if (this.selectedItem.id) {
+      this.adminService.editLoan(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    } else {
+      this.adminService.addLoan(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.event === 'Add') {
-        this.addRowData(result.data);
-      } else if (result.event === 'Update') {
-        this.updateRowData(result.data);
-      } else if (result.event === 'Delete') {
-        this.deleteRowData(result.data);
-      }
-    });
+    this.modalRef.close();
   }
 
-  addRowData(rowObj) {
-    this.adminService.addLoan(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  updateRowData(rowObj) {
-    console.log('Updating loan ' + rowObj);
-    this.adminService.editLoan(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  deleteRowData(rowObj) {
-    console.log('Deleting loan ' + rowObj.id + '...');
-    this.adminService.deleteLoan(rowObj.id).subscribe({
+  delete(id: number) {
+    this.adminService.deleteLoan(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });

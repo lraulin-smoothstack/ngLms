@@ -1,9 +1,7 @@
 import { AdminService } from './../admin.service';
-import { BranchesDialogBoxComponent } from './../branches-dialog-box/branches-dialog-box.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTable } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { Branch } from '../types';
+import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-branches',
@@ -11,57 +9,57 @@ import { Branch } from '../types';
   styleUrls: ['./branches.component.css'],
 })
 export class BranchesComponent implements OnInit {
+  private modalRef: NgbModalRef;
+  items: Branch[] = [];
+  selectedItem: Branch;
   errorMessage: string;
-  dataSource: Branch[];
-  displayedColumns: string[] = ['id', 'name', 'address', 'action'];
+  closeResult: string;
 
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  constructor(
+    private adminService: AdminService,
+    private modalService: NgbModal
+  ) {}
 
-  constructor(public dialog: MatDialog, private adminService: AdminService) {}
+  open(content, item?: Branch) {
+    this.selectedItem = item ? item : { id: null, name: '', address: '' };
+    this.modalRef = this.modalService.open(content);
+    this.modalRef.result.then(
+      (result) => {
+        this.errorMessage = '';
+        this.closeResult = `Closed with ${result}`;
+      },
+      (reason) => {
+        this.errorMessage = `${reason}`;
+        this.closeResult = `Dismissed`;
+      }
+    );
+  }
 
   fetchData(): void {
     this.adminService.getBranches().subscribe({
-      next: (branches) => (this.dataSource = branches),
+      next: (items) => (this.items = items),
       error: (err) => (this.errorMessage = err),
     });
   }
 
-  openDialog(action, obj) {
-    obj.action = action;
-    const dialogRef = this.dialog.open(BranchesDialogBoxComponent, {
-      width: '250px',
-      data: obj,
-    });
+  submit() {
+    if (this.selectedItem.id) {
+      this.adminService.editBranch(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    } else {
+      this.adminService.addBranch(this.selectedItem).subscribe({
+        next: (_) => this.fetchData(),
+        error: (err) => (this.errorMessage = err),
+      });
+    }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.event === 'Add') {
-        this.addRowData(result.data);
-      } else if (result.event === 'Update') {
-        this.updateRowData(result.data);
-      } else if (result.event === 'Delete') {
-        this.deleteRowData(result.data);
-      }
-    });
+    this.modalRef.close();
   }
 
-  addRowData(rowObj) {
-    this.adminService.addBranch(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  updateRowData(rowObj) {
-    console.log('Updating branch ' + rowObj);
-    this.adminService.editBranch(rowObj).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
-  }
-
-  deleteRowData(rowObj) {
-    console.log('Deleting branch ' + rowObj.id + '...');
-    this.adminService.deleteBranch(rowObj.id).subscribe({
+  delete(id: number) {
+    this.adminService.deleteBranch(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });
