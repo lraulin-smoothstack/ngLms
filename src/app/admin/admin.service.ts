@@ -43,7 +43,7 @@ export class AdminService {
   }
 
   addAuthor(author: Author): Observable<Author> {
-    return this.http.post<Author>(this.baseUrl + '/author', author).pipe(
+    return this.http.post<Author>(this.baseUrl + '/authors', author).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -71,7 +71,7 @@ export class AdminService {
   }
 
   addBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(this.baseUrl + '/book', book).pipe(
+    return this.http.post<Book>(this.baseUrl + '/books', book).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -101,7 +101,7 @@ export class AdminService {
   }
 
   addBorrower(borrower: Borrower): Observable<Borrower> {
-    return this.http.post<Borrower>(this.baseUrl + '/borrower', borrower).pipe(
+    return this.http.post<Borrower>(this.baseUrl + '/borrowers', borrower).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -131,7 +131,7 @@ export class AdminService {
   }
 
   addBranch(branch: Branch): Observable<Branch> {
-    return this.http.post<Branch>(this.baseUrl + '/branch', branch).pipe(
+    return this.http.post<Branch>(this.baseUrl + '/branches', branch).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -161,7 +161,7 @@ export class AdminService {
   }
 
   addLoan(loan: Loan): Observable<Loan> {
-    return this.http.post<Loan>(this.baseUrl + '/book-loan', loan).pipe(
+    return this.http.post<Loan>(this.baseUrl + '/book-loans', loan).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -192,7 +192,7 @@ export class AdminService {
 
   addPublisher(publisher: Publisher): Observable<Publisher> {
     return this.http
-      .post<Publisher>(this.baseUrl + '/publisher', publisher)
+      .post<Publisher>(this.baseUrl + '/publishers', publisher)
       .pipe(
         tap((data) => console.log(JSON.stringify(data))),
         catchError(this.handleError)

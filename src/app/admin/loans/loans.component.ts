@@ -15,11 +15,8 @@ export class LoansComponent implements OnInit {
   items: Loan[] = [];
   selectedItem: Loan;
   books: Book[] = [];
-  selectedBook: Book;
   branches: Branch[] = [];
-  selectedBranch: Branch;
   borrowers: Borrower[] = [];
-  selectedBorrower: Borrower;
   errorMessage: string;
   closeResult: string;
   searchString = '';

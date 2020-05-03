@@ -112,23 +112,25 @@
               <option value="" disabled>Choose a borrower</option>
               <option
                 *ngFor="let borrower of borrowers"
-                [ngValue]="selectedBorrower"
+                [ngValue]="selectedItem.id.borrower"
                 >{{ borrower.name }}</option
               ></select
             >
             <label for="bookTitle" class="col-form-label">Title </label>
             <select name="book" ngModel>
               <option value="" disabled>Choose a book</option>
-              <option *ngFor="let book of books" [ngValue]="selectedBook">{{
-                book.title
-              }}</option>
+              <option
+                *ngFor="let book of books"
+                [ngValue]="selectedItem.id.book"
+                >{{ book.title }}</option
+              >
             </select>
             <label for="branchName" class="col-form-label">Branch </label>
             <select name="branch" ngModel>
               <option value="" disabled>Choose a branch</option>
               <option
                 *ngFor="let branch of branches"
-                [ngValue]="selectedBranch"
+                [ngValue]="selectedItem.id.branch"
                 >{{ branch.name }}</option
               >
             </select>
