@@ -1,7 +1,8 @@
 import { AdminService } from './../admin.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Book } from '../types';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Pager, PagerService } from 'src/app/common/services/pager.service';
 
 const newBook = (): Book => ({
   id: null,
@@ -22,15 +23,27 @@ export class BooksComponent implements OnInit {
   selectedBook: Book;
   errorMessage: string;
   closeResult: string;
+  searchString = '';
+  pager: Pager;
+  pagedItems: Book[];
+  itemsPerPage = 5;
 
   constructor(
     private adminService: AdminService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private pagerService: PagerService
   ) {}
 
   fetchData(): void {
     this.adminService.getBooks().subscribe({
-      next: (books) => (this.books = books),
+      next: (books) => {
+        this.books = books;
+        if (this.pager) {
+          this.setPage(this.pager.currentPage);
+        } else {
+          this.setPage(1);
+        }
+      },
       error: (err) => (this.errorMessage = err),
     });
   }
@@ -47,6 +60,23 @@ export class BooksComponent implements OnInit {
         this.errorMessage = `${reason}`;
         this.closeResult = `Dismissed`;
       }
+    );
+  }
+
+  setPage(page: number): void {
+    this.pager = this.pagerService.getPager(
+      this.books.length,
+      page,
+      this.itemsPerPage
+    );
+
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+
+    this.pagedItems = this.books.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
     );
   }
 

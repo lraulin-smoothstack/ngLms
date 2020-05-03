@@ -20,7 +20,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let borrower of items">
+    <tr *ngFor="let borrower of pagedItems">
       <td>{{ borrower.name }}</td>
       <td>{{ borrower.address }}</td>
       <td>{{ borrower.phoneNumber }}</td>
@@ -45,6 +45,19 @@
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="items.length > 0" class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="items.length"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [pageSize]="itemsPerPage"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
 
 <ng-template #editBorrowerModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
