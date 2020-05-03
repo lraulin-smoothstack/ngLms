@@ -78,7 +78,6 @@ export class LoansComponent implements OnInit {
           this.setPage(1);
         }
       },
-
       error: (err) => (this.errorMessage = err),
     });
   }
