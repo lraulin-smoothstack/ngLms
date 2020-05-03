@@ -19,7 +19,6 @@ export class BookCopiesComponent implements OnInit {
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
-  searchString = '';
   totalItems: number;
   pager: any = {};
   pagedItems: any[];
@@ -50,7 +49,6 @@ export class BookCopiesComponent implements OnInit {
 
   loadBookCopies(): void {
     this.bookCopyService.getBookCopies(this.branchId, (data: BookCopy[]) => {
-      data.map((v, i) => (v['index'] = i));
       this.totalItems = data.length;
       this.setPage(1);
     });
@@ -60,7 +58,10 @@ export class BookCopiesComponent implements OnInit {
     this.bookCopyService.deleteBookCopy(
       bookCopy.id.book.id,
       bookCopy.id.branch.id,
-      (data) => this.setPage(1)
+      (data) => {
+        this.totalItems -= 1;
+        this.setPage(1);
+      }
     );
   }
 
@@ -92,26 +93,15 @@ export class BookCopiesComponent implements OnInit {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
+    const data = this.bookCopyService.bookCopies;
     this.pager = this.pagerService.getPager(
-      this.bookCopyService.bookCopies.length,
+      data.length,
       page,
       this.itemsPerPage
     );
-    this.pagedItems = this.bookCopyService.bookCopies.slice(
+    this.pagedItems = data.slice(
       this.pager.startIndex,
       this.pager.endIndex + 1
     );
-  }
-
-  searchBookCopies(): void {
-    if (this.searchString === '') {
-      if (this.bookCopyService.bookCopies.length != this.totalItems) {
-        this.bookCopyService.getBookCopies(this.branchId);
-      }
-    } else {
-      this.bookCopyService.bookCopies = this.bookCopyService.bookCopies.filter(
-        (bc) => this.searchString == bc.id.book.title
-      );
-    }
   }
 }

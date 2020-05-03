@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { LibrarianComponent } from './librarian.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BookCopiesComponent } from './book-copies/book-copies.component';
-import { UpdateLibraryBranchComponent } from './update-library-branch/update-library-branch.component';
 import { BooksComponent } from './books/books.component';
 
 const routes: Routes = [
@@ -15,10 +14,6 @@ const routes: Routes = [
       {
         path: '',
         component: BranchesComponent,
-      },
-      {
-        path: 'branches/:id',
-        component: UpdateLibraryBranchComponent,
       },
       {
         path: 'branches/:id/book-copies',

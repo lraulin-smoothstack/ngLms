@@ -47,7 +47,6 @@ export class BooksComponent implements OnInit {
 
   loadBooks(): void {
     this.bookService.getBooks(this.branchId, (data) => {
-      data.map((v, i) => (v['index'] = i));
       this.totalItems = data.length;
       this.setPage(1);
     });
@@ -87,12 +86,13 @@ export class BooksComponent implements OnInit {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
+    const data = this.bookService.books;
     this.pager = this.pagerService.getPager(
-      this.bookService.books.length,
+      data.length,
       page,
       this.itemsPerPage
     );
-    this.pagedItems = this.bookService.books.slice(
+    this.pagedItems = data.slice(
       this.pager.startIndex,
       this.pager.endIndex + 1
     );
