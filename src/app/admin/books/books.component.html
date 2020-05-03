@@ -22,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let book of books">
+    <tr *ngFor="let book of pagedItems">
       <td>{{ book.title }}</td>
       <td>{{ book.author }}</td>
       <td>{{ book.publisher }}</td>
@@ -48,6 +48,19 @@
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="books.length > 0" class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="books.length"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [pageSize]="itemsPerPage"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
 
 <ng-template #editBookModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
