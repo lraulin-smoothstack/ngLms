@@ -4,26 +4,25 @@
 </h4>
 <p *ngIf="branch">{{ branch.address }}</p>
 
-<button type="button" class="btn btn-primary" routerLink="../books">
-  Add Book to Library
-</button>
-
 <div *ngIf="bookCopyService.isLoading" class="spinner-border" role="status">
   <span className="sr-only">Loading...</span>
 </div>
 
 <div *ngIf="!bookCopyService.isLoading">
-  <hr />
   <table class="table table-dark">
     <thead>
       <tr>
-        <th>title</th>
+        <th>Title</th>
         <th>Authors</th>
         <th>Publisher</th>
         <th>Genres</th>
         <th>Number of Copies</th>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th></th>
+        <th>
+          <button type="button" class="btn btn-primary" routerLink="../books">
+            Add Book to Library
+          </button>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -91,13 +90,13 @@
       <div class="modal-body">
         <form (ngSubmit)="updateBookCopy()">
           <div class="form-group">
-            <label for="amount" class="col-form-label"
+            <label for="bookCopyAmountInput" class="col-form-label"
               >Number of Copies:
             </label>
             <input
               class="form-control"
               name="amount"
-              id="amount"
+              id="bookCopyAmountInput"
               [(ngModel)]="selectedBookCopy.amount"
             />
           </div>
