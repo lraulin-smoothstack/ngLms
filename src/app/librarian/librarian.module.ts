@@ -27,11 +27,6 @@ import { BooksService } from './services/books.service';
     NgbModule,
     FormsModule,
   ],
-  providers: [
-    LibraryBranchesService,
-    BookCopiesService,
-    BooksService,
-    { provide: 'domain', useValue: 'http://localhost:8080' },
-  ],
+  providers: [LibraryBranchesService, BookCopiesService, BooksService],
 })
 export class LibrarianModule {}
