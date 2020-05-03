@@ -22,11 +22,11 @@
       <tr *ngFor="let book of pagedItems">
         <td>{{ book.title }}</td>
         <td>
-          <span *ngFor="let a of book.authors">{{ a.name }}, </span>
+          <span *ngFor="let a of book.authors">{{ a.name }} </span>
         </td>
         <td>{{ book.publisher.name }}</td>
         <td>
-          <span *ngFor="let g of book.genres">{{ g.name }}, </span>
+          <span *ngFor="let g of book.genres">{{ g.name }} </span>
         </td>
         <td>
           <button

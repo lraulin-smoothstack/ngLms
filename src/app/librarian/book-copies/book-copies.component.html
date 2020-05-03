@@ -29,11 +29,11 @@
       <tr *ngFor="let bookCopy of pagedItems">
         <td>{{ bookCopy.id.book.title }}</td>
         <td>
-          <span *ngFor="let a of bookCopy.id.book.authors">{{ a.name }}, </span>
+          <span *ngFor="let a of bookCopy.id.book.authors">{{ a.name }} </span>
         </td>
         <td>{{ bookCopy.id.book.publisher.name }}</td>
         <td>
-          <span *ngFor="let g of bookCopy.id.book.genres">{{ g.name }}, </span>
+          <span *ngFor="let g of bookCopy.id.book.genres">{{ g.name }} </span>
         </td>
         <td>{{ bookCopy.amount }}</td>
         <td>
