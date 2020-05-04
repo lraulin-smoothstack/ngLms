@@ -1,0 +1,29 @@
+<div>
+  <h3 style="color: white">Branches</h3>
+  <div class="form-group">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="branches-addon">Name | Address:</span>
+      </div>
+      <input #searchBox id="search-box" (input)="search(searchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="branch-search" aria-describedby="branches-addon">
+    </div>
+  </div>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Addres</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let branch of searchBranches$ | async">
+        <th scope="row">{{branch.name}}</th>
+        <td>{{branch.address}}</td>
+        <td>
+          <button (click)="this.selectBranch.emit(branch)" type="button" class="btn btn-primary">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
