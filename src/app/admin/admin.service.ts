@@ -206,6 +206,29 @@ export class AdminService {
     );
   }
 
+  deleteGenre(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/genre/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editGenre(genre: Genre): Observable<Genre> {
+    return this.http
+      .put<Genre>(this.baseUrl + '/genre/' + genre.id, genre)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  addGenre(genre: Genre): Observable<Genre> {
+    return this.http.post<Genre>(this.baseUrl + '/genres', genre).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(err: HttpErrorResponse) {
     let errorMessage = '';
     if (err.error instanceof ErrorEvent) {
