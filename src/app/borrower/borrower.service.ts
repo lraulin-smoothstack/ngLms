@@ -51,8 +51,6 @@ export class BorrowerService {
     const url = `http://localhost:8080/lms/borrower/borrowers/${this.store.borrower.id}/loans`;
     this.http.get<Loan[]>(url, this.httpOptions).pipe(
       tap( (loans: Loan[]) => {
-        console.log("SVC LOANS");
-        console.log(loans);
         this.store.loans.next(loans);
         this._state.next(Object.assign({}, this.store));
       }),
@@ -84,8 +82,6 @@ export class BorrowerService {
   }
 
   checkinLoan(loan: Loan) {
-    console.log("CHECKING IN LOAN");
-    console.log(loan);
     const {
       borrowerId,
       branchId,
@@ -105,10 +101,6 @@ export class BorrowerService {
   }
 
   checkoutBook(book: Book, branch: Branch) {
-    console.log("CHECKING OUT");
-    console.log(book);
-    console.log(branch);
-    
     const {
       borrowerId,
       branchId,

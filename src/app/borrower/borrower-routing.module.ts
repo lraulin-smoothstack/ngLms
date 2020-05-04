@@ -4,39 +4,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { BorrowerComponent } from './borrower/borrower.component';
 
-// import { HomeComponent } from './home/home.component';
-// import { LoginComponent } from './login/login.component';
-// import { BranchSelectComponent } from './branch-select/branch-select.component';
-// import { BookCheckoutComponent } from './book-checkout/book-checkout.component';
-
 const routes: Routes = [
   {
     path: '',
     component: BorrowerComponent,
-  },
-  // {
-  //   path: '',
-  //   redirectTo: 'home',
-  // },
-  // {
-  //   path: 'home',
-  //   component: HomeComponent,
-  //   children: [
-  //     {
-  //       path: 'branch',
-  //       component: BranchSelectComponent,
-  //     },
-  //     {
-  //       path: 'branch/:id/books',
-  //       component: BookCheckoutComponent,
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: 'login',
-  //   component: LoginComponent,
-  // },
-
+  }
 ];
 
 @NgModule({

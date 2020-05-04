@@ -1,5 +1,5 @@
 <div>
-  <h3 style="color: white">Quick Return</h3>
+  <h3>Quick Return</h3>
   <div class="form-group">
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -18,7 +18,7 @@
         <th></th>
       </tr>
     </thead>
-    <tbody *ngIf="loans$ | async">
+    <tbody *ngIf="loans$ | async as loans">
       <tr searchInit *ngFor="let loan of searchLoans$ | async">
         <th scope="row">{{loan.id.book.title}}</th>
         <td>{{getBookAuthors(loan.id.book)}}</td>
