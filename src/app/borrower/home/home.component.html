@@ -1,0 +1,7 @@
+<div>
+  <div *ngIf="state$ | async as state" class="home">
+    <app-branches [branches$]="state.branches" (selectBranch)="selectBranch($event)" class="branches"></app-branches>
+    <app-return [loans$]="state.loans" (checkinLoan)="checkinLoan($event)" class="returns"></app-return>
+    <app-checkout [branch]="branch" [books$]="state.books" (checkoutBook)="checkoutBook($event)" class="checkout"></app-checkout>
+  </div>
+</div>

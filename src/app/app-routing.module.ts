@@ -1,6 +1,5 @@
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
-import { BorrowerComponent } from './borrower/borrower/borrower.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -16,7 +15,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./librarian/librarian.module').then((m) => m.LibrarianModule),
   },
-  { path: 'borrower', component: BorrowerComponent },
+  { path: 'borrower',
+    loadChildren: () =>
+      import('./borrower/borrower.module').then((m) => m.BorrowerModule),
+  },
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
