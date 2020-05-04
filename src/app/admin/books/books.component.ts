@@ -16,11 +16,11 @@ export class BooksComponent implements OnInit {
   books: Book[] = [];
   selectedBook: Book;
   authors: Author[] = [];
-  selectedAuthor: Author;
+  selectedAuthor: Author | '' = '';
   publishers: Publisher[] = [];
-  selectedPublisher: Publisher;
+  selectedPublisher: Publisher | '';
   genres: Genre[] = [];
-  selectedGenre: Genre;
+  selectedGenre: Genre | '' = '';
   errorMessage: string;
   closeResult: string;
   searchString = '';
@@ -97,23 +97,15 @@ export class BooksComponent implements OnInit {
   }
 
   open(content, book?: Book) {
-    console.log(this.authors);
-    console.log(this.publishers);
-    console.log(this.genres);
-
+    this.selectedPublisher = book ? book.publisher : '';
     this.selectedBook = book
       ? book
       : {
           id: null,
           title: '',
-          authors: [{ id: null, name: '' }],
-          publisher: {
-            id: null,
-            name: '',
-            address: '',
-            phoneNumber: '',
-          },
-          genres: [{ id: null, name: '' }],
+          authors: [],
+          publisher: null,
+          genres: [],
         };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
@@ -146,6 +138,14 @@ export class BooksComponent implements OnInit {
   }
 
   submit() {
+    console.log('SUBMIT!');
+    if (this.selectedPublisher !== '') {
+      console.log(`publisher: ${this.selectedPublisher}`);
+      this.selectedBook.publisher = this.selectedPublisher;
+    } else {
+      console.log('ERROR: No selected publisher!');
+    }
+    console.log(this.selectedBook);
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
         next: (_) => this.fetchBooks(),
@@ -168,12 +168,55 @@ export class BooksComponent implements OnInit {
     });
   }
 
-  getAuthors(book: Book) {
+  getAuthors(book: Book): string {
     return book.authors ? book.authors.map((x) => x.name).join(', ') : '';
   }
 
-  getGenres(book: Book) {
+  getAvailableAuthors(): Author[] {
+    return this.authors.filter(
+      (x) => !this.selectedBook.authors.map((y) => y.id).includes(x.id)
+    );
+  }
+
+  getAvailableGenres(): Genre[] {
+    return this.genres.filter(
+      (x) => !this.selectedBook.genres.map((y) => y.id).includes(x.id)
+    );
+  }
+
+  getGenres(book: Book): string {
     return book.genres ? book.genres.map((x) => x.name).join(', ') : '';
+  }
+
+  addAuthor(): void {
+    if (this.selectedAuthor !== '') {
+      this.selectedBook.authors.push(this.selectedAuthor);
+    }
+    this.selectedAuthor = '';
+  }
+  addGenre(): void {
+    if (this.selectedGenre !== '') {
+      this.selectedBook.genres.push(this.selectedGenre);
+    }
+    this.selectedGenre = '';
+  }
+
+  removeAuthor(author: Author): void {
+    this.selectedBook.authors = this.selectedBook.authors.filter(
+      (a) => a !== author
+    );
+    this.selectedAuthor = '';
+  }
+
+  removeGenre(genre: Genre): void {
+    this.selectedBook.genres = this.selectedBook.genres.filter(
+      (a) => a !== genre
+    );
+    this.selectedGenre = '';
+  }
+
+  comparePublishers(p1: Publisher, p2: Publisher): boolean {
+    return p1 && p2 ? p1.id === p2.id : p1 === p2;
   }
 
   ngOnInit(): void {

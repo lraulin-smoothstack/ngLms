@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import {
   Author,
   Book,
@@ -139,6 +139,14 @@ export class AdminService {
 
   getLoans(): Observable<Loan[]> {
     return this.http.get<Loan[]>(this.baseUrl + '/book-loans').pipe(
+      map((loans: Loan[]) =>
+        loans.map((loan) => {
+          loan.dateIn = loan.dateIn ? new Date(loan.dateIn) : null;
+          loan.dateOut = loan.dateOut ? new Date(loan.dateOut) : null;
+          loan.dueDate = loan.dueDate ? new Date(loan.dueDate) : null;
+          return loan;
+        })
+      ),
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
