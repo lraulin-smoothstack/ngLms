@@ -1,8 +1,17 @@
 h3 { color: white; }
 
-#checkoutForm {
+thead th {
+  position: sticky;
+  top: 78px;
+  z-index: 1;
+  background: #343A40;
+}
+
+.table thead > tr{ border-bottom: solid white; }
+
+#loansForm {
   position: sticky;
   top: 0;
   z-index: 1;
-  backround: #343A40;
+  background: #343A40;
 }
