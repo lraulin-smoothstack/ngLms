@@ -18,8 +18,8 @@ export interface Branch {
 
 export interface Publisher {
   id: number;
-  address: string;
-  name: string | null;
+  name: string;
+  address: string | null;
   phoneNumber: string | null;
 }
 

@@ -25,9 +25,9 @@
   </thead>
   <tbody>
     <tr *ngFor="let loan of pagedItems">
-      <td>{{ loan.dateOut }}</td>
-      <td>{{ loan.dueDate }}</td>
-      <td>{{ loan.dateIn }}</td>
+      <td>{{ loan.dateOut | date: "shortDate" }}</td>
+      <td>{{ loan.dueDate | date: "shortDate" }}</td>
+      <td>{{ loan.dateIn | date: "shortDate" }}</td>
       <td>{{ loan.id.borrower.name }}</td>
       <td>{{ loan.id.book.title }}</td>
       <td>{{ loan.id.branch.name }}</td>
@@ -86,7 +86,8 @@
               name="dateOut"
               id="dateOut"
               type="date"
-              [(ngModel)]="selectedItem.dateOut"
+              [ngModel]="selectedItem.dateOut | date: 'yyyy-MM-dd'"
+              (ngModelChange)="selectedItem.dateOut = $event"
               required
             />
             <label for="dueDate" class="col-form-label">Due Date </label>
@@ -95,7 +96,8 @@
               name="dueDate"
               id="dueDate"
               type="date"
-              [(ngModel)]="selectedItem.dueDate"
+              [ngModel]="selectedItem.dueDate | date: 'yyyy-MM-dd'"
+              (ngModelChange)="selectedItem.dueDate = $event"
               required
             />
             <label for="dateIn" class="col-form-label">Date In </label>
@@ -104,11 +106,12 @@
               name="dateIn"
               id="dateIn"
               type="date"
-              [(ngModel)]="selectedItem.dateIn"
+              [ngModel]="selectedItem.dateIn | date: 'yyyy-MM-dd'"
+              (ngModelChange)="selectedItem.dateIn = $event"
               required
             />
             <label for="borrower" class="col-form-label">Borrower </label>
-            <select name="borrower" ngModel>
+            <select name="borrower" [(ngModel)]="selectedItem.id.borrower">
               <option value="" disabled>Choose a borrower</option>
               <option
                 *ngFor="let borrower of borrowers"
@@ -117,7 +120,7 @@
               ></select
             >
             <label for="bookTitle" class="col-form-label">Title </label>
-            <select name="book" ngModel>
+            <select name="book" [(ngModel)]="selectedItem.id.book">
               <option value="" disabled>Choose a book</option>
               <option
                 *ngFor="let book of books"
@@ -126,7 +129,7 @@
               >
             </select>
             <label for="branchName" class="col-form-label">Branch </label>
-            <select name="branch" ngModel>
+            <select name="branch" [(ngModel)]="selectedItem.id.branch">
               <option value="" disabled>Choose a branch</option>
               <option
                 *ngFor="let branch of branches"

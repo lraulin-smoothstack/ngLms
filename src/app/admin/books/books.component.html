@@ -98,7 +98,7 @@
               >
             </select>
             <label for="publisher" class="col-form-label">Publisher </label>
-            <select name="publisher" ngModel>
+            <select name="publisher" [(ngModel)]="selectedBook.publisher">
               <option value="" disabled>Choose a publisher</option>
               <option
                 *ngFor="let publisher of publishers"
