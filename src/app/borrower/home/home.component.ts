@@ -3,12 +3,10 @@ import { Component, OnInit, Input, Output } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { CookieService } from 'ngx-cookie-service';
-import { PagerService } from '../../common/services/pager.service';
 
 import { Loan } from '../entity/loan';
 import { Book } from '../entity/book';
 import { Branch } from '../entity/branch';
-import { Pager } from '../entity/pager';
 import { Borrower } from '../entity/borrower';
 import { BorrowerState } from '../entity/borrowerState';
 import { BorrowerService } from '../borrower.service';
@@ -26,11 +24,8 @@ export class HomeComponent implements OnInit {
 
   book: Book;
   branch: Branch;
-  pagedLoans: Pager;
-  pagedBooks: Pager;
 
   constructor(
-    private pagerSvc: PagerService,
     private cookieSvc: CookieService,
     private borrowerSvc: BorrowerService
   ) {
@@ -51,15 +46,6 @@ export class HomeComponent implements OnInit {
           return;
         }
 
-        if(state.books) {
-          this.pagedBooks = this.pagerSvc.getPager(state.books.length, 1, 1);
-          console.log(this.pagedBooks);
-        }
-
-        if(state.loans) {
-          this.pagedLoans = this.pagerSvc.getPager(state.loans.length, 1, 1);
-          console.log(this.pagedLoans);
-        }
     });
   }
 

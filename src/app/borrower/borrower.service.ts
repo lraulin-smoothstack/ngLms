@@ -15,9 +15,9 @@ import { Branch } from './entity/branch';
 export class BorrowerService {
 
   private store: BorrowerState = {
-    books: null,
-    loans: null,
-    branches: null,
+    books:    new BehaviorSubject<Book[]>([]),
+    loans:    new BehaviorSubject<Loan[]>([]),
+    branches: new BehaviorSubject<Branch[]>([]),
     borrower: null
   }
 
@@ -48,11 +48,12 @@ export class BorrowerService {
   }
 
   fetchLoans() {
-    const url = 'http://localhost:8080/lms/borrower/branches/1/borrowers/1';
+    const url = `http://localhost:8080/lms/borrower/borrowers/${this.store.borrower.id}/loans`;
     this.http.get<Loan[]>(url, this.httpOptions).pipe(
       tap( (loans: Loan[]) => {
+        console.log("SVC LOANS");
         console.log(loans);
-        this.store.loans = loans.filter( (loan: Loan) => loan.dateIn == null );
+        this.store.loans.next(loans);
         this._state.next(Object.assign({}, this.store));
       }),
       catchError(this.handleError<any>('BorrowerSvc::fetchLoans()'))
@@ -63,7 +64,7 @@ export class BorrowerService {
      const url = "http://localhost:8080/lms/borrower/branches";
      this.http.get<Branch[]>(url, this.httpOptions).pipe(
        tap( (branches: Branch[]) => {
-         this.store.branches = branches;
+         this.store.branches.next(branches);
          this._state.next(Object.assign({}, this.store));
        }),
        catchError(this.handleError<Book[]>('BorrowerSvc::fetchBranches()'))
@@ -75,7 +76,7 @@ export class BorrowerService {
     const url = `http://localhost:8080/lms/borrower/borrowers/${this.store.borrower.id}/branches/${branchId}/available-books/`;
     this.http.get<Book[]>(url, this.httpOptions).pipe(
       tap( (books: Book[]) => {
-        this.store.books = books;
+        this.store.books.next(books);
         this._state.next(Object.assign({}, this.store));
       }),
       catchError(this.handleError<Book[]>('BorrowerSvc::fetchAvailableBooks()'))
@@ -83,6 +84,8 @@ export class BorrowerService {
   }
 
   checkinLoan(loan: Loan) {
+    console.log("CHECKING IN LOAN");
+    console.log(loan);
     const {
       borrowerId,
       branchId,
@@ -102,6 +105,10 @@ export class BorrowerService {
   }
 
   checkoutBook(book: Book, branch: Branch) {
+    console.log("CHECKING OUT");
+    console.log(book);
+    console.log(branch);
+    
     const {
       borrowerId,
       branchId,

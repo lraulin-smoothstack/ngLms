@@ -8,7 +8,7 @@
       <input #bookReturnSearchBox id="book-return-search-box" (input)="search(bookReturnSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-return-search" aria-describedby="book-addon">
     </div>
   </div>
-  <table class="table table-dark">
+  <table class="table table-dark table-sm">
     <thead>
       <tr>
         <th scope="col">Title</th>
@@ -18,8 +18,8 @@
         <th></th>
       </tr>
     </thead>
-    <tbody *ngIf="loans">
-      <tr *ngFor="let loan of loans">
+    <tbody *ngIf="loans$ | async">
+      <tr searchInit *ngFor="let loan of searchLoans$ | async">
         <th scope="row">{{loan.id.book.title}}</th>
         <td>{{getBookAuthors(loan.id.book)}}</td>
         <td>{{loan.dateOut}}</td>

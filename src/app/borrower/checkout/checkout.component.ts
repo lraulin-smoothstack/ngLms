@@ -16,10 +16,10 @@ import { Book } from '../entity/book';
 })
 export class CheckoutComponent implements OnInit {
 
-  @Input() books;
+  @Input() books$;
   @Input() branch;
 
-  @Output("checkoutBook") checkoutBook: EventEmitter<any> = new EventEmitter();  
+  @Output("checkoutBook") checkoutBook: EventEmitter<any> = new EventEmitter();
 
   book: Book;
 
@@ -37,16 +37,23 @@ export class CheckoutComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit() {
+    this.search('');
+  }
+
   search(term: string): void {
     this.searchTerms.next(term);
   }
 
   searchBooks(term: string): Observable<Book[]> {
     if (!term.trim()) {
-      return of(this.books);
+      return this.books$;
     }
-    return of(this.books.filter( book =>
-      book.name.includes(term) || book.author.includes(term)));
+    return of(this.books$.getValue().filter( book =>
+      book.title.includes(term)
+      ||
+      book.authors.join().includes(term))
+    );
   }
 
   selectBook(book: Book) {

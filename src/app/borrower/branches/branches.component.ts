@@ -15,7 +15,7 @@ import { Branch } from '../entity/branch';
 })
 export class BranchesComponent implements OnInit {
 
-  @Input() branches;
+  @Input() branches$;
   @Output("selectBranch") selectBranch: EventEmitter<any> = new EventEmitter();
 
   searchBranches$: Observable<Branch[]>;
@@ -31,15 +31,20 @@ export class BranchesComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit() {
+    this.search('');
+  }
+
   search(term: string): void {
     this.searchTerms.next(term);
   }
 
   searchBranches(term: string): Observable<Branch[]> {
     if (!term.trim()) {
-      return of(this.branches);
+      return this.branches$;
     }
-    return of(this.branches.filter( branch =>
-      branch.name.includes(term) || branch.address.includes(term)));
+    return of(this.branches$.getValue().filter( branch =>
+      branch.name.includes(term) || branch.address.includes(term)
+    ));
   }
 }

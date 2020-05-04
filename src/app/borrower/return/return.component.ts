@@ -8,6 +8,10 @@ import {
 
 import { Loan } from '../entity/loan';
 
+
+import { PagerService } from '../../common/services/pager.service';
+import { Pager } from '../entity/pager';
+
 @Component({
   selector: 'app-return',
   templateUrl: './return.component.html',
@@ -15,14 +19,18 @@ import { Loan } from '../entity/loan';
 })
 export class ReturnComponent implements OnInit {
 
-  @Input() loans;
+  @Input() loans$;
   @Output("checkinLoan") checkinLoan: EventEmitter<any> = new EventEmitter();
 
   loan: Loan;
   searchLoans$: Observable<Loan[]>;
   searchTerms = new Subject<string>();
 
-  constructor() { console.log(this.loans); }
+
+  // pagedLoans: Pager;
+  pagedBooks: Pager;
+
+  constructor(private pagerSvc: PagerService) { }
 
   ngOnInit(): void {
     this.searchLoans$ = this.searchTerms.pipe(
@@ -30,20 +38,35 @@ export class ReturnComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((term: string) => this.searchLoans(term))
     );
+
+    // if(state.books) {
+    //   this.pagedBooks = this.pagerSvc.getPager(state.books.length, 1, 1);
+    //   console.log(this.pagedBooks);
+    // }
+
+    // if(state.loans) {
+    //   this.pagedLoans = this.pagerSvc.getPager(state.loans.length, 1, 1);
+    //   console.log(this.pagedLoans);
+    // }
+  }
+
+  ngAfterViewInit() {
+    this.search('');
   }
 
   search(term: string): void {
-    console.log("LOANS IN RETURN");
-    console.log(this.loans);
     this.searchTerms.next(term);
   }
 
   searchLoans(term: string): Observable<Loan[]> {
     if (!term.trim()) {
-      return of(this.loans);
+      return this.loans$;
     }
-    return of(this.loans.filter( loan =>
-      loan.name.includes(term) || loan.includes(term)));
+    return of(this.loans$.getValue().filter( loan =>
+      loan.id.book.title.includes(term)
+      ||
+      loan.id.book.authors.join().includes(term)
+    ));
   }
 
   getBookAuthors(book) {

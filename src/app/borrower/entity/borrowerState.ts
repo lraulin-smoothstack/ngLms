@@ -3,12 +3,11 @@ import { Loan } from './loan';
 import { Branch } from './branch';
 import { Borrower } from './borrower';
 
-
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 export interface BorrowerState {
-  books?: Book[],
-  loans?: Loan[],
-  branches?: Branch[],
+  books?: BehaviorSubject<Book[]>,
+  loans?: BehaviorSubject<Loan[]>,
+  branches?: BehaviorSubject<Branch[]>,
   borrower?: Borrower
 }

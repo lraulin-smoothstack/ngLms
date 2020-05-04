@@ -14,7 +14,14 @@ import { CheckoutComponent } from './checkout/checkout.component';
 
 
 @NgModule({
-  declarations: [BorrowerComponent, HomeComponent, TableComponent, BranchesComponent, ReturnComponent, CheckoutComponent],
+  declarations: [
+    BorrowerComponent,
+    HomeComponent,
+    TableComponent,
+    BranchesComponent,
+    ReturnComponent,
+    CheckoutComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
