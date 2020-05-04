@@ -16,7 +16,7 @@ export class BooksComponent implements OnInit {
   books: Book[] = [];
   selectedBook: Book;
   authors: Author[] = [];
-  selectedAuthor: Author;
+  selectedAuthor: Author | '';
   publishers: Publisher[] = [];
   selectedPublisher: Publisher;
   genres: Genre[] = [];
@@ -168,12 +168,32 @@ export class BooksComponent implements OnInit {
     });
   }
 
-  getAuthors(book: Book) {
+  getAuthors(book: Book): string {
     return book.authors ? book.authors.map((x) => x.name).join(', ') : '';
   }
 
-  getGenres(book: Book) {
+  getAvailableAuthors(): Author[] {
+    return this.authors.filter(
+      (x) => !this.selectedBook.authors.map((y) => y.id).includes(x.id)
+    );
+  }
+
+  getGenres(book: Book): string {
     return book.genres ? book.genres.map((x) => x.name).join(', ') : '';
+  }
+
+  addAuthor(): void {
+    if (this.selectedAuthor !== '') {
+      this.selectedBook.authors.push(this.selectedAuthor);
+    }
+    this.selectedAuthor = '';
+  }
+
+  removeAuthor(author: Author): void {
+    this.selectedBook.authors = this.selectedBook.authors.filter(
+      (a) => a !== author
+    );
+    this.selectedAuthor = '';
   }
 
   ngOnInit(): void {
