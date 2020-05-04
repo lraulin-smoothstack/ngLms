@@ -1,3 +1,4 @@
+import { GenresComponent } from './genres/genres.component';
 import { CommonModule } from '@angular/common';
 import { PublishersComponent } from './publishers/publishers.component';
 import { LoansComponent } from './loans/loans.component';
@@ -29,6 +30,10 @@ const routes: Routes = [
       {
         path: 'branches',
         component: BranchesComponent,
+      },
+      {
+        path: 'genres',
+        component: GenresComponent,
       },
       {
         path: 'loans',

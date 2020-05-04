@@ -13,6 +13,7 @@ import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SortableDirective } from './sortable.directive';
+import { GenresComponent } from './genres/genres.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SortableDirective } from './sortable.directive';
     LoansComponent,
     PublishersComponent,
     SortableDirective,
+    GenresComponent,
   ],
   imports: [
     AdminRoutingModule,
