@@ -121,12 +121,20 @@
               </select>
             </div>
             <div>
-              <label for="genre" class="col-form-label">Genre </label>
-              <select name="genre" ngModel>
-                <option value="" disabled>Choose a publisher</option>
+              <label for="genre" class="col-form-label">Genres </label>
+              <span *ngFor="let genre of selectedBook.genres"
+                >{{ genre.name
+                }}<button (click)="removeGenre(genre)">X</button></span
+              >
+              <select
+                name="selectedGenre"
+                [(ngModel)]="selectedGenre"
+                (change)="addGenre()"
+              >
+                <option value="{{ null }}" disabled>Add an genre</option>
                 <option
-                  *ngFor="let genre of genres"
-                  [ngValue]="selectedGenre"
+                  *ngFor="let genre of getAvailableGenres()"
+                  [ngValue]="genre"
                   >{{ genre.name }}</option
                 >
               </select>

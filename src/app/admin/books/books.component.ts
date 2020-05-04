@@ -16,11 +16,11 @@ export class BooksComponent implements OnInit {
   books: Book[] = [];
   selectedBook: Book;
   authors: Author[] = [];
-  selectedAuthor: Author | '';
+  selectedAuthor: Author | '' = '';
   publishers: Publisher[] = [];
   selectedPublisher: Publisher;
   genres: Genre[] = [];
-  selectedGenre: Genre;
+  selectedGenre: Genre | '' = '';
   errorMessage: string;
   closeResult: string;
   searchString = '';
@@ -178,6 +178,12 @@ export class BooksComponent implements OnInit {
     );
   }
 
+  getAvailableGenres(): Genre[] {
+    return this.genres.filter(
+      (x) => !this.selectedBook.genres.map((y) => y.id).includes(x.id)
+    );
+  }
+
   getGenres(book: Book): string {
     return book.genres ? book.genres.map((x) => x.name).join(', ') : '';
   }
@@ -188,12 +194,25 @@ export class BooksComponent implements OnInit {
     }
     this.selectedAuthor = '';
   }
+  addGenre(): void {
+    if (this.selectedGenre !== '') {
+      this.selectedBook.genres.push(this.selectedGenre);
+    }
+    this.selectedGenre = '';
+  }
 
   removeAuthor(author: Author): void {
     this.selectedBook.authors = this.selectedBook.authors.filter(
       (a) => a !== author
     );
     this.selectedAuthor = '';
+  }
+
+  removeGenre(genre: Genre): void {
+    this.selectedBook.genres = this.selectedBook.genres.filter(
+      (a) => a !== genre
+    );
+    this.selectedGenre = '';
   }
 
   ngOnInit(): void {
