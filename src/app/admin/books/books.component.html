@@ -115,7 +115,7 @@
                 <option value="" disabled>Choose a publisher</option>
                 <option
                   *ngFor="let publisher of publishers"
-                  [ngValue]="selectedBook.publisher"
+                  [ngValue]="publisher"
                   >{{ publisher.name }}</option
                 >
               </select>

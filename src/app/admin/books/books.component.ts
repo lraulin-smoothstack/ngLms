@@ -106,14 +106,9 @@ export class BooksComponent implements OnInit {
       : {
           id: null,
           title: '',
-          authors: [{ id: null, name: '' }],
-          publisher: {
-            id: null,
-            name: '',
-            address: '',
-            phoneNumber: '',
-          },
-          genres: [{ id: null, name: '' }],
+          authors: [],
+          publisher: null,
+          genres: [],
         };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
@@ -146,6 +141,7 @@ export class BooksComponent implements OnInit {
   }
 
   submit() {
+    console.log(this.selectedBook);
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
         next: (_) => this.fetchBooks(),
