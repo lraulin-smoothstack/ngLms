@@ -111,7 +111,12 @@
             </div>
             <div>
               <label for="publisher" class="col-form-label">Publisher </label>
-              <select name="publisher" [(ngModel)]="selectedBook.publisher">
+              <select
+                name="publisher"
+                required
+                [(ngModel)]="selectedPublisher"
+                [compareWith]="comparePublishers"
+              >
                 <option value="" disabled>Choose a publisher</option>
                 <option
                   *ngFor="let publisher of publishers"

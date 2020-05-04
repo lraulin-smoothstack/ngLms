@@ -18,7 +18,7 @@ export class BooksComponent implements OnInit {
   authors: Author[] = [];
   selectedAuthor: Author | '' = '';
   publishers: Publisher[] = [];
-  selectedPublisher: Publisher;
+  selectedPublisher: Publisher | '';
   genres: Genre[] = [];
   selectedGenre: Genre | '' = '';
   errorMessage: string;
@@ -97,10 +97,7 @@ export class BooksComponent implements OnInit {
   }
 
   open(content, book?: Book) {
-    console.log(this.authors);
-    console.log(this.publishers);
-    console.log(this.genres);
-
+    this.selectedPublisher = book ? book.publisher : '';
     this.selectedBook = book
       ? book
       : {
@@ -141,6 +138,13 @@ export class BooksComponent implements OnInit {
   }
 
   submit() {
+    console.log('SUBMIT!');
+    if (this.selectedPublisher !== '') {
+      console.log(`publisher: ${this.selectedPublisher}`);
+      this.selectedBook.publisher = this.selectedPublisher;
+    } else {
+      console.log('ERROR: No selected publisher!');
+    }
     console.log(this.selectedBook);
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
@@ -209,6 +213,10 @@ export class BooksComponent implements OnInit {
       (a) => a !== genre
     );
     this.selectedGenre = '';
+  }
+
+  comparePublishers(p1: Publisher, p2: Publisher): boolean {
+    return p1 && p2 ? p1.id === p2.id : p1 === p2;
   }
 
   ngOnInit(): void {
