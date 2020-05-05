@@ -15,19 +15,19 @@
 }
 
 .branches {
-  margin: 5px;
+  padding: 0 25px 25px 25px;
   grid-area: branches;
   overflow-y: scroll;
 }
 
 .returns {
-  margin: 5px;
+  padding: 0 25px 25px 25px;
   grid-area: returns;
   overflow-y: scroll;
 }
 
 .checkout {
-  margin: 5px;
+  padding: 0 25px 25px 25px;
   grid-area: checkout / 1 / checkout / -1;
   overflow-y: scroll;
 }

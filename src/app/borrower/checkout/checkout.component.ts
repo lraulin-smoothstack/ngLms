@@ -1,13 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-import {
-   debounceTime, distinctUntilChanged, switchMap
- } from 'rxjs/operators';
-
-
+import { PagerService, Pager } from '../../common/services/pager.service';
 import { Book } from '../entity/book';
+
+
 
 @Component({
   selector: 'app-checkout',
@@ -24,36 +23,65 @@ export class CheckoutComponent implements OnInit {
   book: Book;
 
   searchBooks$: Observable<Book[]>;
-  searchTerms = new Subject<string>();
+  searchTerms$ = new Subject<string>();
 
-  constructor() { }
+  pagedBooks$ = new BehaviorSubject<Book[]>([]);
+
+  pager: Pager;
+  itemsPerPage: number;
+
+  constructor( private pagerSvc: PagerService ) {
+    this.itemsPerPage = 5;
+  }
 
   ngOnInit(): void {
 
-    this.searchBooks$ = this.searchTerms.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((term: string) => this.searchBooks(term))
-    );
-  }
+    this.books$.subscribe( books => {
+      this.setPage(1, books);
+      this.search('');
+    });
 
-  ngAfterViewInit() {
-    this.search('');
+    this.searchBooks$ = this.searchTerms$.pipe(
+      debounceTime(300),
+      switchMap((term: string) => this.searchBooks(term) )
+    );
+
+    this.searchBooks$.subscribe( books => {
+      this.setPage(this.pager.currentPage, books);
+    })
   }
 
   search(term: string): void {
-    this.searchTerms.next(term);
+    this.searchTerms$.next(term);
   }
 
   searchBooks(term: string): Observable<Book[]> {
     if (!term.trim()) {
       return this.books$;
     }
+
     return of(this.books$.getValue().filter( book =>
       book.title.includes(term)
       ||
-      book.authors.join().includes(term))
+      book.authors.join().includes(term)
+    ));
+  }
+
+  setPage(page: number, books: Book[] ): void {
+    this.pager = this.pagerSvc.getPager(
+      books.length,
+      page,
+      this.itemsPerPage
     );
+
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+
+    this.pagedBooks$.next(books.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    ));
   }
 
   selectBook(book: Book) {

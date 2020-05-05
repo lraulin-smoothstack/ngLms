@@ -1,13 +1,30 @@
 <div>
-  <h3>Quick Return</h3>
   <div id="loansForm" class="form-group">
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="book-return-addon">Title | Author:</span>
+    <h3>Quick Return</h3>
+    <form class="form-inline">
+      <div class="form-group">
+        <div class="input-group mb-2 ml-2 mr-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="book-return-addon">Title | Author:</span>
+          </div>
+          <input #bookReturnSearchBox id="book-return-search-box" (input)="search(bookReturnSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-return-search" aria-describedby="book-addon">
+        </div>
+        <div *ngIf="searchLoans$ | async as loans" style="height: 46px">
+          <div class="ds-l-col--9">
+            <ngb-pagination
+              [collectionSize]="loans.length"
+              [(page)]="pager.currentPage"
+              [maxSize]="5"
+              [pageSize]="itemsPerPage"
+              [boundaryLinks]="true"
+              (pageChange)="setPage($event, loans)"
+            ></ngb-pagination>
+          </div>
+        </div>
       </div>
-      <input #bookReturnSearchBox id="book-return-search-box" (input)="search(bookReturnSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-return-search" aria-describedby="book-addon">
-    </div>
+    </form>
   </div>
+
   <table class="table table-dark table-sm">
     <thead>
       <tr>
@@ -18,8 +35,8 @@
         <th></th>
       </tr>
     </thead>
-    <tbody *ngIf="loans$ | async as loans">
-      <tr searchInit *ngFor="let loan of searchLoans$ | async">
+    <tbody>
+      <tr *ngFor="let loan of pagedLoans$ | async">
         <th scope="row">{{loan.id.book.title}}</th>
         <td>{{getBookAuthors(loan.id.book)}}</td>
         <td>{{loan.dateOut}}</td>
@@ -30,6 +47,7 @@
       </tr>
     </tbody>
   </table>
+
   <div *ngIf="loan" class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
