@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Author } from '../common/interfaces/author.interface';
@@ -14,8 +14,14 @@ import { Genre } from '../common/interfaces/genre.interface';
   providedIn: 'root',
 })
 export class AdminService {
-  private baseUrl = 'http://localhost:8080/lms/admin';
-  constructor(private http: HttpClient) {}
+  private baseUrl: string;
+
+  constructor(
+    @Inject('domain') private domain: string,
+    private http: HttpClient
+  ) {
+    this.baseUrl = this.domain + '/lms/admin';
+  }
 
   getAuthors(): Observable<Author[]> {
     return this.http.get<Author[]>(this.baseUrl + '/authors').pipe(
@@ -161,21 +167,12 @@ export class AdminService {
   }
 
   editLoan(loan: Loan): Observable<Loan> {
-    console.log('DATE IN');
-    console.log(loan.dateIn);
-    console.log(typeof loan.dateIn);
     if (loan.dateIn) {
       // @ts-ignore
       loan.dateIn = this.formatDate(loan.dateIn);
     }
-    console.log('DATE OUT');
-    console.log(loan.dateOut);
-    console.log(typeof loan.dateOut);
     // @ts-ignore
     loan.dateOut = this.formatDate(loan.dateOut);
-    console.log('DUE DATE');
-    console.log(loan.dueDate);
-    console.log(typeof loan.dueDate);
     // @ts-ignore
     loan.dueDate = this.formatDate(loan.dueDate);
     return this.http.put<Loan>(this.baseUrl + '/book-loan', loan).pipe(
