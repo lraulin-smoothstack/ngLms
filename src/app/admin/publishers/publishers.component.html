@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Phone Number</th>
       <th>Address</th>
       <th></th>
       <th>
@@ -22,6 +23,7 @@
   <tbody>
     <tr *ngFor="let publisher of pagedItems">
       <td>{{ publisher.name }}</td>
+      <td>{{ publisher.phoneNumber }}</td>
       <td>{{ publisher.address }}</td>
       <td>
         <button
@@ -86,6 +88,18 @@
               [(ngModel)]="selectedItem.name"
               required
             />
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber" class="col-form-label">Address </label>
+            <input
+              class="form-control"
+              name="phoneNumber"
+              id="phoneNumber"
+              [(ngModel)]="selectedItem.phoneNumber"
+              required
+            />
+          </div>
+          <div class="form-group">
             <label for="address" class="col-form-label">Address </label>
             <input
               class="form-control"

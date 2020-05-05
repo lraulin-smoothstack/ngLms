@@ -24,7 +24,7 @@ export class AdminService {
   }
 
   getAuthors(): Observable<Author[]> {
-    return this.http.get<Author[]>(this.baseUrl + '/authors').pipe(
+    return this.http.get<Author[]>(this.baseUrl + '/author').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -47,14 +47,14 @@ export class AdminService {
   }
 
   addAuthor(author: Author): Observable<Author> {
-    return this.http.post<Author>(this.baseUrl + '/authors', author).pipe(
+    return this.http.post<Author>(this.baseUrl + '/author', author).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   getBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(this.baseUrl + '/books').pipe(
+    return this.http.get<Book[]>(this.baseUrl + '/book').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -75,14 +75,14 @@ export class AdminService {
   }
 
   addBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(this.baseUrl + '/books', book).pipe(
+    return this.http.post<Book>(this.baseUrl + '/book', book).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   getBorrowers(): Observable<Borrower[]> {
-    return this.http.get<Borrower[]>(this.baseUrl + '/borrowers').pipe(
+    return this.http.get<Borrower[]>(this.baseUrl + '/borrower').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -105,14 +105,14 @@ export class AdminService {
   }
 
   addBorrower(borrower: Borrower): Observable<Borrower> {
-    return this.http.post<Borrower>(this.baseUrl + '/borrowers', borrower).pipe(
+    return this.http.post<Borrower>(this.baseUrl + '/borrower', borrower).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   getBranches(): Observable<Branch[]> {
-    return this.http.get<Branch[]>(this.baseUrl + '/branches').pipe(
+    return this.http.get<Branch[]>(this.baseUrl + '/branch').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -135,14 +135,14 @@ export class AdminService {
   }
 
   addBranch(branch: Branch): Observable<Branch> {
-    return this.http.post<Branch>(this.baseUrl + '/branches', branch).pipe(
+    return this.http.post<Branch>(this.baseUrl + '/branch', branch).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   getLoans(): Observable<Loan[]> {
-    return this.http.get<Loan[]>(this.baseUrl + '/book-loans').pipe(
+    return this.http.get<Loan[]>(this.baseUrl + '/loan').pipe(
       map((loans: Loan[]) =>
         loans.map((loan) => {
           loan.dateIn = loan.dateIn ? new Date(loan.dateIn) : null;
@@ -175,14 +175,14 @@ export class AdminService {
     loan.dateOut = this.formatDate(loan.dateOut);
     // @ts-ignore
     loan.dueDate = this.formatDate(loan.dueDate);
-    return this.http.put<Loan>(this.baseUrl + '/book-loan', loan).pipe(
+    return this.http.put<Loan>(this.baseUrl + '/loan', loan).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   getPublishers(): Observable<Publisher[]> {
-    return this.http.get<Publisher[]>(this.baseUrl + '/publishers').pipe(
+    return this.http.get<Publisher[]>(this.baseUrl + '/publisher').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -206,7 +206,7 @@ export class AdminService {
 
   addPublisher(publisher: Publisher): Observable<Publisher> {
     return this.http
-      .post<Publisher>(this.baseUrl + '/publishers', publisher)
+      .post<Publisher>(this.baseUrl + '/publisher', publisher)
       .pipe(
         tap((data) => console.log(JSON.stringify(data))),
         catchError(this.handleError)
@@ -214,7 +214,7 @@ export class AdminService {
   }
 
   getGenres(): Observable<Genre[]> {
-    return this.http.get<Genre[]>(this.baseUrl + '/genres').pipe(
+    return this.http.get<Genre[]>(this.baseUrl + '/genre').pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -237,7 +237,7 @@ export class AdminService {
   }
 
   addGenre(genre: Genre): Observable<Genre> {
-    return this.http.post<Genre>(this.baseUrl + '/genres', genre).pipe(
+    return this.http.post<Genre>(this.baseUrl + '/genre', genre).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
