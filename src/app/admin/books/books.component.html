@@ -80,26 +80,32 @@
       <div class="modal-body">
         <form #f="ngForm" (ngSubmit)="submit()">
           <div class="form-group">
+            <label for="title" class="col-form-label">Title </label>
+            <input
+              class="form-control"
+              name="title"
+              id="title"
+              [(ngModel)]="selectedBook.title"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="author" class="col-form-label">Authors </label>
             <div>
-              <label for="title" class="col-form-label">Title </label>
-              <input
-                class="form-control"
-                name="title"
-                id="title"
-                [(ngModel)]="selectedBook.title"
-                required
-              />
-            </div>
-            <div>
-              <label for="author" class="col-form-label">Authors </label>
-              <span *ngFor="let author of selectedBook.authors"
-                >{{ author.name
-                }}<button (click)="removeAuthor(author)">X</button></span
-              >
+              <span
+                class="badge badge-light"
+                *ngFor="let author of selectedBook.authors"
+                >{{ author.name }}
+                <button class="removeBtn" (click)="removeAuthor(author)">
+                  <fa-icon [icon]="faTimesCircle"></fa-icon>
+                </button>
+              </span>
               <select
                 name="selectedAuthor"
+                class="form-control"
                 [(ngModel)]="selectedAuthor"
                 (change)="addAuthor()"
+                [compareWith]="compareItems"
               >
                 <option value="{{ null }}" disabled>Add an author</option>
                 <option
@@ -109,31 +115,39 @@
                 >
               </select>
             </div>
-            <div>
-              <label for="publisher" class="col-form-label">Publisher </label>
-              <select
-                name="publisher"
-                required
-                [(ngModel)]="selectedPublisher"
-                [compareWith]="comparePublishers"
+          </div>
+          <div class="form-group">
+            <label for="publisher" class="col-form-label">Publisher </label>
+            <select
+              name="publisher"
+              class="form-control"
+              required
+              [(ngModel)]="selectedPublisher"
+              [compareWith]="compareItems"
+            >
+              <option value="" disabled>Choose a publisher</option>
+              <option
+                *ngFor="let publisher of publishers"
+                [ngValue]="publisher"
+                >{{ publisher.name }}</option
               >
-                <option value="" disabled>Choose a publisher</option>
-                <option
-                  *ngFor="let publisher of publishers"
-                  [ngValue]="publisher"
-                  >{{ publisher.name }}</option
-                >
-              </select>
-            </div>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="genre" class="col-form-label">Genres </label>
             <div>
-              <label for="genre" class="col-form-label">Genres </label>
-              <span *ngFor="let genre of selectedBook.genres"
-                >{{ genre.name
-                }}<button (click)="removeGenre(genre)">X</button></span
-              >
+              <span
+                class="badge badge-light"
+                *ngFor="let genre of selectedBook.genres"
+                >{{ genre.name }}
+                <button class="removeBtn" (click)="removeGenre(genre)">
+                  <fa-icon [icon]="faTimesCircle"></fa-icon></button
+              ></span>
               <select
                 name="selectedGenre"
+                class="form-control"
                 [(ngModel)]="selectedGenre"
+                [compareWith]="compareItems"
                 (change)="addGenre()"
               >
                 <option value="{{ null }}" disabled>Add an genre</option>
