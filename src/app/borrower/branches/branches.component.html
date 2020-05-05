@@ -1,23 +1,40 @@
 <div>
-  <h3>Branches</h3>
-  <div class="form-group">
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="branches-addon">Name | Address:</span>
+  <div id="branchesForm" class="form-group">
+    <h3>Branches</h3>
+    <form class="form-inline">
+      <div class="form-group">
+        <div class="input-group mb-2 ml-2 mr-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="branches-addon">Name | Address:</span>
+          </div>
+          <input #branchSearchBox id="branch-search-box" (input)="search(branchSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="branch-search" aria-describedby="branches-addon">
+        </div>
+        <div *ngIf="searchBranches$ | async as branches" style="height: 46px">
+          <div class="ds-l-col--9">
+            <ngb-pagination
+              [collectionSize]="branches.length"
+              [(page)]="pager.currentPage"
+              [maxSize]="5"
+              [pageSize]="itemsPerPage"
+              [boundaryLinks]="true"
+              (pageChange)="setPage($event, branches)"
+            ></ngb-pagination>
+          </div>
+        </div>
       </div>
-      <input #searchBox id="search-box" (input)="search(searchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="branch-search" aria-describedby="branches-addon">
-    </div>
+    </form>
   </div>
+
   <table class="table table-dark table-sm">
     <thead>
       <tr>
         <th scope="col">Name</th>
-        <th scope="col">Addres</th>
+        <th scope="col">Address</th>
         <th></th>
       </tr>
     </thead>
-    <tbody *ngIf="branches$ | async">
-      <tr *ngFor="let branch of searchBranches$ | async">
+    <tbody>
+      <tr *ngFor="let branch of pagedBranches$ | async">
         <th scope="row">{{branch.name}}</th>
         <td>{{branch.address}}</td>
         <td>

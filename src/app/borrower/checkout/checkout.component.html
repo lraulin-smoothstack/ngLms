@@ -1,13 +1,30 @@
 <div>
-  <div id="checkoutForm" class="form-group">
+  <div id="checkoutForm">
     <h3>Checkout: {{ branch?.name }}</h3>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="branches-addon">Name | Author:</span>
+    <form class="form-inline">
+      <div class="form-group">
+        <div class="input-group mb-2 ml-2 mr-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="branches-addon">Name | Author:</span>
+          </div>
+          <input #bookCheckoutSearchBox id="book-checkout-search-box" (input)="search(bookCheckoutSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-checkout-search" aria-describedby="book-addon">
+        </div>
       </div>
-      <input #bookCheckoutSearchBox id="book-checkout-search-box" (input)="search(bookCheckoutSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-checkout-search" aria-describedby="book-addon">
-    </div>
+      <div *ngIf="searchBooks$ | async as books" style="height: 46px">
+        <div class="ds-l-col--9">
+          <ngb-pagination
+            [collectionSize]="books.length"
+            [(page)]="pager.currentPage"
+            [maxSize]="5"
+            [pageSize]="itemsPerPage"
+            [boundaryLinks]="true"
+            (pageChange)="setPage($event, books)"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </form>
   </div>
+
   <table class="table table-dark table-sm">
     <thead>
       <tr>
@@ -17,8 +34,8 @@
         <th></th>
       </tr>
     </thead>
-    <tbody *ngIf="books$ | async">
-      <tr *ngFor="let book of searchBooks$ | async">
+    <tbody>
+      <tr *ngFor="let book of pagedBooks$ | async">
         <th scope="row">{{book.title}}</th>
         <td>{{getBookAuthors(book)}}</td>
         <td>{{getBookGenres(book)}}</td>
@@ -40,7 +57,7 @@
         <div class="modal-body">
           <form>
             <div class="form-group">
-              <label for="book-title" class="col-form-label">TItle</label>
+              <label for="book-title" class="col-form-label">Title</label>
               <input type="text" class="form-control" id="book-title" disabled placeholder={{book?.title}}>
             </div>
             <div class="form-group">
