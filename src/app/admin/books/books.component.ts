@@ -8,7 +8,7 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { Book } from 'src/app/common/interfaces/book.interface';
-import { Author } from 'src/app/common/interfaces/author.interface';
+import { Author, newAuthor } from 'src/app/common/interfaces/author.interface';
 import { Publisher } from 'src/app/common/interfaces/publisher.interface';
 import { Genre } from 'src/app/common/interfaces/genre.interface';
 
@@ -22,11 +22,11 @@ export class BooksComponent implements OnInit {
   books: Book[] = [];
   selectedBook: Book;
   authors: Author[] = [];
-  selectedAuthor: Author | '' = '';
+  selectedAuthor: Author = null;
   publishers: Publisher[] = [];
-  selectedPublisher: Publisher | '';
+  selectedPublisher: Publisher = null;
   genres: Genre[] = [];
-  selectedGenre: Genre | '' = '';
+  selectedGenre: Genre = null;
   errorMessage: string;
   closeResult: string;
   searchString = '';
@@ -104,7 +104,7 @@ export class BooksComponent implements OnInit {
   }
 
   open(content, book?: Book) {
-    this.selectedPublisher = book ? book.publisher : '';
+    this.selectedPublisher = book ? book.publisher : null;
     this.selectedBook = book
       ? book
       : {
@@ -145,14 +145,10 @@ export class BooksComponent implements OnInit {
   }
 
   submit() {
-    console.log('SUBMIT!');
-    if (this.selectedPublisher !== '') {
-      console.log(`publisher: ${this.selectedPublisher}`);
-      this.selectedBook.publisher = this.selectedPublisher;
-    } else {
-      console.log('ERROR: No selected publisher!');
+    if (!this.selectedPublisher) {
+      return;
     }
-    console.log(this.selectedBook);
+    this.selectedBook.publisher = this.selectedPublisher;
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
         next: (_) => this.fetchBooks(),
@@ -196,30 +192,30 @@ export class BooksComponent implements OnInit {
   }
 
   addAuthor(): void {
-    if (this.selectedAuthor !== '') {
+    if (this.selectedAuthor) {
       this.selectedBook.authors.push(this.selectedAuthor);
     }
-    this.selectedAuthor = '';
+    this.selectedAuthor = null;
   }
   addGenre(): void {
-    if (this.selectedGenre !== '') {
+    if (this.selectedGenre) {
       this.selectedBook.genres.push(this.selectedGenre);
     }
-    this.selectedGenre = '';
+    this.selectedGenre = null;
   }
 
   removeAuthor(author: Author): void {
     this.selectedBook.authors = this.selectedBook.authors.filter(
       (a) => a !== author
     );
-    this.selectedAuthor = '';
+    this.selectedAuthor = null;
   }
 
   removeGenre(genre: Genre): void {
     this.selectedBook.genres = this.selectedBook.genres.filter(
       (a) => a !== genre
     );
-    this.selectedGenre = '';
+    this.selectedGenre = null;
   }
 
   compareItems(
