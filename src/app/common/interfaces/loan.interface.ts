@@ -1,5 +1,5 @@
 import { Book } from './book.interface';
-import { borrower } from './borrower.interface';
+import { Borrower } from './borrower.interface';
 import { Branch } from './branch.interface';
 
 export interface Loan {
