@@ -1,12 +1,13 @@
 import { Injectable, Inject } from '@angular/core';
-import { LibraryBranch } from '../models/library-branch.interface';
 import { HttpClient } from '@angular/common/http';
+
+import { Branch } from '../../common/interfaces/branch.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LibraryBranchesService {
-  branches: LibraryBranch[];
+export class BranchService {
+  branches: Branch[];
   isLoading: boolean;
 
   constructor(
@@ -20,7 +21,7 @@ export class LibraryBranchesService {
     this.isLoading = true;
     this.http
       .get(`${this.domain}/lms/librarian/branches`)
-      .subscribe((data: LibraryBranch[]) => {
+      .subscribe((data: Branch[]) => {
         this.branches = data;
         this.isLoading = false;
 
@@ -34,13 +35,13 @@ export class LibraryBranchesService {
     this.isLoading = true;
     this.http
       .get(`${this.domain}/lms/librarian/branches/${id}`)
-      .subscribe((data: LibraryBranch) => {
+      .subscribe((data: Branch) => {
         this.isLoading = false;
         callback(data);
       });
   }
 
-  updateBranch(id: number, branch: LibraryBranch, callback?: any): void {
+  updateBranch(id: number, branch: Branch, callback?: any): void {
     this.isLoading = true;
 
     this.http

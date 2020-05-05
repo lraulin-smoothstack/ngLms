@@ -1,11 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
-import { BookCopy } from '../models/book-copy.interface';
 import { HttpClient } from '@angular/common/http';
+
+import { BookCopy } from '../../common/interfaces/book-copy.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BookCopiesService {
+export class BookCopyService {
   bookCopies: BookCopy[];
   isLoading: boolean;
 

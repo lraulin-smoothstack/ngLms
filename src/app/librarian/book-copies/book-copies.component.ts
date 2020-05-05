@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { BookCopiesService } from '../services/book-copies.service';
-import { BookCopy } from '../models/book-copy.interface';
-import { LibraryBranch } from '../models/library-branch.interface';
-import { LibraryBranchesService } from '../services/library-branches.service';
-import { PagerService } from 'src/app/common/services/pager.service';
+
+import { BookCopyService } from '../services/book-copy.service';
+import { BranchService } from '../services/branch.service';
+import { PagerService } from '../../common/services/pager.service';
+import { BookCopy } from '../../common/interfaces/book-copy.interface';
+import { Branch } from '../../common/interfaces/branch.interface';
 
 @Component({
   selector: 'app-book-copies',
@@ -15,7 +16,7 @@ import { PagerService } from 'src/app/common/services/pager.service';
 export class BookCopiesComponent implements OnInit {
   selectedBookCopy: BookCopy;
   branchId: number;
-  branch: LibraryBranch;
+  branch: Branch;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
@@ -25,8 +26,8 @@ export class BookCopiesComponent implements OnInit {
   itemsPerPage = 5;
 
   constructor(
-    public bookCopyService: BookCopiesService,
-    public branchService: LibraryBranchesService,
+    public bookCopyService: BookCopyService,
+    public branchService: BranchService,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private pagerService: PagerService
