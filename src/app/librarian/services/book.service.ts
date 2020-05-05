@@ -1,11 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Book } from '../models/book.interface';
+
+import { Book } from '../../common/interfaces/book.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BooksService {
+export class BookService {
   books: Book[];
   isLoading: boolean;
 

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LibraryBranch } from '../models/library-branch.interface';
-import { LibraryBranchesService } from '../services/library-branches.service';
-import { PagerService } from 'src/app/common/services/pager.service';
 import { NgForm } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+
+import { BranchService } from '../services/branch.service';
+import { PagerService } from '../../common/services/pager.service';
+import { Branch } from '../../common/interfaces/branch.interface';
 
 @Component({
   selector: 'app-branches',
@@ -11,7 +12,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./branches.component.css'],
 })
 export class BranchesComponent implements OnInit {
-  selectedBranch: LibraryBranch;
+  selectedBranch: Branch;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
@@ -21,7 +22,7 @@ export class BranchesComponent implements OnInit {
   itemsPerPage = 5;
 
   constructor(
-    public branchService: LibraryBranchesService,
+    public branchService: BranchService,
     private modalService: NgbModal,
     private pagerService: PagerService
   ) {}
@@ -45,7 +46,7 @@ export class BranchesComponent implements OnInit {
     );
   }
 
-  open(content, branch: LibraryBranch) {
+  open(content, branch: Branch) {
     this.selectedBranch = branch;
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(

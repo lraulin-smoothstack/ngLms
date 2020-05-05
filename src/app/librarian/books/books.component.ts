@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { LibraryBranch } from '../models/library-branch.interface';
-import { BooksService } from '../services/books.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Book } from '../models/book.interface';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BookCopiesService } from '../services/book-copies.service';
-import { BookCopy } from '../models/book-copy.interface';
-import { PagerService } from 'src/app/common/services/pager.service';
+
+import { BookCopyService } from '../services/book-copy.service';
+import { BookService } from '../services/book.service';
+import { PagerService } from '../../common/services/pager.service';
+import { BookCopy } from '../../common/interfaces/book-copy.interface';
+import { Book } from '../../common/interfaces/book.interface';
+import { Branch } from '../../common/interfaces/branch.interface';
 
 @Component({
   selector: 'app-books',
@@ -26,8 +27,8 @@ export class BooksComponent implements OnInit {
   itemsPerPage = 5;
 
   constructor(
-    public bookService: BooksService,
-    public bookCopyService: BookCopiesService,
+    public bookService: BookService,
+    public bookCopyService: BookCopyService,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private router: Router,
@@ -54,7 +55,16 @@ export class BooksComponent implements OnInit {
 
   addBookCopy(): void {
     const bookCopy: BookCopy = {
-      id: { book: { id: this.selectedBook.id }, branch: { id: this.branchId } },
+      id: {
+        book: {
+          id: this.selectedBook.id,
+          title: null,
+          publisher: null,
+          authors: [],
+          genres: [],
+        },
+        branch: { id: this.branchId, name: null, address: null },
+      },
       amount: this.amount,
     };
 

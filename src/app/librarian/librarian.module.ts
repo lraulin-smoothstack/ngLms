@@ -8,10 +8,10 @@ import { LibrarianRoutingModule } from './librarian-routing.module';
 import { LibrarianComponent } from './librarian.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BookCopiesComponent } from './book-copies/book-copies.component';
-import { LibraryBranchesService } from './services/library-branches.service';
-import { BookCopiesService } from './services/book-copies.service';
 import { BooksComponent } from './books/books.component';
-import { BooksService } from './services/books.service';
+import { BranchService } from './services/branch.service';
+import { BookCopyService } from './services/book-copy.service';
+import { BookService } from './services/book.service';
 
 @NgModule({
   declarations: [
@@ -27,6 +27,6 @@ import { BooksService } from './services/books.service';
     NgbModule,
     FormsModule,
   ],
-  providers: [LibraryBranchesService, BookCopiesService, BooksService],
+  providers: [BranchService, BookCopyService, BookService],
 })
 export class LibrarianModule {}
