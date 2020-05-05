@@ -94,7 +94,7 @@
               id="dueDate"
               type="date"
               [ngModel]="selectedItem.dueDate | date: 'yyyy-MM-dd'"
-              (ngModelChange)="selectedItem.dueDate = $event"
+              (ngModelChange)="setDueDate($event)"
               required
             />
           </div>

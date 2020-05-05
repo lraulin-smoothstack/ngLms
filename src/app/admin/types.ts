@@ -6,21 +6,21 @@ export interface Author {
 export interface Borrower {
   id: number;
   name: string;
-  address: string | null;
-  phoneNumber: string | null;
+  address: string;
+  phoneNumber: string;
 }
 
 export interface Branch {
   id: number;
   name: string;
-  address: string | null;
+  address: string;
 }
 
 export interface Publisher {
   id: number;
   name: string;
-  address: string | null;
-  phoneNumber: string | null;
+  address: string;
+  phoneNumber: string;
 }
 
 export interface Genre {
