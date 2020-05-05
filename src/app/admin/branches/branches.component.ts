@@ -1,8 +1,8 @@
 import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
-import { Branch } from '../types';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
+import { Branch } from 'src/app/common/interfaces/branch.interface';
 
 @Component({
   selector: 'app-branches',

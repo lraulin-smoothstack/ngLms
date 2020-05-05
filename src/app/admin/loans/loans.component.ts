@@ -1,9 +1,11 @@
-import { Branch, Borrower, Book } from './../types';
 import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
-import { Loan } from '../types';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
+import { Loan } from 'src/app/common/interfaces/loan.interface';
+import { Book } from 'src/app/common/interfaces/book.interface';
+import { Branch } from 'src/app/common/interfaces/branch.interface';
+import { Borrower } from 'src/app/common/interfaces/borrower.interface';
 
 @Component({
   selector: 'app-loans',

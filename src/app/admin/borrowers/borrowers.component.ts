@@ -1,8 +1,8 @@
 import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
-import { Borrower } from '../types';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
+import { Borrower } from 'src/app/common/interfaces/borrower.interface';
 
 @Component({
   selector: 'app-borrowers',
