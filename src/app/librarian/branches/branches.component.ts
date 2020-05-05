@@ -13,6 +13,8 @@ import { Branch } from '../../common/interfaces/branch.interface';
 })
 export class BranchesComponent implements OnInit {
   selectedBranch: Branch;
+  branches: Branch[];
+  isLoading: boolean;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
@@ -32,18 +34,22 @@ export class BranchesComponent implements OnInit {
   }
 
   loadLibraryBranches(): void {
-    this.branchService.getBranches((data) => {
+    this.isLoading = true;
+    this.branchService.getBranches().subscribe((data: Branch[]) => {
+      this.branches = data;
       this.totalItems = data.length;
       this.setPage(1);
+      this.isLoading = false;
     });
   }
 
   updateLibraryBranch(form: NgForm): void {
-    this.branchService.updateBranch(
-      this.selectedBranch.id,
-      form.value,
-      (data) => this.modalRef.close()
-    );
+    this.branchService
+      .updateBranch(this.selectedBranch.id, form.value)
+      .subscribe((data) => {
+        this.modalRef.close();
+        this.isLoading = false;
+      });
   }
 
   open(content, branch: Branch) {
@@ -65,7 +71,7 @@ export class BranchesComponent implements OnInit {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
-    const data = this.branchService.branches;
+    const data = this.branches;
     this.pager = this.pagerService.getPager(
       data.length,
       page,
