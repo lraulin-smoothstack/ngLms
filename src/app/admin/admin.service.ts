@@ -2,15 +2,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
-import {
-  Author,
-  Book,
-  Borrower,
-  Branch,
-  Loan,
-  Publisher,
-  Genre,
-} from './types';
+import { Author } from '../common/interfaces/author.interface';
+import { Book } from '../common/interfaces/book.interface';
+import { Borrower } from '../common/interfaces/borrower.interface';
+import { Branch } from '../common/interfaces/branch.interface';
+import { Loan } from '../common/interfaces/loan.interface';
+import { Publisher } from '../common/interfaces/publisher.interface';
+import { Genre } from '../common/interfaces/genre.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -2,8 +2,8 @@ import { SortableDirective, SortEvent } from './../sortable.directive';
 import { PagerService, Pager } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { Author } from '../types';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Author } from 'src/app/common/interfaces/author.interface';
 
 @Component({
   selector: 'app-authors',
