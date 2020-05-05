@@ -103,26 +103,24 @@ export class LoansComponent implements OnInit {
   }
 
   submit() {
-    if (this.selectedItem.id) {
-      this.adminService.editLoan(this.selectedItem).subscribe({
-        next: (_) => this.fetchData(),
-        error: (err) => (this.errorMessage = err),
-      });
-    } else {
-      this.adminService.addLoan(this.selectedItem).subscribe({
-        next: (_) => this.fetchData(),
-        error: (err) => (this.errorMessage = err),
-      });
-    }
+    this.adminService.editLoan(this.selectedItem).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
+    });
 
     this.modalRef.close();
   }
 
-  delete(id: number) {
-    this.adminService.deleteLoan(id).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+  compareItems(
+    p1: Book | Borrower | Branch,
+    p2: Book | Borrower | Branch
+  ): boolean {
+    return p1 && p2 ? p1.id === p2.id : p1 === p2;
+  }
+
+  setDueDate(selectedDate: string) {
+    console.log(selectedDate);
+    this.selectedItem.dueDate = new Date(selectedDate);
   }
 
   ngOnInit(): void {

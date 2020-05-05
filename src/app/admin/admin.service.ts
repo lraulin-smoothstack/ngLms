@@ -152,24 +152,35 @@ export class AdminService {
     );
   }
 
-  deleteLoan(id: number): Observable<{}> {
-    return this.http.delete(this.baseUrl + '/book-loan/' + id).pipe(
-      tap((data) => console.log(JSON.stringify(data))),
-      catchError(this.handleError)
+  private formatDate(date: Date): string {
+    return (
+      ('0' + (date.getMonth() + 1)).slice(-2) +
+      '/' +
+      ('0' + date.getDate()).slice(-2) +
+      '/' +
+      date.getFullYear()
     );
   }
 
   editLoan(loan: Loan): Observable<Loan> {
-    return this.http
-      .put<Loan>(this.baseUrl + '/book-loan/' + loan.id, loan)
-      .pipe(
-        tap((data) => console.log(JSON.stringify(data))),
-        catchError(this.handleError)
-      );
-  }
-
-  addLoan(loan: Loan): Observable<Loan> {
-    return this.http.post<Loan>(this.baseUrl + '/book-loans', loan).pipe(
+    console.log('DATE IN');
+    console.log(loan.dateIn);
+    console.log(typeof loan.dateIn);
+    if (loan.dateIn) {
+      // @ts-ignore
+      loan.dateIn = this.formatDate(loan.dateIn);
+    }
+    console.log('DATE OUT');
+    console.log(loan.dateOut);
+    console.log(typeof loan.dateOut);
+    // @ts-ignore
+    loan.dateOut = this.formatDate(loan.dateOut);
+    console.log('DUE DATE');
+    console.log(loan.dueDate);
+    console.log(typeof loan.dueDate);
+    // @ts-ignore
+    loan.dueDate = this.formatDate(loan.dueDate);
+    return this.http.put<Loan>(this.baseUrl + '/book-loan', loan).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );

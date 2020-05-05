@@ -14,6 +14,7 @@ import { LoansComponent } from './loans/loans.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SortableDirective } from './sortable.directive';
 import { GenresComponent } from './genres/genres.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { GenresComponent } from './genres/genres.component';
     HttpClientModule,
     NgbModule,
     ReactiveFormsModule,
+    FontAwesomeModule,
   ],
   providers: [PagerService],
 })

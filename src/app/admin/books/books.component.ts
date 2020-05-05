@@ -5,6 +5,10 @@ import { Book } from '../types';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
 import { SortableDirective, SortEvent } from '../sortable.directive';
+import {
+  faTimesCircle,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-books',
@@ -28,6 +32,7 @@ export class BooksComponent implements OnInit {
   pagedItems: Book[];
   itemsPerPage = 5;
   arrows = { title: '', author: '', publisher: '', genre: '' };
+  faTimesCircle: IconDefinition = faTimesCircle;
 
   @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
 
@@ -215,7 +220,10 @@ export class BooksComponent implements OnInit {
     this.selectedGenre = '';
   }
 
-  comparePublishers(p1: Publisher, p2: Publisher): boolean {
+  compareItems(
+    p1: Author | Genre | Publisher,
+    p2: Author | Genre | Publisher
+  ): boolean {
     return p1 && p2 ? p1.id === p2.id : p1 === p2;
   }
 
