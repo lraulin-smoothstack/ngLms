@@ -11,16 +11,6 @@
       <th>Borrower</th>
       <th>Title</th>
       <th>Branch</th>
-      <th></th>
-      <th>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="open(editLoanModal)"
-        >
-          Add
-        </button>
-      </th>
     </tr>
   </thead>
   <tbody>
@@ -37,12 +27,7 @@
           class="btn btn-primary"
           (click)="open(editLoanModal, loan)"
         >
-          Edit
-        </button>
-      </td>
-      <td>
-        <button type="button" class="btn btn-danger" (click)="delete(loan.id)">
-          Delete
+          Change Due Date
         </button>
       </td>
     </tr>
@@ -78,18 +63,30 @@
         </button>
       </div>
       <div class="modal-body">
+        <table>
+          <tr>
+            <th>Borrower</th>
+            <td>{{ selectedItem.id.borrower.name }}</td>
+          </tr>
+          <tr>
+            <th>Branch</th>
+            <td>{{ selectedItem.id.branch.name }}</td>
+          </tr>
+          <tr>
+            <th>Book</th>
+            <td>{{ selectedItem.id.book.title }}</td>
+          </tr>
+          <tr>
+            <th>Checked Out</th>
+            <td>{{ selectedItem.dateOut | date: "shortDate" }}</td>
+          </tr>
+          <tr>
+            <th>Returned</th>
+            <td>{{ selectedItem.dateIn | date: "shortDate" }}</td>
+          </tr>
+        </table>
         <form #f="ngForm" (ngSubmit)="submit()">
           <div class="form-group">
-            <label for="dateOut" class="col-form-label">Date Out </label>
-            <input
-              class="form-control"
-              name="dateOut"
-              id="dateOut"
-              type="date"
-              [ngModel]="selectedItem.dateOut | date: 'yyyy-MM-dd'"
-              (ngModelChange)="selectedItem.dateOut = $event"
-              required
-            />
             <label for="dueDate" class="col-form-label">Due Date </label>
             <input
               class="form-control"
@@ -100,43 +97,6 @@
               (ngModelChange)="selectedItem.dueDate = $event"
               required
             />
-            <label for="dateIn" class="col-form-label">Date In </label>
-            <input
-              class="form-control"
-              name="dateIn"
-              id="dateIn"
-              type="date"
-              [ngModel]="selectedItem.dateIn | date: 'yyyy-MM-dd'"
-              (ngModelChange)="selectedItem.dateIn = $event"
-              required
-            />
-            <label for="borrower" class="col-form-label">Borrower </label>
-            <select name="borrower" [(ngModel)]="selectedItem.id.borrower">
-              <option value="" disabled>Choose a borrower</option>
-              <option
-                *ngFor="let borrower of borrowers"
-                [ngValue]="selectedItem.id.borrower"
-                >{{ borrower.name }}</option
-              ></select
-            >
-            <label for="bookTitle" class="col-form-label">Title </label>
-            <select name="book" [(ngModel)]="selectedItem.id.book">
-              <option value="" disabled>Choose a book</option>
-              <option
-                *ngFor="let book of books"
-                [ngValue]="selectedItem.id.book"
-                >{{ book.title }}</option
-              >
-            </select>
-            <label for="branchName" class="col-form-label">Branch </label>
-            <select name="branch" [(ngModel)]="selectedItem.id.branch">
-              <option value="" disabled>Choose a branch</option>
-              <option
-                *ngFor="let branch of branches"
-                [ngValue]="selectedItem.id.branch"
-                >{{ branch.name }}</option
-              >
-            </select>
           </div>
           <input type="submit" class="btn btn-primary" value="Save" />
         </form>

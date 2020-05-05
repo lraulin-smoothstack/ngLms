@@ -125,6 +125,13 @@ export class LoansComponent implements OnInit {
     });
   }
 
+  compareItems(
+    p1: Book | Borrower | Branch,
+    p2: Book | Borrower | Branch
+  ): boolean {
+    return p1 && p2 ? p1.id === p2.id : p1 === p2;
+  }
+
   ngOnInit(): void {
     this.fetchData();
     this.fetchMisc();
