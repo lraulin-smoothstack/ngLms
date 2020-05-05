@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { Branch } from '../../common/interfaces/branch.interface';
 
@@ -7,54 +8,23 @@ import { Branch } from '../../common/interfaces/branch.interface';
   providedIn: 'root',
 })
 export class BranchService {
-  branches: Branch[];
-  isLoading: boolean;
-
   constructor(
     private http: HttpClient,
     @Inject('domain') private domain: string
-  ) {
-    this.branches = [];
+  ) {}
+
+  getBranches(): Observable<Branch[]> {
+    return this.http.get<Branch[]>(`${this.domain}/lms/librarian/branches`);
   }
 
-  getBranches(callback?: any): void {
-    this.isLoading = true;
-    this.http
-      .get(`${this.domain}/lms/librarian/branches`)
-      .subscribe((data: Branch[]) => {
-        this.branches = data;
-        this.isLoading = false;
-
-        if (callback) {
-          callback(data);
-        }
-      });
+  getBranch(id: number): Observable<Branch> {
+    return this.http.get<Branch>(`${this.domain}/lms/librarian/branches/${id}`);
   }
 
-  getBranch(id: number, callback: any): void {
-    this.isLoading = true;
-    this.http
-      .get(`${this.domain}/lms/librarian/branches/${id}`)
-      .subscribe((data: Branch) => {
-        this.isLoading = false;
-        callback(data);
-      });
-  }
-
-  updateBranch(id: number, branch: Branch, callback?: any): void {
-    this.isLoading = true;
-
-    this.http
-      .put(`${this.domain}/lms/librarian/branches/${id}`, branch)
-      .subscribe((data: any) => {
-        const branchToUpdate = this.branches.find((b) => b.id == id);
-        branchToUpdate.name = branch.name;
-        branchToUpdate.address = branch.address;
-        this.isLoading = false;
-
-        if (callback) {
-          callback(data);
-        }
-      });
+  updateBranch(id: number, branch: Branch): Observable<Branch> {
+    return this.http.put<Branch>(
+      `${this.domain}/lms/librarian/branches/${id}`,
+      branch
+    );
   }
 }

@@ -15,6 +15,8 @@ import { Branch } from '../../common/interfaces/branch.interface';
 })
 export class BookCopiesComponent implements OnInit {
   selectedBookCopy: BookCopy;
+  bookCopies: BookCopy[];
+  isLoading: boolean;
   branchId: number;
   branch: Branch;
   private modalRef: NgbModalRef;
@@ -39,40 +41,55 @@ export class BookCopiesComponent implements OnInit {
       this.branchId = parseInt(tempId, 10);
 
       if (this.branchId) {
-        this.branchService.getBranch(
-          this.branchId,
-          (data) => (this.branch = data)
-        );
-        this.loadBookCopies();
+        this.isLoading = false;
+        this.branchService.getBranch(this.branchId).subscribe((data) => {
+          this.branch = data;
+          this.loadBookCopies();
+        });
       }
     }
   }
 
   loadBookCopies(): void {
-    this.bookCopyService.getBookCopies(this.branchId, (data: BookCopy[]) => {
+    this.isLoading = true;
+    this.bookCopyService.getBookCopies(this.branchId).subscribe((data: any) => {
+      this.bookCopies = data;
       this.totalItems = data.length;
       this.setPage(1);
+      this.isLoading = false;
     });
   }
 
   deleteBookCopy(bookCopy): void {
-    this.bookCopyService.deleteBookCopy(
-      bookCopy.id.book.id,
-      bookCopy.id.branch.id,
-      (data) => {
+    this.isLoading = true;
+    this.bookCopyService
+      .deleteBookCopy(bookCopy.id.book.id, bookCopy.id.branch.id)
+      .subscribe((data: any) => {
+        const bookId = bookCopy.id.book.id;
+        const branchId = bookCopy.id.branch.id;
+        this.bookCopies = this.bookCopies.filter(
+          (bc: BookCopy) =>
+            bc.id.book.id != bookId || bc.id.branch.id != branchId
+        );
+
         this.totalItems -= 1;
         this.setPage(1);
-      }
-    );
+        this.isLoading = false;
+      });
   }
 
   updateBookCopy(): void {
-    this.bookCopyService.updateBookCopy(
-      this.selectedBookCopy.id.book.id,
-      this.selectedBookCopy.id.branch.id,
-      this.selectedBookCopy,
-      (data) => this.modalRef.close()
-    );
+    this.isLoading = true;
+    this.bookCopyService
+      .updateBookCopy(
+        this.selectedBookCopy.id.book.id,
+        this.selectedBookCopy.id.branch.id,
+        this.selectedBookCopy
+      )
+      .subscribe((data: BookCopy) => {
+        this.modalRef.close();
+        this.isLoading = false;
+      });
   }
 
   open(content, bookCopy: BookCopy) {
@@ -94,7 +111,7 @@ export class BookCopiesComponent implements OnInit {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
-    const data = this.bookCopyService.bookCopies;
+    const data = this.bookCopies;
     this.pager = this.pagerService.getPager(
       data.length,
       page,

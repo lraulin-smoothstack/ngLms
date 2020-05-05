@@ -16,6 +16,8 @@ import { Branch } from '../../common/interfaces/branch.interface';
 })
 export class BooksComponent implements OnInit {
   selectedBook: Book;
+  books: Book[];
+  isLoading: boolean;
   branchId: number;
   amount: number = 0;
   private modalRef: NgbModalRef;
@@ -47,9 +49,12 @@ export class BooksComponent implements OnInit {
   }
 
   loadBooks(): void {
-    this.bookService.getBooks(this.branchId, (data) => {
+    this.isLoading = true;
+    this.bookService.getBooks(this.branchId).subscribe((data) => {
+      this.books = data;
       this.totalItems = data.length;
       this.setPage(1);
+      this.isLoading = false;
     });
   }
 
@@ -68,9 +73,11 @@ export class BooksComponent implements OnInit {
       amount: this.amount,
     };
 
-    this.bookCopyService.addBookCopy(bookCopy, (data) => {
+    this.isLoading = true;
+    this.bookCopyService.addBookCopy(bookCopy).subscribe((data: BookCopy) => {
       this.amount = 0;
       this.modalRef.close();
+      this.isLoading = false;
       this.router.navigate(['../book-copies'], {
         relativeTo: this.activatedRoute,
       });
@@ -96,7 +103,7 @@ export class BooksComponent implements OnInit {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
-    const data = this.bookService.books;
+    const data = this.books;
     this.pager = this.pagerService.getPager(
       data.length,
       page,
