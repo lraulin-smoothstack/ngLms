@@ -107,7 +107,7 @@
                 (change)="addAuthor()"
                 [compareWith]="compareItems"
               >
-                <option [value]="null" disabled>Add an author</option>
+                <option [value]="null">Add an author</option>
                 <option
                   *ngFor="let author of getAvailableAuthors()"
                   [ngValue]="author"
@@ -150,7 +150,7 @@
                 [compareWith]="compareItems"
                 (change)="addGenre()"
               >
-                <option [value]="null" disabled>Add an genre</option>
+                <option [value]="null">Add an genre</option>
                 <option
                   *ngFor="let genre of getAvailableGenres()"
                   [ngValue]="genre"

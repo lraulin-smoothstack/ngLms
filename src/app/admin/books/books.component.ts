@@ -192,13 +192,13 @@ export class BooksComponent implements OnInit {
   }
 
   addAuthor(): void {
-    if (this.selectedAuthor) {
+    if (this.selectedAuthor && this.selectedAuthor.id) {
       this.selectedBook.authors.push(this.selectedAuthor);
     }
     this.selectedAuthor = null;
   }
   addGenre(): void {
-    if (this.selectedGenre) {
+    if (this.selectedGenre && this.selectedGenre.id) {
       this.selectedBook.genres.push(this.selectedGenre);
     }
     this.selectedGenre = null;
