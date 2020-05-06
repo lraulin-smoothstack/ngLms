@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit {
 
     this.state$.subscribe(
       state => {
-
         const borrower = state.borrower;
         const cookie = this.cookieSvc.get('borrowerId');
 

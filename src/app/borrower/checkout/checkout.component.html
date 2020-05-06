@@ -3,23 +3,21 @@
     <h3>Checkout: {{ branch?.name }}</h3>
     <form class="form-inline">
       <div class="form-group">
-        <div class="input-group mb-2 ml-2 mr-2">
+        <div class="input-group input-group-sm">
           <div class="input-group-prepend">
             <span class="input-group-text" id="branches-addon">Name | Author:</span>
           </div>
           <input #bookCheckoutSearchBox id="book-checkout-search-box" (input)="search(bookCheckoutSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="book-checkout-search" aria-describedby="book-addon">
         </div>
-      </div>
-      <div *ngIf="searchBooks$ | async as books" style="height: 46px">
-        <div class="ds-l-col--9">
-          <ngb-pagination
-            [collectionSize]="books.length"
-            [(page)]="pager.currentPage"
-            [maxSize]="5"
-            [pageSize]="itemsPerPage"
-            [boundaryLinks]="true"
-            (pageChange)="setPage($event, books)"
-          ></ngb-pagination>
+        <div *ngIf="searchBooks$ | async as books">
+            <ngb-pagination size="sm"
+              [collectionSize]="books.length"
+              [(page)]="pager.currentPage"
+              [maxSize]="5"
+              [pageSize]="itemsPerPage"
+              [boundaryLinks]="true"
+              (pageChange)="setPage($event, books)"
+            ></ngb-pagination>
         </div>
       </div>
     </form>

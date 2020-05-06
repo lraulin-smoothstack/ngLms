@@ -44,7 +44,7 @@ export class BorrowerService {
         this._state.next(Object.assign({}, this.store));
       }),
       catchError(this.handleError<any>('BorrowerSvc::fetchBorrower()'))
-      )
+    )
   }
 
   fetchLoans() {
@@ -59,14 +59,14 @@ export class BorrowerService {
   }
 
   fetchBranches(){
-     const url = "http://localhost:8080/lms/borrower/branches";
-     this.http.get<Branch[]>(url, this.httpOptions).pipe(
-       tap( (branches: Branch[]) => {
-         this.store.branches.next(branches);
-         this._state.next(Object.assign({}, this.store));
-       }),
-       catchError(this.handleError<Book[]>('BorrowerSvc::fetchBranches()'))
-     ).subscribe();
+    const url = "http://localhost:8080/lms/borrower/branches";
+    this.http.get<Branch[]>(url, this.httpOptions).pipe(
+      tap( (branches: Branch[]) => {
+        this.store.branches.next(branches);
+        this._state.next(Object.assign({}, this.store));
+      }),
+      catchError(this.handleError<Book[]>('BorrowerSvc::fetchBranches()'))
+    ).subscribe();
   }
 
   fetchAvailableBooks(branch: Branch){
@@ -74,7 +74,7 @@ export class BorrowerService {
     const url = `http://localhost:8080/lms/borrower/borrowers/${this.store.borrower.id}/branches/${branchId}/available-books/`;
     this.http.get<Book[]>(url, this.httpOptions).pipe(
       tap( (books: Book[]) => {
-        this.store.books.next(books);
+        this.store.books.next(books);              
         this._state.next(Object.assign({}, this.store));
       }),
       catchError(this.handleError<Book[]>('BorrowerSvc::fetchAvailableBooks()'))
@@ -112,7 +112,7 @@ export class BorrowerService {
 
     const url = `http://localhost:8080/lms/borrower/borrowers/${borrowerId}/branches/${branchId}/books/${bookId}:checkout`;
 
-    this.http.post(url, this.httpOptions).pipe(      
+    this.http.post(url, this.httpOptions).pipe(
       catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
     ).subscribe( res => this.fetchLoans() );
   }

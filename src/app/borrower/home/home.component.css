@@ -15,21 +15,21 @@
 }
 
 .branches {
-  padding: 0 25px 25px 25px;
   grid-area: branches;
-  overflow-y: scroll;
+  margin: 2px;
+  padding: 5px;
 }
 
 .returns {
-  padding: 0 25px 25px 25px;
   grid-area: returns;
-  overflow-y: scroll;
+  margin: 2px;
+  padding: 5px;
 }
 
-.checkout {
-  padding: 0 25px 25px 25px;
+.checkout {  
   grid-area: checkout / 1 / checkout / -1;
-  overflow-y: scroll;
+  margin: 2px;
+  padding: 5px;
 }
 
 ::-webkit-scrollbar {
