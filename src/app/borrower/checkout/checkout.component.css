@@ -1,1 +1,21 @@
 h3 { color: white; }
+
+table {
+  border-collapse: separate;
+}
+
+thead th {
+  margin: 5px;
+  position: sticky;
+  top: 78px;
+  z-index: 1;
+  background: #343A40;
+  border-bottom: solid white;
+}
+
+#checkoutForm {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #343A40;
+}

@@ -95,7 +95,6 @@ export class BorrowerService {
     const url = `http://localhost:8080/lms/borrower/borrowers/${borrowerId}/branches/${branchId}/books/${bookId}:checkin`;
 
     this.http.post(url, this.httpOptions).pipe(
-      tap( res => console.log(res)),
       catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
     ).subscribe( res => this.fetchLoans() );
   }
@@ -113,8 +112,7 @@ export class BorrowerService {
 
     const url = `http://localhost:8080/lms/borrower/borrowers/${borrowerId}/branches/${branchId}/books/${bookId}:checkout`;
 
-    this.http.post(url, this.httpOptions).pipe(
-      tap( res => console.log(res)),
+    this.http.post(url, this.httpOptions).pipe(      
       catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
     ).subscribe( res => this.fetchLoans() );
   }

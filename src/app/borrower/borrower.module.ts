@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormsModule }   from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { PagerService } from '../common/services/pager.service';
 
 import { BorrowerRoutingModule } from './borrower-routing.module';
 
@@ -25,7 +29,9 @@ import { CheckoutComponent } from './checkout/checkout.component';
   imports: [
     CommonModule,
     FormsModule,
+    NgbModule,
     BorrowerRoutingModule
-  ]
+  ],
+  providers: [ PagerService ]
 })
 export class BorrowerModule { }

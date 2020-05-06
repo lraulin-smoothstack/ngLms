@@ -4,11 +4,11 @@
 </h4>
 <p *ngIf="branch">{{ branch.address }}</p>
 
-<div *ngIf="bookCopyService.isLoading" class="spinner-border" role="status">
+<div *ngIf="isLoading" class="spinner-border" role="status">
   <span className="sr-only">Loading...</span>
 </div>
 
-<div *ngIf="!bookCopyService.isLoading">
+<div *ngIf="!isLoading">
   <table class="table table-dark">
     <thead>
       <tr>
@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let bookCopy of pagedItems">
-        <td>{{ bookCopy.id.book.title }}</td>
+        <th scope="row">{{ bookCopy.id.book.title }}</th>
         <td>
           <span *ngFor="let a of bookCopy.id.book.authors">{{ a.name }} </span>
         </td>
