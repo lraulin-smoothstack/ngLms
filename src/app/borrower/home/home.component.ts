@@ -22,9 +22,6 @@ export class HomeComponent implements OnInit {
 
   @Input() state$;
 
-  book: Book;
-  branch: Branch;
-
   constructor(
     private cookieSvc: CookieService,
     private borrowerSvc: BorrowerService
@@ -48,17 +45,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  selectBranch(branch: Branch) {
-    this.branch = branch;
-    this.borrowerSvc.fetchAvailableBooks(this.branch);
+  selectBranch(branch: Branch):void {
+    this.borrowerSvc.fetchAvailableBooks(branch);
   }
 
-  checkoutBook(book: Book): void {
-    this.book = book;
-    this.borrowerSvc.checkoutBook(this.book, this.branch);
+  checkoutBook(book: Book):void {
+    this.borrowerSvc.checkoutBook(book);
   }
 
-  checkinLoan(loan: Loan) {
+  checkinLoan(loan: Loan):void {
     this.borrowerSvc.checkinLoan(loan);
   }
 }

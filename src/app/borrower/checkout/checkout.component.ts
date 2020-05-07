@@ -16,7 +16,7 @@ import { Book } from '../entity/book';
 export class CheckoutComponent implements OnInit {
 
   @Input() books$;
-  @Input() branch;
+  @Input() branch$;
 
   @Output("checkoutBook") checkoutBook: EventEmitter<any> = new EventEmitter();
 
@@ -49,7 +49,6 @@ export class CheckoutComponent implements OnInit {
       this.setPage(1, books);
       this.search('');
     });
-
   }
 
   search(term: string): void {

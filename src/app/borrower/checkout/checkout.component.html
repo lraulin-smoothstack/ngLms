@@ -1,6 +1,6 @@
 <div>
   <div id="checkoutForm">
-    <h3>Checkout: {{ branch?.name }}</h3>
+    <h3>Checkout: {{ (branch$ | async)?.name }}</h3>
     <form class="form-inline">
       <div class="form-group">
         <div class="input-group input-group-sm">

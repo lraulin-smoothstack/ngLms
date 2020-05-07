@@ -34,11 +34,6 @@ export class ReturnComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loans$.subscribe( loans => {
-      this.setPage(1, loans);
-      this.search('');
-    });
-
     this.searchLoans$ = this.searchTerms$.pipe(
       debounceTime(300),
       switchMap((term: string) => this.searchLoans(term))
@@ -47,6 +42,11 @@ export class ReturnComponent implements OnInit {
     this.searchLoans$.subscribe( loans => {
       this.setPage(this.pager.currentPage, loans);
     })
+
+    this.loans$.subscribe( loans => {
+      this.setPage(1, loans);
+      this.search('');
+    });
   }
 
   search(term: string): void {
@@ -54,6 +54,7 @@ export class ReturnComponent implements OnInit {
   }
 
   searchLoans(term: string): Observable<Loan[]> {
+
     if (!term.trim()) {
       return this.loans$;
     }
@@ -65,15 +66,12 @@ export class ReturnComponent implements OnInit {
   }
 
   setPage(page: number, loans: Loan[] ): void {
+
     this.pager = this.pagerSvc.getPager(
       loans.length,
       page,
       this.itemsPerPage
     );
-
-    if (page < 1 || page > this.pager.totalPages) {
-      return;
-    }
 
     this.pagedLoans$.next(loans.slice(
       this.pager.startIndex,

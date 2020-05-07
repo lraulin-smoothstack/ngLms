@@ -17,27 +17,31 @@ export class BorrowerService {
   private store: BorrowerState = {
     books:    new BehaviorSubject<Book[]>([]),
     loans:    new BehaviorSubject<Loan[]>([]),
+    branch:   new BehaviorSubject<Branch>(null),
     branches: new BehaviorSubject<Branch[]>([]),
-    borrower: null
+    borrower: null,
   }
 
   private _state = new BehaviorSubject<BorrowerState>({} as BorrowerState);
   readonly state$ = this._state.asObservable();
 
-  httpOptions = {
+  private hostPath: string;
+  private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
   constructor(
-    private http: HttpClient,
-  ) { }
+    private http: HttpClient
+  ) {
+    this.hostPath = 'http://localhost:8080/lms/borrower';
+  }
 
   get state() {
     return this.state$;
   }
 
   fetchBorrower(cardNum: string): Observable<Borrower> {
-    const url = 'http://www.mocky.io/v2/5eab4aad3300005d00760842';
+    const url = `http://www.mocky.io/v2/5eab4aad3300005d00760842`;
     return this.http.get(url, this.httpOptions).pipe(
       tap( (borrower: Borrower) => {
         this.store.borrower = borrower;
@@ -48,73 +52,75 @@ export class BorrowerService {
   }
 
   fetchLoans() {
-    const url = `http://localhost:8080/lms/borrower/borrowers/${this.store.borrower.id}/loans`;
+    const url = `${this.hostPath}/borrowers/${this.store.borrower.id}/loans`;
     this.http.get<Loan[]>(url, this.httpOptions).pipe(
-      tap( (loans: Loan[]) => {
-        this.store.loans.next(loans);
-        this._state.next(Object.assign({}, this.store));
-      }),
       catchError(this.handleError<any>('BorrowerSvc::fetchLoans()'))
-    ).subscribe();
+    ).subscribe( (loans: Loan[]) => {
+      this.store.loans.next(loans);
+      this._state.next(Object.assign({}, this.store));
+    });
   }
 
   fetchBranches(){
-    const url = "http://localhost:8080/lms/borrower/branches";
+
+    const url = `${this.hostPath}/branches`;
     this.http.get<Branch[]>(url, this.httpOptions).pipe(
-      tap( (branches: Branch[]) => {
-        this.store.branches.next(branches);
-        this._state.next(Object.assign({}, this.store));
-      }),
       catchError(this.handleError<Book[]>('BorrowerSvc::fetchBranches()'))
-    ).subscribe();
+    ).subscribe( (branches: Branch[]) => {
+      this.store.branches.next(branches);
+      this._state.next(Object.assign({}, this.store));
+    });
   }
 
   fetchAvailableBooks(branch: Branch){
-    const branchId = branch.id;
-    const url = `http://localhost:8080/lms/borrower/borrowers/${this.store.borrower.id}/branches/${branchId}/available-books/`;
+
+    const borrowerId = this.store.borrower.id;
+
+    const url = `${this.hostPath}/borrowers/${borrowerId}/branches/${branch.id}/available-books/`;
     this.http.get<Book[]>(url, this.httpOptions).pipe(
-      tap( (books: Book[]) => {
-        this.store.books.next(books);              
-        this._state.next(Object.assign({}, this.store));
-      }),
       catchError(this.handleError<Book[]>('BorrowerSvc::fetchAvailableBooks()'))
-    ).subscribe();
+    ).subscribe( (books: Book[]) => {
+        this.store.books.next(books);
+        this.store.branch.next(branch);
+        this._state.next(Object.assign({}, this.store));
+    });
   }
 
   checkinLoan(loan: Loan) {
-    const {
-      borrowerId,
-      branchId,
-      bookId
-    } = {
-      borrowerId: loan.id.borrower.id,
-      branchId: loan.id.branch.id,
-      bookId: loan.id.book.id
-    };
 
-    const url = `http://localhost:8080/lms/borrower/borrowers/${borrowerId}/branches/${branchId}/books/${bookId}:checkin`;
-
-    this.http.post(url, this.httpOptions).pipe(
-      catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
-    ).subscribe( res => this.fetchLoans() );
-  }
-
-  checkoutBook(book: Book, branch: Branch) {
     const {
       borrowerId,
       branchId,
       bookId
     } = {
       borrowerId: this.store.borrower.id,
-      branchId: branch.id,
-      bookId: book.id
+      branchId: loan.id.branch.id,
+      bookId: loan.id.book.id
     };
 
-    const url = `http://localhost:8080/lms/borrower/borrowers/${borrowerId}/branches/${branchId}/books/${bookId}:checkout`;
+    const url = `${this.hostPath}/borrowers/${borrowerId}/branches/${branchId}/books/${bookId}:checkin`;
 
     this.http.post(url, this.httpOptions).pipe(
       catchError(this.handleError<any>('BorrowerSvc::checkinBook()'))
-    ).subscribe( res => this.fetchLoans() );
+    ).subscribe( _ => {
+      this.fetchLoans();
+      this.fetchAvailableBooks(this.store.branch.getValue());
+    });
+  }
+
+  checkoutBook(book: Book) {
+
+    const borrower = this.store.borrower;
+    const branch = this.store.branch.getValue();
+
+    const url = `${this.hostPath}/borrowers/${borrower.id}/branches/${branch.id}/books/${book.id}:checkout`;
+
+    this.http.post(url, this.httpOptions).pipe(
+      catchError(this.handleError<any>('BorrowerSvc::checkoutBook()'))
+    ).subscribe( _ => {
+      this.fetchLoans();
+      this.fetchAvailableBooks(branch);
+    });
   }
 
   /**

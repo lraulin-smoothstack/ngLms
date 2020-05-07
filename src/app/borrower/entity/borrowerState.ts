@@ -9,5 +9,6 @@ export interface BorrowerState {
   books?: BehaviorSubject<Book[]>,
   loans?: BehaviorSubject<Loan[]>,
   branches?: BehaviorSubject<Branch[]>,
+  branch?: BehaviorSubject<Branch>,
   borrower?: Borrower
 }
