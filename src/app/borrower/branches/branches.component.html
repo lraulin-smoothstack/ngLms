@@ -3,23 +3,21 @@
     <h3>Branches</h3>
     <form class="form-inline">
       <div class="form-group">
-        <div class="input-group mb-2 ml-2 mr-2">
+        <div class="input-group input-group-sm">
           <div class="input-group-prepend">
             <span class="input-group-text" id="branches-addon">Name | Address:</span>
           </div>
           <input #branchSearchBox id="branch-search-box" (input)="search(branchSearchBox.value)" type="text" class="form-control" placeholder="Search..." aria-label="branch-search" aria-describedby="branches-addon">
         </div>
-        <div *ngIf="searchBranches$ | async as branches" style="height: 46px">
-          <div class="ds-l-col--9">
-            <ngb-pagination
-              [collectionSize]="branches.length"
-              [(page)]="pager.currentPage"
-              [maxSize]="5"
-              [pageSize]="itemsPerPage"
-              [boundaryLinks]="true"
-              (pageChange)="setPage($event, branches)"
-            ></ngb-pagination>
-          </div>
+        <div *ngIf="searchBranches$ | async as branches">
+          <ngb-pagination size="sm"
+            [collectionSize]="branches.length"
+            [(page)]="pager.currentPage"
+            [maxSize]="3"
+            [pageSize]="itemsPerPage"
+            [boundaryLinks]="true"
+            (pageChange)="setPage($event, branches)"
+          ></ngb-pagination>
         </div>
       </div>
     </form>

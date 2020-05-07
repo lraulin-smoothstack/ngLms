@@ -20,13 +20,13 @@ import { PagerService } from './common/services/pager.service';
   imports: [
     BrowserAnimationsModule,
     AppRoutingModule,
-    NgbModule,
     HttpClientModule,
+    NgbModule
   ],
   providers: [
     PagerService,
     { provide: 'domain', useValue: 'http://localhost:8080' },
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -16,7 +16,7 @@ import { Book } from '../entity/book';
 export class CheckoutComponent implements OnInit {
 
   @Input() books$;
-  @Input() branch;
+  @Input() branch$;
 
   @Output("checkoutBook") checkoutBook: EventEmitter<any> = new EventEmitter();
 
@@ -36,11 +36,6 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.books$.subscribe( books => {
-      this.setPage(1, books);
-      this.search('');
-    });
-
     this.searchBooks$ = this.searchTerms$.pipe(
       debounceTime(300),
       switchMap((term: string) => this.searchBooks(term) )
@@ -49,6 +44,11 @@ export class CheckoutComponent implements OnInit {
     this.searchBooks$.subscribe( books => {
       this.setPage(this.pager.currentPage, books);
     })
+
+    this.books$.subscribe( books => {
+      this.setPage(1, books);
+      this.search('');
+    });
   }
 
   search(term: string): void {
@@ -56,6 +56,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   searchBooks(term: string): Observable<Book[]> {
+
     if (!term.trim()) {
       return this.books$;
     }
@@ -68,15 +69,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   setPage(page: number, books: Book[] ): void {
+
     this.pager = this.pagerSvc.getPager(
       books.length,
       page,
       this.itemsPerPage
     );
-
-    if (page < 1 || page > this.pager.totalPages) {
-      return;
-    }
 
     this.pagedBooks$.next(books.slice(
       this.pager.startIndex,
