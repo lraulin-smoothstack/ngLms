@@ -11,43 +11,41 @@
       <th>Borrower</th>
       <th>Title</th>
       <th>Branch</th>
-      <th></th>
-      <th>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="open(editLoanModal)"
-        >
-          Add
-        </button>
-      </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let loan of items">
-      <td>{{ loan.dateOut }}</td>
-      <td>{{ loan.dueDate }}</td>
-      <td>{{ loan.dateIn }}</td>
-      <td>{{ loan.borrower }}</td>
-      <td>{{ loan.bookTitle }}</td>
-      <td>{{ loan.branchName }}</td>
+    <tr *ngFor="let loan of pagedItems">
+      <td>{{ loan.dateOut | date: "shortDate" }}</td>
+      <td>{{ loan.dueDate | date: "shortDate" }}</td>
+      <td>{{ loan.dateIn | date: "shortDate" }}</td>
+      <td>{{ loan.id.borrower.name }}</td>
+      <td>{{ loan.id.book.title }}</td>
+      <td>{{ loan.id.branch.name }}</td>
       <td>
         <button
           type="button"
           class="btn btn-primary"
           (click)="open(editLoanModal, loan)"
         >
-          Edit
-        </button>
-      </td>
-      <td>
-        <button type="button" class="btn btn-danger" (click)="delete(loan.id)">
-          Delete
+          Change Due Date
         </button>
       </td>
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="items.length > 0" class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="items.length"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [pageSize]="itemsPerPage"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
 
 <ng-template #editLoanModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
@@ -65,57 +63,38 @@
         </button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="submit()">
+        <table>
+          <tr>
+            <th>Borrower</th>
+            <td>{{ selectedItem.id.borrower.name }}</td>
+          </tr>
+          <tr>
+            <th>Branch</th>
+            <td>{{ selectedItem.id.branch.name }}</td>
+          </tr>
+          <tr>
+            <th>Book</th>
+            <td>{{ selectedItem.id.book.title }}</td>
+          </tr>
+          <tr>
+            <th>Checked Out</th>
+            <td>{{ selectedItem.dateOut | date: "shortDate" }}</td>
+          </tr>
+          <tr>
+            <th>Returned</th>
+            <td>{{ selectedItem.dateIn | date: "shortDate" }}</td>
+          </tr>
+        </table>
+        <form #f="ngForm" (ngSubmit)="submit()">
           <div class="form-group">
-            <label for="dateOut" class="col-form-label">Date Out </label>
-            <input
-              class="form-control"
-              name="dateOut"
-              id="dateOut"
-              type="date"
-              [(ngModel)]="selectedItem.dateOut"
-              required
-            />
             <label for="dueDate" class="col-form-label">Due Date </label>
             <input
               class="form-control"
               name="dueDate"
               id="dueDate"
               type="date"
-              [(ngModel)]="selectedItem.dueDate"
-              required
-            />
-            <label for="dateIn" class="col-form-label">Date In </label>
-            <input
-              class="form-control"
-              name="dateIn"
-              id="dateIn"
-              type="date"
-              [(ngModel)]="selectedItem.dateIn"
-              required
-            />
-            <label for="borrower" class="col-form-label">Borrower </label>
-            <input
-              class="form-control"
-              name="borrower"
-              id="borrower"
-              [(ngModel)]="selectedItem.borrower"
-              required
-            />
-            <label for="bookTitle" class="col-form-label">Title </label>
-            <input
-              class="form-control"
-              name="bookTitle"
-              id="bookTitle"
-              [(ngModel)]="selectedItem.bookTitle"
-              required
-            />
-            <label for="branchName" class="col-form-label">Branch </label>
-            <input
-              class="form-control"
-              name="branchName"
-              id="branchName"
-              [(ngModel)]="selectedItem.branchName"
+              [ngModel]="selectedItem.dueDate | date: 'yyyy-MM-dd'"
+              (ngModelChange)="setDueDate($event)"
               required
             />
           </div>

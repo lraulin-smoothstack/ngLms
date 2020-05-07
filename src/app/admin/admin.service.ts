@@ -1,15 +1,27 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { Author, Book, Borrower, Branch, Loan, Publisher } from './types';
+import { catchError, tap, map } from 'rxjs/operators';
+import { Author } from '../common/interfaces/author.interface';
+import { Book } from '../common/interfaces/book.interface';
+import { Borrower } from '../common/interfaces/borrower.interface';
+import { Branch } from '../common/interfaces/branch.interface';
+import { Loan } from '../common/interfaces/loan.interface';
+import { Publisher } from '../common/interfaces/publisher.interface';
+import { Genre } from '../common/interfaces/genre.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  private baseUrl = 'https://5ea8795235f3720016609246.mockapi.io';
-  constructor(private http: HttpClient) {}
+  private baseUrl: string;
+
+  constructor(
+    @Inject('domain') private domain: string,
+    private http: HttpClient
+  ) {
+    this.baseUrl = this.domain + '/lms/admin';
+  }
 
   getAuthors(): Observable<Author[]> {
     return this.http.get<Author[]>(this.baseUrl + '/author').pipe(
@@ -131,27 +143,39 @@ export class AdminService {
 
   getLoans(): Observable<Loan[]> {
     return this.http.get<Loan[]>(this.baseUrl + '/loan').pipe(
+      map((loans: Loan[]) =>
+        loans.map((loan) => {
+          loan.dateIn = loan.dateIn ? new Date(loan.dateIn) : null;
+          loan.dateOut = loan.dateOut ? new Date(loan.dateOut) : null;
+          loan.dueDate = loan.dueDate ? new Date(loan.dueDate) : null;
+          return loan;
+        })
+      ),
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
-  deleteLoan(id: number): Observable<{}> {
-    return this.http.delete(this.baseUrl + '/loan/' + id).pipe(
-      tap((data) => console.log(JSON.stringify(data))),
-      catchError(this.handleError)
+  private formatDate(date: Date): string {
+    return (
+      ('0' + (date.getMonth() + 1)).slice(-2) +
+      '/' +
+      ('0' + date.getDate()).slice(-2) +
+      '/' +
+      date.getFullYear()
     );
   }
 
   editLoan(loan: Loan): Observable<Loan> {
-    return this.http.put<Loan>(this.baseUrl + '/loan/' + loan.id, loan).pipe(
-      tap((data) => console.log(JSON.stringify(data))),
-      catchError(this.handleError)
-    );
-  }
-
-  addLoan(loan: Loan): Observable<Loan> {
-    return this.http.post<Loan>(this.baseUrl + '/loan', loan).pipe(
+    if (loan.dateIn) {
+      // @ts-ignore
+      loan.dateIn = this.formatDate(loan.dateIn);
+    }
+    // @ts-ignore
+    loan.dateOut = this.formatDate(loan.dateOut);
+    // @ts-ignore
+    loan.dueDate = this.formatDate(loan.dueDate);
+    return this.http.put<Loan>(this.baseUrl + '/loan', loan).pipe(
       tap((data) => console.log(JSON.stringify(data))),
       catchError(this.handleError)
     );
@@ -187,6 +211,36 @@ export class AdminService {
         tap((data) => console.log(JSON.stringify(data))),
         catchError(this.handleError)
       );
+  }
+
+  getGenres(): Observable<Genre[]> {
+    return this.http.get<Genre[]>(this.baseUrl + '/genre').pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteGenre(id: number): Observable<{}> {
+    return this.http.delete(this.baseUrl + '/genre/' + id).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  editGenre(genre: Genre): Observable<Genre> {
+    return this.http
+      .put<Genre>(this.baseUrl + '/genre/' + genre.id, genre)
+      .pipe(
+        tap((data) => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
+      );
+  }
+
+  addGenre(genre: Genre): Observable<Genre> {
+    return this.http.post<Genre>(this.baseUrl + '/genre', genre).pipe(
+      tap((data) => console.log(JSON.stringify(data))),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(err: HttpErrorResponse) {

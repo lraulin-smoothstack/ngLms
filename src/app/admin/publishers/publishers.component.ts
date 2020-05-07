@@ -1,7 +1,8 @@
 import { AdminService } from './../admin.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Publisher } from '../types';
+import { Component, OnInit } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Pager, PagerService } from 'src/app/common/services/pager.service';
+import { Publisher } from 'src/app/common/interfaces/publisher.interface';
 
 @Component({
   selector: 'app-publishers',
@@ -14,10 +15,15 @@ export class PublishersComponent implements OnInit {
   selectedItem: Publisher;
   errorMessage: string;
   closeResult: string;
+  searchString = '';
+  pager: Pager;
+  pagedItems: Publisher[];
+  itemsPerPage = 5;
 
   constructor(
     private adminService: AdminService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private pagerService: PagerService
   ) {}
 
   open(content, item?: Publisher) {
@@ -37,9 +43,33 @@ export class PublishersComponent implements OnInit {
     );
   }
 
+  setPage(page: number): void {
+    this.pager = this.pagerService.getPager(
+      this.items.length,
+      page,
+      this.itemsPerPage
+    );
+
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+
+    this.pagedItems = this.items.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    );
+  }
+
   fetchData(): void {
     this.adminService.getPublishers().subscribe({
-      next: (items) => (this.items = items),
+      next: (items) => {
+        this.items = items;
+        if (this.pager) {
+          this.setPage(this.pager.currentPage);
+        } else {
+          this.setPage(1);
+        }
+      },
       error: (err) => (this.errorMessage = err),
     });
   }

@@ -3,22 +3,22 @@ import { PagerService, Pager } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Author } from 'src/app/common/interfaces/author.interface';
+import { Genre } from 'src/app/common/interfaces/genre.interface';
 
 @Component({
-  selector: 'app-authors',
-  templateUrl: './authors.component.html',
-  styleUrls: ['./authors.component.css'],
+  selector: 'app-genres',
+  templateUrl: './genres.component.html',
+  styleUrls: ['./genres.component.css'],
 })
-export class AuthorsComponent implements OnInit {
+export class GenresComponent implements OnInit {
   private modalRef: NgbModalRef;
-  authors: Author[] = [];
-  selectedAuthor: Author;
+  genres: Genre[] = [];
+  selectedGenre: Genre;
   errorMessage: string;
   closeResult: string;
   searchString = '';
   pager: Pager;
-  pagedItems: Author[];
+  pagedItems: Genre[];
   itemsPerPage = 5;
   arrows = { name: '' };
 
@@ -39,7 +39,7 @@ export class AuthorsComponent implements OnInit {
       }
     });
 
-    this.authors = this.sort(this.authors, column, direction);
+    this.genres = this.sort(this.genres, column, direction);
     this.arrows[column] =
       direction === 'asc' ? '△' : direction === 'desc' ? '▽' : '';
     this.setPage(this.pager.currentPage);
@@ -49,7 +49,7 @@ export class AuthorsComponent implements OnInit {
     return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
   }
 
-  sort(items: Author[], column: string, direction: string): Author[] {
+  sort(items: Genre[], column: string, direction: string): Genre[] {
     if (direction === '') {
       return items;
     } else {
@@ -60,8 +60,8 @@ export class AuthorsComponent implements OnInit {
     }
   }
 
-  open(content, author?: Author) {
-    this.selectedAuthor = author ? author : { id: null, name: '' };
+  open(content, genre?: Genre) {
+    this.selectedGenre = genre ? genre : { id: null, name: '' };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       (result) => {
@@ -76,10 +76,10 @@ export class AuthorsComponent implements OnInit {
   }
 
   fetchData(): void {
-    this.adminService.getAuthors().subscribe({
-      next: (authors) => {
-        this.authors = authors;
-        console.log(this.authors);
+    this.adminService.getGenres().subscribe({
+      next: (genres) => {
+        this.genres = genres;
+        console.log(this.genres);
         this.setPage(1);
       },
       error: (err) => (this.errorMessage = err),
@@ -87,13 +87,13 @@ export class AuthorsComponent implements OnInit {
   }
 
   submit() {
-    if (this.selectedAuthor.id) {
-      this.adminService.editAuthor(this.selectedAuthor).subscribe({
+    if (this.selectedGenre.id) {
+      this.adminService.editGenre(this.selectedGenre).subscribe({
         next: (_) => this.fetchData(),
         error: (err) => (this.errorMessage = err),
       });
     } else {
-      this.adminService.addAuthor(this.selectedAuthor).subscribe({
+      this.adminService.addGenre(this.selectedGenre).subscribe({
         next: (_) => this.fetchData(),
         error: (err) => (this.errorMessage = err),
       });
@@ -102,8 +102,8 @@ export class AuthorsComponent implements OnInit {
     this.modalRef.close();
   }
 
-  deleteAuthor(id: number) {
-    this.adminService.deleteAuthor(id).subscribe({
+  deleteGenre(id: number) {
+    this.adminService.deleteGenre(id).subscribe({
       next: (_) => this.fetchData(),
       error: (err) => (this.errorMessage = err),
     });
@@ -111,14 +111,14 @@ export class AuthorsComponent implements OnInit {
 
   setPage(page: number): void {
     this.pager = this.pagerService.getPager(
-      this.authors.length,
+      this.genres.length,
       page,
       this.itemsPerPage
     );
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
-    this.pagedItems = this.authors.slice(
+    this.pagedItems = this.genres.slice(
       this.pager.startIndex,
       this.pager.endIndex + 1
     );

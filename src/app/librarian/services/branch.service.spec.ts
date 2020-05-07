@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BookCopiesService } from './book-copies.service';
+import { BranchService } from './branch.service';
 
-describe('BookCopiesService', () => {
-  let service: BookCopiesService;
+describe('LibraryBranchesService', () => {
+  let service: BranchService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(BookCopiesService);
+    service = TestBed.inject(BranchService);
   });
 
   it('should be created', () => {

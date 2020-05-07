@@ -1,5 +1,6 @@
+import { PagerService } from './../common/services/pager.service';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,17 +11,32 @@ import { PublishersComponent } from './publishers/publishers.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BorrowersComponent } from './borrowers/borrowers.component';
 import { LoansComponent } from './loans/loans.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SortableDirective } from './sortable.directive';
+import { GenresComponent } from './genres/genres.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     AdminComponent,
     AuthorsComponent,
     BooksComponent,
-    PublishersComponent,
-    BranchesComponent,
     BorrowersComponent,
+    BranchesComponent,
     LoansComponent,
+    PublishersComponent,
+    SortableDirective,
+    GenresComponent,
   ],
-  imports: [CommonModule, AdminRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    AdminRoutingModule,
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    NgbModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+  ],
+  providers: [PagerService],
 })
 export class AdminModule {}

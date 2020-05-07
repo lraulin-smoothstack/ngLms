@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { LibraryBranch } from '../models/library-branch.interface';
-import { BooksService } from '../services/books.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Book } from '../models/book.interface';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BookCopiesService } from '../services/book-copies.service';
-import { BookCopy } from '../models/book-copy.interface';
+
+import { BookCopyService } from '../services/book-copy.service';
+import { BookService } from '../services/book.service';
+import { PagerService } from '../../common/services/pager.service';
+import { BookCopy } from '../../common/interfaces/book-copy.interface';
+import { Book } from '../../common/interfaces/book.interface';
+import { Branch } from '../../common/interfaces/branch.interface';
 
 @Component({
   selector: 'app-books',
@@ -14,31 +16,68 @@ import { BookCopy } from '../models/book-copy.interface';
 })
 export class BooksComponent implements OnInit {
   selectedBook: Book;
+  books: Book[];
+  isLoading: boolean;
   branchId: number;
-  amount: number;
+  amount: number = 0;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
+  totalItems: number;
+  pager: any = {};
+  pagedItems: any[];
+  itemsPerPage = 5;
 
   constructor(
-    public bookService: BooksService,
-    public bookCopyService: BookCopiesService,
+    public bookService: BookService,
+    public bookCopyService: BookCopyService,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private router: Router
-  ) {
-    this.amount = 0;
+    private router: Router,
+    private pagerService: PagerService
+  ) {}
+
+  ngOnInit(): void {
+    if (this.activatedRoute.snapshot.paramMap.has('id')) {
+      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
+      this.branchId = parseInt(tempId, 10);
+
+      if (this.branchId) {
+        this.loadBooks();
+      }
+    }
+  }
+
+  loadBooks(): void {
+    this.isLoading = true;
+    this.bookService.getBooks(this.branchId).subscribe((data) => {
+      this.books = data;
+      this.totalItems = data.length;
+      this.setPage(1);
+      this.isLoading = false;
+    });
   }
 
   addBookCopy(): void {
     const bookCopy: BookCopy = {
-      id: { book: { id: this.selectedBook.id }, branch: { id: this.branchId } },
+      id: {
+        book: {
+          id: this.selectedBook.id,
+          title: null,
+          publisher: null,
+          authors: [],
+          genres: [],
+        },
+        branch: { id: this.branchId, name: null, address: null },
+      },
       amount: this.amount,
     };
 
-    this.bookCopyService.addBookCopy(bookCopy, (data) => {
+    this.isLoading = true;
+    this.bookCopyService.addBookCopy(bookCopy).subscribe((data: BookCopy) => {
       this.amount = 0;
       this.modalRef.close();
+      this.isLoading = false;
       this.router.navigate(['../book-copies'], {
         relativeTo: this.activatedRoute,
       });
@@ -60,14 +99,19 @@ export class BooksComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    if (this.activatedRoute.snapshot.paramMap.has('id')) {
-      const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
-      this.branchId = parseInt(tempId, 10);
-
-      if (this.branchId) {
-        this.bookService.getBooks(this.branchId);
-      }
+  setPage(page: number): void {
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
     }
+    const data = this.books;
+    this.pager = this.pagerService.getPager(
+      data.length,
+      page,
+      this.itemsPerPage
+    );
+    this.pagedItems = data.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    );
   }
 }

@@ -1,7 +1,11 @@
 import { AdminService } from './../admin.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Loan } from '../types';
+import { Component, OnInit } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Pager, PagerService } from 'src/app/common/services/pager.service';
+import { Loan } from 'src/app/common/interfaces/loan.interface';
+import { Book } from 'src/app/common/interfaces/book.interface';
+import { Branch } from 'src/app/common/interfaces/branch.interface';
+import { Borrower } from 'src/app/common/interfaces/borrower.interface';
 
 @Component({
   selector: 'app-loans',
@@ -12,27 +16,35 @@ export class LoansComponent implements OnInit {
   private modalRef: NgbModalRef;
   items: Loan[] = [];
   selectedItem: Loan;
+  books: Book[] = [];
+  branches: Branch[] = [];
+  borrowers: Borrower[] = [];
   errorMessage: string;
   closeResult: string;
+  searchString = '';
+  pager: Pager;
+  pagedItems: Loan[];
+  itemsPerPage = 5;
 
   constructor(
     private adminService: AdminService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private pagerService: PagerService
   ) {}
 
   open(content, item?: Loan) {
     this.selectedItem = item
       ? item
       : {
-          id: null,
+          id: {
+            book: null,
+            borrower: null,
+            branch: null,
+          },
           dateIn: null,
           dateOut: null,
           dueDate: null,
-          borrower: '',
-          bookTitle: '',
-          branchName: '',
         };
-    console.log(typeof this.selectedItem.dateIn);
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       (result) => {
@@ -46,37 +58,75 @@ export class LoansComponent implements OnInit {
     );
   }
 
+  setPage(page: number): void {
+    this.pager = this.pagerService.getPager(
+      this.items.length,
+      page,
+      this.itemsPerPage
+    );
+
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+
+    this.pagedItems = this.items.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    );
+  }
+
   fetchData(): void {
     this.adminService.getLoans().subscribe({
-      next: (items) => (this.items = items),
+      next: (items) => {
+        this.items = items;
+        if (this.pager) {
+          this.setPage(this.pager.currentPage);
+        } else {
+          this.setPage(1);
+        }
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
+  fetchMisc(): void {
+    this.adminService.getBorrowers().subscribe({
+      next: (borrower) => (this.borrowers = borrower),
+      error: (err) => (this.errorMessage = err),
+    });
+    this.adminService.getBranches().subscribe({
+      next: (branches) => (this.branches = branches),
+      error: (err) => (this.errorMessage = err),
+    });
+    this.adminService.getBooks().subscribe({
+      next: (books) => (this.books = books),
       error: (err) => (this.errorMessage = err),
     });
   }
 
   submit() {
-    if (this.selectedItem.id) {
-      this.adminService.editLoan(this.selectedItem).subscribe({
-        next: (_) => this.fetchData(),
-        error: (err) => (this.errorMessage = err),
-      });
-    } else {
-      this.adminService.addLoan(this.selectedItem).subscribe({
-        next: (_) => this.fetchData(),
-        error: (err) => (this.errorMessage = err),
-      });
-    }
+    this.adminService.editLoan(this.selectedItem).subscribe({
+      next: (_) => this.fetchData(),
+      error: (err) => (this.errorMessage = err),
+    });
 
     this.modalRef.close();
   }
 
-  delete(id: number) {
-    this.adminService.deleteLoan(id).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+  compareItems(
+    p1: Book | Borrower | Branch,
+    p2: Book | Borrower | Branch
+  ): boolean {
+    return p1 && p2 ? p1.id === p2.id : p1 === p2;
+  }
+
+  setDueDate(selectedDate: string) {
+    console.log(selectedDate);
+    this.selectedItem.dueDate = new Date(selectedDate);
   }
 
   ngOnInit(): void {
     this.fetchData();
+    this.fetchMisc();
   }
 }

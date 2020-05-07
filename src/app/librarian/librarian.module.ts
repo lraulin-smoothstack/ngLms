@@ -8,18 +8,16 @@ import { LibrarianRoutingModule } from './librarian-routing.module';
 import { LibrarianComponent } from './librarian.component';
 import { BranchesComponent } from './branches/branches.component';
 import { BookCopiesComponent } from './book-copies/book-copies.component';
-import { LibraryBranchesService } from './services/library-branches.service';
-import { UpdateLibraryBranchComponent } from './update-library-branch/update-library-branch.component';
-import { BookCopiesService } from './services/book-copies.service';
 import { BooksComponent } from './books/books.component';
-import { BooksService } from './services/books.service';
+import { BranchService } from './services/branch.service';
+import { BookCopyService } from './services/book-copy.service';
+import { BookService } from './services/book.service';
 
 @NgModule({
   declarations: [
     LibrarianComponent,
     BranchesComponent,
     BookCopiesComponent,
-    UpdateLibraryBranchComponent,
     BooksComponent,
   ],
   imports: [
@@ -29,11 +27,6 @@ import { BooksService } from './services/books.service';
     NgbModule,
     FormsModule,
   ],
-  providers: [
-    LibraryBranchesService,
-    BookCopiesService,
-    BooksService,
-    { provide: 'domain', useValue: 'http://localhost:8080' },
-  ],
+  providers: [BranchService, BookCopyService, BookService],
 })
 export class LibrarianModule {}

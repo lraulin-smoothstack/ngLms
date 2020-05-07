@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Phone Number</th>
       <th>Address</th>
       <th></th>
       <th>
@@ -20,8 +21,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let publisher of items">
+    <tr *ngFor="let publisher of pagedItems">
       <td>{{ publisher.name }}</td>
+      <td>{{ publisher.phoneNumber }}</td>
       <td>{{ publisher.address }}</td>
       <td>
         <button
@@ -44,6 +46,19 @@
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="items.length > 0" class="ds-l-row ds-u-margin-top--3">
+  <div class="ds-l-col--9">
+    <ngb-pagination
+      [collectionSize]="items.length"
+      [(page)]="pager.currentPage"
+      [maxSize]="5"
+      [pageSize]="itemsPerPage"
+      [boundaryLinks]="true"
+      (pageChange)="setPage($event)"
+    ></ngb-pagination>
+  </div>
+</div>
 
 <ng-template #editPublisherModal let-c="close" let-d="dismiss">
   <div class="ds-c-dialog">
@@ -73,6 +88,18 @@
               [(ngModel)]="selectedItem.name"
               required
             />
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber" class="col-form-label">Address </label>
+            <input
+              class="form-control"
+              name="phoneNumber"
+              id="phoneNumber"
+              [(ngModel)]="selectedItem.phoneNumber"
+              required
+            />
+          </div>
+          <div class="form-group">
             <label for="address" class="col-form-label">Address </label>
             <input
               class="form-control"
