@@ -83,22 +83,22 @@ export class BooksComponent implements OnInit {
           this.setPage(1);
         }
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => console.log(err),
     });
   }
 
   fetchMisc(): void {
     this.adminService.getAuthors().subscribe({
       next: (authors) => (this.authors = authors),
-      error: (err) => (this.errorMessage = err),
+      error: (err) => console.log(err),
     });
     this.adminService.getPublishers().subscribe({
       next: (publishers) => (this.publishers = publishers),
-      error: (err) => (this.errorMessage = err),
+      error: (err) => console.log(err),
     });
     this.adminService.getGenres().subscribe({
       next: (genres) => (this.genres = genres),
-      error: (err) => (this.errorMessage = err),
+      error: (err) => console.log(err),
     });
   }
 
@@ -149,12 +149,12 @@ export class BooksComponent implements OnInit {
     if (this.selectedBook.id) {
       this.adminService.editBook(this.selectedBook).subscribe({
         next: (_) => this.fetchBooks(),
-        error: (err) => (this.errorMessage = err),
+        error: (err) => console.log(err),
       });
     } else {
       this.adminService.addBook(this.selectedBook).subscribe({
         next: (_) => this.fetchBooks(),
-        error: (err) => (this.errorMessage = err),
+        error: (err) => console.log(err),
       });
     }
 
