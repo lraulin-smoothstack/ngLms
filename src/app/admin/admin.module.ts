@@ -15,6 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SortableDirective } from './sortable.directive';
 import { GenresComponent } from './genres/genres.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ConfirmComponent } from './confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     PublishersComponent,
     SortableDirective,
     GenresComponent,
+    ConfirmComponent,
   ],
   imports: [
     AdminRoutingModule,
@@ -38,5 +40,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
   ],
   providers: [PagerService],
+  entryComponents: [ConfirmComponent],
 })
 export class AdminModule {}

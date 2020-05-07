@@ -4,6 +4,7 @@ import { AdminService } from './../admin.service';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Genre } from 'src/app/common/interfaces/genre.interface';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-genres',
@@ -103,10 +104,18 @@ export class GenresComponent implements OnInit {
   }
 
   deleteGenre(id: number) {
-    this.adminService.deleteGenre(id).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+    this.modalRef = this.modalService.open(ConfirmComponent);
+    this.modalRef.result.then(
+      (result) => {
+        this.adminService.deleteGenre(id).subscribe({
+          next: (_) => this.fetchData(),
+          error: (err) => console.log(err),
+        });
+      },
+      (reason) => {
+        console.log(`Dismissed with reason: ${reason}`);
+      }
+    );
   }
 
   setPage(page: number): void {
