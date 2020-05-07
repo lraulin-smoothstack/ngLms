@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
 import { Branch } from 'src/app/common/interfaces/branch.interface';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-branches',
@@ -89,10 +90,18 @@ export class BranchesComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.adminService.deleteBranch(id).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+    this.modalRef = this.modalService.open(ConfirmComponent);
+    this.modalRef.result.then(
+      (result) => {
+        this.adminService.deleteBranch(id).subscribe({
+          next: (_) => this.fetchData(),
+          error: (err) => console.log(err),
+        });
+      },
+      (reason) => {
+        console.log(`Dismissed with reason: ${reason}`);
+      }
+    );
   }
 
   ngOnInit(): void {

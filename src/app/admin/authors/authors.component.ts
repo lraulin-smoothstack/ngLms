@@ -1,3 +1,4 @@
+import { ConfirmComponent } from './../confirm/confirm.component';
 import { SortableDirective, SortEvent } from './../sortable.directive';
 import { PagerService, Pager } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
@@ -103,10 +104,24 @@ export class AuthorsComponent implements OnInit {
   }
 
   deleteAuthor(id: number) {
-    this.adminService.deleteAuthor(id).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+    this.modalRef = this.modalService.open(ConfirmComponent);
+    this.modalRef.result.then(
+      (result) => {
+        this.errorMessage = '';
+        this.closeResult = `Closed with result: ${result}`;
+        console.log(this.closeResult);
+
+        this.adminService.deleteAuthor(id).subscribe({
+          next: (_) => this.fetchData(),
+          error: (err) => (this.errorMessage = err),
+        });
+      },
+      (reason) => {
+        this.errorMessage = ``;
+        this.closeResult = `Dismissed with reason: ${reason}`;
+        console.log(this.closeResult);
+      }
+    );
   }
 
   setPage(page: number): void {

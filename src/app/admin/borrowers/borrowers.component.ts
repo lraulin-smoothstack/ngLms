@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
 import { Borrower } from 'src/app/common/interfaces/borrower.interface';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-borrowers',
@@ -91,10 +92,18 @@ export class BorrowersComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.adminService.deleteBorrower(id).subscribe({
-      next: (_) => this.fetchData(),
-      error: (err) => (this.errorMessage = err),
-    });
+    this.modalRef = this.modalService.open(ConfirmComponent);
+    this.modalRef.result.then(
+      (result) => {
+        this.adminService.deleteBorrower(id).subscribe({
+          next: (_) => this.fetchData(),
+          error: (err) => console.log(err),
+        });
+      },
+      (reason) => {
+        console.log(`Dismissed with reason: ${reason}`);
+      }
+    );
   }
 
   ngOnInit(): void {

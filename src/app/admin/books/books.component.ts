@@ -11,6 +11,7 @@ import { Book } from 'src/app/common/interfaces/book.interface';
 import { Author, newAuthor } from 'src/app/common/interfaces/author.interface';
 import { Publisher } from 'src/app/common/interfaces/publisher.interface';
 import { Genre } from 'src/app/common/interfaces/genre.interface';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-books',
@@ -18,7 +19,6 @@ import { Genre } from 'src/app/common/interfaces/genre.interface';
   styleUrls: ['./books.component.css'],
 })
 export class BooksComponent implements OnInit {
-  private modalRef: NgbModalRef;
   books: Book[] = [];
   selectedBook: Book;
   authors: Author[] = [];
@@ -27,14 +27,13 @@ export class BooksComponent implements OnInit {
   selectedPublisher: Publisher = null;
   genres: Genre[] = [];
   selectedGenre: Genre = null;
-  errorMessage: string;
-  closeResult: string;
   searchString = '';
+  faTimesCircle: IconDefinition = faTimesCircle;
+  arrows = { title: '', author: '', publisher: '', genre: '' };
+  private modalRef: NgbModalRef;
   pager: Pager;
   pagedItems: Book[];
   itemsPerPage = 5;
-  arrows = { title: '', author: '', publisher: '', genre: '' };
-  faTimesCircle: IconDefinition = faTimesCircle;
 
   @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
 
@@ -117,12 +116,10 @@ export class BooksComponent implements OnInit {
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       (result) => {
-        this.errorMessage = '';
-        this.closeResult = `Closed with ${result}`;
+        console.log(`Closed with result: ${result}`);
       },
       (reason) => {
-        this.errorMessage = `${reason}`;
-        this.closeResult = `Dismissed`;
+        console.log(`Dismissed with reason: ${reason}`);
       }
     );
   }
@@ -165,10 +162,18 @@ export class BooksComponent implements OnInit {
   }
 
   deleteBook(id: number) {
-    this.adminService.deleteBook(id).subscribe({
-      next: (_) => this.fetchBooks(),
-      error: (err) => (this.errorMessage = err),
-    });
+    this.modalRef = this.modalService.open(ConfirmComponent);
+    this.modalRef.result.then(
+      (result) => {
+        this.adminService.deleteBook(id).subscribe({
+          next: (_) => this.fetchBooks(),
+          error: (err) => console.log(err),
+        });
+      },
+      (reason) => {
+        console.log(`Dismissed with reason: ${reason}`);
+      }
+    );
   }
 
   getAuthors(book: Book): string {
