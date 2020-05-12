@@ -12,8 +12,15 @@ const MOCK_DATA: Author[] = [
 ];
 
 class MockAdminService {
+  data: Author[] = MOCK_DATA;
+
   getAuthors(): Observable<Author[]> {
-    return of(MOCK_DATA);
+    return of(this.data);
+  }
+
+  deleteAuthor(id: number): Observable<{}> {
+    this.data = this.data.filter((x) => x.id !== id);
+    return of({});
   }
 }
 
@@ -41,10 +48,31 @@ fdescribe('AuthorsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('compare', () => {
+    it('should return -1 when first item comes before second item', () => {
+      const actual = component.compare('a', 'z');
+      expect(actual).toBe(-1);
+    });
+  });
+
+  describe('compare', () => {
+    it('should return 1 when first item comes after second item', () => {
+      const actual = component.compare('z', 'a');
+      expect(actual).toBe(1);
+    });
+  });
+
+  describe('compare', () => {
+    it('should return 0 when items are the same', () => {
+      const actual = component.compare('a', 'a');
+      expect(actual).toBe(0);
+    });
+  });
+
   describe('fetchData', () => {
     it('should get authors', () => {
       component.fetchData();
-      expect(component.authors.length).toBe(MOCK_DATA.length);
+      expect(component.authors).toEqual(MOCK_DATA);
     });
   });
 });
