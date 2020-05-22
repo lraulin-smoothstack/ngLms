@@ -1,9 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Author } from 'src/app/common/interfaces/author.interface';
-import { TestBed } from '@angular/core/testing';
-
 import { AdminService } from './admin.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { asyncData, asyncError } from 'src/testing/async-observable-helpers';
+import { asyncData } from 'src/testing/async-observable-helpers';
 
 const MOCK_AUTHORS: Author[] = [
   { id: 1, name: 'JR Tolkein' },
@@ -12,30 +10,58 @@ const MOCK_AUTHORS: Author[] = [
 ];
 
 fdescribe('AdminService', () => {
-  let httpClientSpy: { get: jasmine.Spy };
-  let service: AdminService;
+  const setup = () => {
+    const httpClientSpy = jasmine.createSpyObj('HttpClient', [
+      'delete',
+      'get',
+      'post',
+      'put',
+    ]);
+    const baseUrl = 'mock-base-url';
+    const service = new AdminService(baseUrl, httpClientSpy);
 
-  beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    service = new AdminService('mock-api-url', httpClientSpy as any);
-  });
+    return {
+      httpClientSpy,
+      baseUrl,
+      service,
+    };
+  };
 
   it('should be created', () => {
+    const { service } = setup();
     expect(service).toBeTruthy();
   });
 
-  it('should return expected authors (HttpClient called once)', () => {
-    const expectedAuthors: Author[] = MOCK_AUTHORS;
+  describe('getAuthors', () => {
+    it('should return expected authors (HttpClient called once)', () => {
+      const { httpClientSpy, baseUrl, service } = setup();
+      const expectedAuthors: Author[] = MOCK_AUTHORS;
 
-    httpClientSpy.get.and.returnValue(asyncData(expectedAuthors));
+      httpClientSpy.get.and.returnValue(asyncData(expectedAuthors));
 
-    service
-      .getAuthors()
-      .subscribe(
-        (authors) =>
-          expect(authors).toEqual(expectedAuthors, 'expected authors'),
-        fail
+      service
+        .getAuthors()
+        .subscribe(
+          (authors) =>
+            expect(authors).toEqual(expectedAuthors, 'expected authors'),
+          fail
+        );
+      expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
+      expect(httpClientSpy.get).toHaveBeenCalledWith(baseUrl + '/author');
+    });
+  });
+
+  describe('deleteAuthor', () => {
+    it('should return nothing when successful (HttpClient called once)', () => {
+      const { httpClientSpy, baseUrl, service } = setup();
+      httpClientSpy.delete.and.returnValue(asyncData(undefined));
+      const idToDelete = 1;
+
+      service.deleteAuthor(idToDelete).subscribe((_) => {}, fail);
+      expect(httpClientSpy.delete.calls.count()).toBe(1, 'one call');
+      expect(httpClientSpy.delete).toHaveBeenCalledWith(
+        baseUrl + '/author/' + idToDelete
       );
-    expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
+    });
   });
 });
