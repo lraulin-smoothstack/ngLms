@@ -9,7 +9,7 @@ const MOCK_AUTHORS: Author[] = [
   { id: 3, name: 'Leo Tolstoy' },
 ];
 
-fdescribe('AdminService', () => {
+describe('AdminService', () => {
   const setup = () => {
     const httpClientSpy = jasmine.createSpyObj('HttpClient', [
       'delete',
@@ -61,6 +61,21 @@ fdescribe('AdminService', () => {
       expect(httpClientSpy.delete.calls.count()).toBe(1, 'one call');
       expect(httpClientSpy.delete).toHaveBeenCalledWith(
         baseUrl + '/author/' + idToDelete
+      );
+    });
+  });
+
+  describe('editAuthor', () => {
+    it('should return edited author (HttpClient called once)', () => {
+      const { httpClientSpy, baseUrl, service } = setup();
+      const idToEdit = 1;
+      const originalAuthor = MOCK_AUTHORS[idToEdit];
+      httpClientSpy.put.and.returnValue(asyncData(undefined));
+
+      service.deleteAuthor(idToEdit).subscribe((_) => {}, fail);
+      expect(httpClientSpy.delete.calls.count()).toBe(1, 'one call');
+      expect(httpClientSpy.delete).toHaveBeenCalledWith(
+        baseUrl + '/author/' + idToEdit
       );
     });
   });

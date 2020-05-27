@@ -8,9 +8,11 @@ import {
   ViewChildren,
   QueryList,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Author } from 'src/app/common/interfaces/author.interface';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-authors',
@@ -28,7 +30,7 @@ export class AuthorsComponent implements OnInit {
   pagedItems: Author[];
   itemsPerPage = 5;
   arrows = { name: '' };
-
+  @ViewChild('editAuthorModal') public editAuthorModalRef: TemplateRef<any>; // for testing
   @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
 
   constructor(
