@@ -2,7 +2,13 @@ import { NgbModal, NgbModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AdminService } from './../admin.service';
 import { Author } from 'src/app/common/interfaces/author.interface';
 import { Observable, of } from 'rxjs';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  async,
+  ComponentFixture,
+  TestBed,
+  tick,
+  fakeAsync,
+} from '@angular/core/testing';
 import { AuthorsComponent } from './authors.component';
 import { By } from '@angular/platform-browser';
 
@@ -80,13 +86,25 @@ fdescribe('AuthorsComponent', () => {
   });
 
   describe('open', () => {
-    it('should open modal with correct title ("Add Author") when called without Author object', () => {
-      expect(component.editAuthorModalRef).toBeTruthy();
-      component.open(component.editAuthorModalRef);
-      fixture.detectChanges();
-      const headerText = fixture.debugElement.queryAll(By.css('h5'))[0]
-        .nativeElement.innerText;
-      expect(headerText).toBeTruthy();
-    });
+    // it('should open modal with correct title ("Add Author") when called without Author object', () => {
+    //   expect(component.editAuthorModalRef).toBeTruthy();
+    //   component.open(component.editAuthorModalRef);
+    //   fixture.detectChanges();
+    //   const headerText = fixture.debugElement.queryAll(By.css('h5'))[0]
+    //     .nativeElement.innerText;
+    //   expect(headerText).toBeTruthy();
+    // });
+
+    it('should be called with one argument when user clicks on Add button', fakeAsync(() => {
+      const openSpy = spyOn(component, 'open');
+
+      const button = fixture.debugElement.nativeElement.querySelector(
+        '#addButton'
+      );
+      button.click();
+      tick();
+      expect(openSpy).toHaveBeenCalled();
+      expect(openSpy.calls.mostRecent().args.length).toEqual(1);
+    }));
   });
 });
