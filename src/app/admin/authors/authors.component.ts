@@ -39,7 +39,7 @@ export class AuthorsComponent implements OnInit {
     private pagerService: PagerService
   ) {}
 
-  onSort({ column, direction }: SortEvent) {
+  onSort({ column, direction }: SortEvent): void {
     console.log('Sorting...');
     // resetting other headers
     this.headers.forEach((header) => {
@@ -69,7 +69,7 @@ export class AuthorsComponent implements OnInit {
     }
   }
 
-  open(content: TemplateRef<any>, author?: Author) {
+  open(content: TemplateRef<any>, author?: Author): void {
     this.selectedAuthor = author ? author : { id: null, name: '' };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
@@ -95,7 +95,7 @@ export class AuthorsComponent implements OnInit {
     });
   }
 
-  submit() {
+  submit(): void {
     if (this.selectedAuthor.id) {
       this.adminService.editAuthor(this.selectedAuthor).subscribe({
         next: (_) => this.fetchData(),
@@ -111,7 +111,7 @@ export class AuthorsComponent implements OnInit {
     this.modalRef.close();
   }
 
-  deleteAuthor(id: number) {
+  deleteAuthor(id: number): void {
     this.modalRef = this.modalService.open(ConfirmComponent);
     this.modalRef.result.then(
       (result) => {
