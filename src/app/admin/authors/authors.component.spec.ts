@@ -41,7 +41,7 @@ fdescribe('AuthorsComponent', () => {
   let fixture: ComponentFixture<AuthorsComponent>;
   let modalService: NgbModal;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AuthorsComponent],
       providers: [
@@ -55,7 +55,7 @@ fdescribe('AuthorsComponent', () => {
     component = fixture.componentInstance;
     modalService = TestBed.inject(NgbModal);
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
