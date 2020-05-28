@@ -8,10 +8,10 @@ import { of } from 'rxjs';
 import { BranchesComponent } from './branches.component';
 import { LibrarianRoutingModule } from '../librarian-routing.module';
 import { BranchService } from '../services/branch.service';
-import { PagerService } from 'src/app/common/services/pager.service';
+import { PagerService } from '../../common/services/pager.service';
 import { Branch } from '../../common/interfaces/branch.interface';
+import { BookCopyService } from '../services/book-copy.service';
 
-//Mock Modal
 export class MockNgbModalRef {
   result: Promise<any> = new Promise((resolve, reject) => resolve('x'));
 }

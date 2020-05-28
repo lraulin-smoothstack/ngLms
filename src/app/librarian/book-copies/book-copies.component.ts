@@ -16,7 +16,7 @@ import { Branch } from '../../common/interfaces/branch.interface';
 export class BookCopiesComponent implements OnInit {
   selectedBookCopy: BookCopy;
   bookCopies: BookCopy[];
-  isLoading: boolean;
+  isLoading: any = { branch: false, bookCopies: false };
   branchId: number;
   branch: Branch;
   private modalRef: NgbModalRef;
@@ -36,27 +36,32 @@ export class BookCopiesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadBranch();
+    this.loadBookCopies();
+  }
+
+  loadBranch(): void {
     if (this.activatedRoute.snapshot.paramMap.has('id')) {
       const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       this.branchId = parseInt(tempId, 10);
 
       if (this.branchId) {
-        this.isLoading = false;
+        this.isLoading.branch = true;
         this.branchService.getBranch(this.branchId).subscribe((data) => {
           this.branch = data;
-          this.loadBookCopies();
+          this.isLoading.branch = false;
         });
       }
     }
   }
 
   loadBookCopies(): void {
-    this.isLoading = true;
+    this.isLoading.bookCopies = true;
     this.bookCopyService.getBookCopies(this.branchId).subscribe((data: any) => {
       this.bookCopies = data;
       this.totalItems = data.length;
       this.setPage(1);
-      this.isLoading = false;
+      this.isLoading.bookCopies = false;
     });
   }
 
