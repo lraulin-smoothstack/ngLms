@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -82,5 +82,14 @@ describe('BranchesComponent', () => {
     const mockBranch: Branch = { id: 1, name: 'name1', address: 'address1' };
     spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
     component.open('editLibraryBranchModal', mockBranch);
+  });
+
+  it('Should close a modal', () => {
+    const mockBranch: Branch = { id: 1, name: 'name1', address: 'address1' };
+    spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+    component.open('editLibraryBranchModal', mockBranch);
+    expect(component.closeResult).toBe('Dismissed');
+    tick();
+    expect(component.closeResult).toBe('Dismissed');
   });
 });
