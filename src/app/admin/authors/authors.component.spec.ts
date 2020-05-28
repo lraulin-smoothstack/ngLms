@@ -62,6 +62,13 @@ fdescribe('AuthorsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should load components and call life cycle methods', () => {
+    spyOn(component, 'fetchData');
+    component.ngOnInit();
+
+    expect(component.fetchData).toHaveBeenCalled();
+  });
+
   describe('compare', () => {
     it('should return -1 when first item comes before second item', () => {
       const actual = component.compare('a', 'z');
