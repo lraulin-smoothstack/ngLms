@@ -21,6 +21,7 @@ const mockData: Author[] = [
 // Mock class for NgbModalRef
 export class MockNgbModalRef {
   result: Promise<any> = new Promise((resolve, reject) => resolve('x'));
+  close(): void {}
 }
 
 class MockAdminService {
@@ -34,12 +35,17 @@ class MockAdminService {
     this.data = this.data.filter((x) => x.id !== id);
     return of({});
   }
+
+  editAuthor(author: Author): Observable<Author> {
+    return of(author);
+  }
 }
 
 fdescribe('AuthorsComponent', () => {
   let component: AuthorsComponent;
   let fixture: ComponentFixture<AuthorsComponent>;
   let modalService: NgbModal;
+  let adminService: AdminService;
   const mockModalRef: MockNgbModalRef = new MockNgbModalRef();
 
   beforeEach(async(() => {
@@ -52,9 +58,10 @@ fdescribe('AuthorsComponent', () => {
       ],
     }).compileComponents();
 
+    adminService = TestBed.inject(AdminService);
+    modalService = TestBed.inject(NgbModal);
     fixture = TestBed.createComponent(AuthorsComponent);
     component = fixture.componentInstance;
-    modalService = TestBed.get(NgbModal);
     fixture.detectChanges();
   }));
 
@@ -117,6 +124,17 @@ fdescribe('AuthorsComponent', () => {
       component.open('editAuthorModal' as any);
       tick();
       expect(component.closeResult).toBe('Dismissed');
+    }));
+  });
+
+  describe('submit', () => {
+    it('should call the service editAuthor method when a pre-existing author is selected', fakeAsync(() => {
+      spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+      const author = mockData[0];
+      component.selectedAuthor = author;
+      component.open('editAuthorModal' as any, author);
+      tick();
+      component.submit();
     }));
   });
 });
