@@ -2,9 +2,17 @@ import { ConfirmComponent } from './../confirm/confirm.component';
 import { SortableDirective, SortEvent } from './../sortable.directive';
 import { PagerService, Pager } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChildren,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Author } from 'src/app/common/interfaces/author.interface';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-authors',
@@ -22,7 +30,7 @@ export class AuthorsComponent implements OnInit {
   pagedItems: Author[];
   itemsPerPage = 5;
   arrows = { name: '' };
-
+  @ViewChild('editAuthorModal') public editAuthorModalRef: TemplateRef<any>; // for testing
   @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
 
   constructor(
@@ -46,7 +54,7 @@ export class AuthorsComponent implements OnInit {
     this.setPage(this.pager.currentPage);
   }
 
-  compare(v1, v2) {
+  compare(v1: string, v2: string): 1 | -1 | 0 {
     return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
   }
 
@@ -61,7 +69,7 @@ export class AuthorsComponent implements OnInit {
     }
   }
 
-  open(content, author?: Author) {
+  open(content: TemplateRef<any>, author?: Author) {
     this.selectedAuthor = author ? author : { id: null, name: '' };
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(

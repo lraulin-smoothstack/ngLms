@@ -11,6 +11,7 @@
       <th></th>
       <th>
         <button
+          id="addButton"
           type="button"
           class="btn btn-primary"
           (click)="open(editAuthorModal)"
@@ -59,10 +60,10 @@
 </div>
 
 <ng-template #editAuthorModal let-c="close" let-d="dismiss">
-  <div class="ds-c-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">
+  <div id="ds-c-dialog" class="ds-c-dialog">
+    <div id="modal-content" class="modal-content">
+      <div id="modal-header" class="modal-header">
+        <h5 id="modal-title" class="modal-title">
           {{ selectedAuthor ? "Edit" : "Add" }} Author
         </h5>
         <button
