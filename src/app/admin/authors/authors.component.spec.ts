@@ -40,20 +40,21 @@ fdescribe('AuthorsComponent', () => {
   let component: AuthorsComponent;
   let fixture: ComponentFixture<AuthorsComponent>;
   let modalService: NgbModal;
+  const mockModalRef: MockNgbModalRef = new MockNgbModalRef();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AuthorsComponent],
+      imports: [NgbModule],
       providers: [
         AuthorsComponent,
-        NgbModal,
         { provide: AdminService, useClass: MockAdminService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuthorsComponent);
     component = fixture.componentInstance;
-    modalService = TestBed.inject(NgbModal);
+    modalService = TestBed.get(NgbModal);
     fixture.detectChanges();
   }));
 
@@ -86,16 +87,29 @@ fdescribe('AuthorsComponent', () => {
   });
 
   describe('open', () => {
-    it('should be called with one argument when user clicks on Add button', fakeAsync(() => {
-      const openSpy = spyOn(component, 'open');
+    it('should set selectedAuthor correctly when opened with no Author', fakeAsync(() => {
+      spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+      component.open('editAuthorModal' as any);
+      expect(component.selectedAuthor.id).toBeNull();
+      expect(component.selectedAuthor.name).toEqual('');
+    }));
 
-      const button = fixture.debugElement.nativeElement.querySelector(
-        '#addButton'
+    it('should set selectedAuthor correctly when opened with an Author', fakeAsync(() => {
+      const author: Author = mockData[0];
+      spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+      component.open('editAuthorModal' as any, author);
+      expect(component.selectedAuthor.id).toEqual(author.id);
+      expect(component.selectedAuthor.name).toEqual(author.name);
+    }));
+
+    it('should close a modal window', fakeAsync(() => {
+      spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
+      mockModalRef.result = new Promise((resolve, reject) =>
+        reject('someerror')
       );
-      button.click();
+      component.open('editAuthorModal' as any);
       tick();
-      expect(openSpy).toHaveBeenCalled();
-      expect(openSpy.calls.mostRecent().args.length).toEqual(1);
+      expect(component.closeResult).toBe('Dismissed');
     }));
   });
 });
