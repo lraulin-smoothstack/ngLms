@@ -41,7 +41,7 @@ fdescribe('AuthorsComponent', () => {
   let fixture: ComponentFixture<AuthorsComponent>;
   let modalService: NgbModal;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AuthorsComponent],
       providers: [
@@ -55,7 +55,7 @@ fdescribe('AuthorsComponent', () => {
     component = fixture.componentInstance;
     modalService = TestBed.inject(NgbModal);
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -86,15 +86,6 @@ fdescribe('AuthorsComponent', () => {
   });
 
   describe('open', () => {
-    // it('should open modal with correct title ("Add Author") when called without Author object', () => {
-    //   expect(component.editAuthorModalRef).toBeTruthy();
-    //   component.open(component.editAuthorModalRef);
-    //   fixture.detectChanges();
-    //   const headerText = fixture.debugElement.queryAll(By.css('h5'))[0]
-    //     .nativeElement.innerText;
-    //   expect(headerText).toBeTruthy();
-    // });
-
     it('should be called with one argument when user clicks on Add button', fakeAsync(() => {
       const openSpy = spyOn(component, 'open');
 
