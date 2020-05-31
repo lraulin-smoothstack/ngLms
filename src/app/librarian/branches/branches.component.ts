@@ -34,7 +34,7 @@ export class BranchesComponent implements OnInit {
     this.loadBranches();
   }
 
-  loadBranches(): Observable<Branch> {
+  loadBranches(): Observable<Branch[]> {
     this.isLoading = true;
     const observable = this.branchService.getBranches();
     observable.subscribe((data: Branch[]) => {
@@ -58,10 +58,10 @@ export class BranchesComponent implements OnInit {
     return observable;
   }
 
-  open(content, branch: Branch): void {
+  open(content, branch: Branch): Promise<any> {
     this.selectedBranch = branch;
     this.modalRef = this.modalService.open(content);
-    this.modalRef.result.then(
+    return this.modalRef.result.then(
       (result) => {
         this.errMsg = '';
         this.closeResult = `Closed with ${result}`;

@@ -106,10 +106,10 @@ export class BookCopiesComponent implements OnInit {
     return observable;
   }
 
-  open(content, bookCopy: BookCopy): void {
+  open(content, bookCopy: BookCopy): Promise<any> {
     this.selectedBookCopy = bookCopy;
     this.modalRef = this.modalService.open(content);
-    this.modalRef.result.then(
+    return this.modalRef.result.then(
       (result) => {
         this.errMsg = '';
         this.closeResult = `Closed with ${result}`;

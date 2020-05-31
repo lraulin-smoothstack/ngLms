@@ -90,10 +90,10 @@ export class BooksComponent implements OnInit {
     return observable;
   }
 
-  open(content, book: Book): void {
+  open(content, book: Book): Promise<any> {
     this.selectedBook = book;
     this.modalRef = this.modalService.open(content);
-    this.modalRef.result.then(
+    return this.modalRef.result.then(
       (result) => {
         this.errMsg = '';
         this.closeResult = `Closed with ${result}`;

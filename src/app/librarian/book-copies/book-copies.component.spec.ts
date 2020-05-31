@@ -3,17 +3,16 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { of, BehaviorSubject, Subject } from 'rxjs';
+import { of, BehaviorSubject, Subject, Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { LibrarianRoutingModule } from '../librarian-routing.module';
 import { PagerService } from '../../common/services/pager.service';
 import { BookCopiesComponent } from './book-copies.component';
-import { BookCopyService } from '../services/book-copy.service';
-import { BranchService } from '../services/branch.service';
 import { BookCopy } from '../../common/interfaces/book-copy.interface';
 import { Branch } from '../../common/interfaces/branch.interface';
-import { ActivatedRoute } from '@angular/router';
-import { keyframes } from '@angular/animations';
+import { BookCopyService } from '../services/book-copy.service';
+import { BranchService } from '../services/branch.service';
 
 export class MockNgbModalRef {
   result: Promise<any> = new Promise((resolve, reject) => resolve('x'));
@@ -25,7 +24,7 @@ export class ParamMap {
   }
 
   get(name): string {
-    return '';
+    return '1';
   }
 }
 
@@ -40,14 +39,57 @@ export class MockActivatedRoute extends ActivatedRoute {
   }
 }
 
-fdescribe('BookCopiesComponent', () => {
+export class MockBookCopyService {
+  getBookCopies(id: number): Observable<BookCopy[]> {
+    const result: BookCopy[] = [];
+    return of(result);
+  }
+
+  updateBookCopy(
+    bookId: number,
+    branchId: number,
+    bookCopy: BookCopy
+  ): Observable<BookCopy> {
+    const result: BookCopy = null;
+    return of(result);
+  }
+
+  addBookCopy(bookCopy: BookCopy): Observable<BookCopy> {
+    const result: BookCopy = null;
+    return of(result);
+  }
+
+  deleteBookCopy(bookId: number, branchId: number): Observable<object> {
+    const result: any = null;
+    return of(result);
+  }
+}
+
+export class MockBranchService {
+  getBranches(): Observable<Branch[]> {
+    const result: Branch[] = [];
+    return of(result);
+  }
+
+  getBranch(id: number): Observable<Branch> {
+    const result: Branch = null;
+    return of(result);
+  }
+
+  updateBranch(id: number, branch: Branch): Observable<Branch> {
+    const result: Branch = null;
+    return of(result);
+  }
+}
+
+describe('BookCopiesComponent', () => {
   let component: BookCopiesComponent;
-  let bookCopyService: BookCopyService;
-  let branchService: BranchService;
+  let mockBookCopyService: MockBookCopyService;
+  let mockBranchService: MockBranchService;
   let pagerService: PagerService;
   let modalService: NgbModal;
-  let mockModalRef: MockNgbModalRef = new MockNgbModalRef();
-  let mockActivatedRoute: MockActivatedRoute = new MockActivatedRoute();
+  let mockModalRef: MockNgbModalRef;
+  let mockActivatedRoute: ActivatedRoute;
   let fixture: ComponentFixture<BookCopiesComponent>;
 
   beforeEach(async(() => {
@@ -61,21 +103,23 @@ fdescribe('BookCopiesComponent', () => {
         FormsModule,
       ],
       providers: [
-        BookCopyService,
-        BranchService,
+        MockBookCopyService,
+        MockBranchService,
         { provide: ActivatedRoute, useClass: MockActivatedRoute },
         { provide: 'domain', useValue: 'http://localhost:8080' },
       ],
     }).compileComponents();
 
-    bookCopyService = new BookCopyService(null, '');
-    branchService = new BranchService(null, '');
+    mockActivatedRoute = new MockActivatedRoute();
+    mockModalRef = new MockNgbModalRef();
+    mockBookCopyService = new MockBookCopyService();
+    mockBranchService = new MockBranchService();
     pagerService = new PagerService();
     modalService = TestBed.get(NgbModal);
 
     component = new BookCopiesComponent(
-      bookCopyService,
-      branchService,
+      mockBookCopyService as BookCopyService,
+      mockBranchService as BranchService,
       mockActivatedRoute,
       modalService,
       pagerService
@@ -89,18 +133,12 @@ fdescribe('BookCopiesComponent', () => {
   });
 
   it('should create', () => {
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'has').and.returnValue(true);
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
     expect(component).toBeTruthy();
   });
 
-  it('Should call life cycle method ngOninit', () => {
+  it('Should call life cycle method ngOnInit', () => {
     spyOn(component, 'loadBookCopies');
-    spyOn(bookCopyService, 'getBookCopies').and.returnValue(of([]));
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'has').and.returnValue(true);
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
     spyOn(component, 'loadBranch');
-    spyOn(branchService, 'getBranch').and.returnValue(of({} as Branch));
     component.ngOnInit();
     expect(component.loadBookCopies).toHaveBeenCalled();
     expect(component.loadBranch).toHaveBeenCalled();
@@ -146,11 +184,14 @@ fdescribe('BookCopiesComponent', () => {
       },
     ];
 
-    spyOn(bookCopyService, 'getBookCopies').and.returnValue(of(mockBookCopies));
-    component.ngOnInit();
-    expect(bookCopyService).toBeTruthy();
-    expect(component.bookCopies.length).toEqual(2);
-    expect(component.bookCopies).toEqual(mockBookCopies);
+    spyOn(mockBookCopyService, 'getBookCopies').and.returnValue(
+      of(mockBookCopies)
+    );
+    component.loadBookCopies().subscribe(() => {
+      expect(mockBookCopyService).toBeTruthy();
+      expect(component.bookCopies.length).toEqual(2);
+      expect(component.bookCopies).toEqual(mockBookCopies);
+    });
   });
 
   it('Should load library branch from service using  mock data', () => {
@@ -159,12 +200,12 @@ fdescribe('BookCopiesComponent', () => {
       name: 'branch1',
       address: 'address1',
     };
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'has').and.returnValue(true);
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
-    spyOn(branchService, 'getBranch').and.returnValue(of(mockBranch));
-    component.ngOnInit();
-    expect(branchService).toBeTruthy();
-    expect(component.branch).toEqual(mockBranch);
+
+    spyOn(mockBranchService, 'getBranch').and.returnValue(of(mockBranch));
+    component.loadBranch().subscribe(() => {
+      expect(mockBranchService).toBeTruthy();
+      expect(component.branch).toEqual(mockBranch);
+    });
   });
 
   it('Should open a modal window', () => {
@@ -187,8 +228,6 @@ fdescribe('BookCopiesComponent', () => {
       amount: 2,
     };
 
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'has').and.returnValue(true);
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
     spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
     component.open('editBookCopyModal', mockBookCopy);
   });
@@ -213,12 +252,9 @@ fdescribe('BookCopiesComponent', () => {
       amount: 2,
     };
 
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'has').and.returnValue(true);
-    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
     spyOn(modalService, 'open').and.returnValue(mockModalRef as any);
-    component.open('editBookCopyModal', mockBookCopy);
-    expect(component.closeResult).toBe('Dismissed');
-    tick();
-    expect(component.closeResult).toBe('Dismissed');
+    component.open('editBookCopyModal', mockBookCopy).catch(() => {
+      expect(component.closeResult).toBe('Dismissed');
+    });
   });
 });
