@@ -41,7 +41,7 @@ class MockAdminService {
   }
 }
 
-fdescribe('AuthorsComponent', () => {
+describe('AuthorsComponent', () => {
   let component: AuthorsComponent;
   let fixture: ComponentFixture<AuthorsComponent>;
   let modalService: NgbModal;
