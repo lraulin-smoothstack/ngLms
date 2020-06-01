@@ -13,7 +13,7 @@ describe('PagerService', () => {
     expect(service).toBeTruthy();
   });
 
-  fdescribe('getPager', () => {
+  describe('getPager', () => {
     it('should have the correct number of pages', () => {
       const pager = service.getPager(12, 1, 5);
       expect(pager.totalPages).toBe(3);
