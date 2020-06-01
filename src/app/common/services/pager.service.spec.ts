@@ -3,10 +3,20 @@ import { TestBed } from '@angular/core/testing';
 import { PagerService } from './pager.service';
 
 describe('PagerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: PagerService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.get(PagerService);
+  });
 
   it('should be created', () => {
-    const service: PagerService = TestBed.get(PagerService);
     expect(service).toBeTruthy();
+  });
+
+  fdescribe('getPager', () => {
+    it('should have the correct number of pages', () => {
+      const pager = service.getPager(12, 1, 5);
+      expect(pager.totalPages).toBe(3);
+    });
   });
 });

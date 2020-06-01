@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
 
 import { BranchService } from '../services/branch.service';
 import { PagerService } from '../../common/services/pager.service';
@@ -30,32 +31,37 @@ export class BranchesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadLibraryBranches();
+    this.loadBranches();
   }
 
-  loadLibraryBranches(): void {
+  loadBranches(): Observable<Branch[]> {
     this.isLoading = true;
-    this.branchService.getBranches().subscribe((data: Branch[]) => {
+    const observable = this.branchService.getBranches();
+    observable.subscribe((data: Branch[]) => {
       this.branches = data;
       this.totalItems = data.length;
       this.setPage(1);
       this.isLoading = false;
     });
+    return observable;
   }
 
-  updateLibraryBranch(form: NgForm): void {
-    this.branchService
-      .updateBranch(this.selectedBranch.id, form.value)
-      .subscribe((data) => {
-        this.modalRef.close();
-        this.isLoading = false;
-      });
+  updateLibraryBranch(form: NgForm): Observable<Branch> {
+    const observable = this.branchService.updateBranch(
+      this.selectedBranch.id,
+      form.value
+    );
+    observable.subscribe((data: Branch) => {
+      this.modalRef.close();
+      this.isLoading = false;
+    });
+    return observable;
   }
 
-  open(content, branch: Branch) {
+  open(content, branch: Branch): Promise<any> {
     this.selectedBranch = branch;
     this.modalRef = this.modalService.open(content);
-    this.modalRef.result.then(
+    return this.modalRef.result.then(
       (result) => {
         this.errMsg = '';
         this.closeResult = `Closed with ${result}`;

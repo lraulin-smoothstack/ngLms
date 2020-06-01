@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { BookCopyService } from '../services/book-copy.service';
 import { BranchService } from '../services/branch.service';
@@ -16,7 +17,7 @@ import { Branch } from '../../common/interfaces/branch.interface';
 export class BookCopiesComponent implements OnInit {
   selectedBookCopy: BookCopy;
   bookCopies: BookCopy[];
-  isLoading: boolean;
+  isLoading: any = { branch: false, bookCopies: false };
   branchId: number;
   branch: Branch;
   private modalRef: NgbModalRef;
@@ -36,66 +37,79 @@ export class BookCopiesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadBranch();
+    this.loadBookCopies();
+  }
+
+  loadBranch(): Observable<Branch> {
     if (this.activatedRoute.snapshot.paramMap.has('id')) {
       const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       this.branchId = parseInt(tempId, 10);
 
       if (this.branchId) {
-        this.isLoading = false;
-        this.branchService.getBranch(this.branchId).subscribe((data) => {
+        this.isLoading.branch = true;
+        const observable = this.branchService.getBranch(this.branchId);
+        observable.subscribe((data: Branch) => {
           this.branch = data;
-          this.loadBookCopies();
+          this.isLoading.branch = false;
         });
+        return observable;
       }
     }
+
+    return null;
   }
 
-  loadBookCopies(): void {
-    this.isLoading = true;
-    this.bookCopyService.getBookCopies(this.branchId).subscribe((data: any) => {
+  loadBookCopies(): Observable<BookCopy[]> {
+    this.isLoading.bookCopies = true;
+    const observable = this.bookCopyService.getBookCopies(this.branchId);
+    observable.subscribe((data: BookCopy[]) => {
       this.bookCopies = data;
       this.totalItems = data.length;
       this.setPage(1);
+      this.isLoading.bookCopies = false;
+    });
+    return observable;
+  }
+
+  deleteBookCopy(bookCopy): Observable<Object> {
+    this.isLoading = true;
+    const observable = this.bookCopyService.deleteBookCopy(
+      bookCopy.id.book.id,
+      bookCopy.id.branch.id
+    );
+    observable.subscribe((data: Object) => {
+      const bookId = bookCopy.id.book.id;
+      const branchId = bookCopy.id.branch.id;
+      this.bookCopies = this.bookCopies.filter(
+        (bc: BookCopy) => bc.id.book.id != bookId || bc.id.branch.id != branchId
+      );
+
+      this.totalItems -= 1;
+      this.setPage(1);
       this.isLoading = false;
     });
+    return observable;
   }
 
-  deleteBookCopy(bookCopy): void {
+  updateBookCopy(): Observable<BookCopy> {
     this.isLoading = true;
-    this.bookCopyService
-      .deleteBookCopy(bookCopy.id.book.id, bookCopy.id.branch.id)
-      .subscribe((data: any) => {
-        const bookId = bookCopy.id.book.id;
-        const branchId = bookCopy.id.branch.id;
-        this.bookCopies = this.bookCopies.filter(
-          (bc: BookCopy) =>
-            bc.id.book.id != bookId || bc.id.branch.id != branchId
-        );
-
-        this.totalItems -= 1;
-        this.setPage(1);
-        this.isLoading = false;
-      });
+    const observable = this.bookCopyService.updateBookCopy(
+      this.selectedBookCopy.id.book.id,
+      this.selectedBookCopy.id.branch.id,
+      this.selectedBookCopy
+    );
+    observable.subscribe((data: BookCopy) => {
+      this.modalRef.close();
+      this.isLoading = false;
+    });
+    return observable;
   }
 
-  updateBookCopy(): void {
-    this.isLoading = true;
-    this.bookCopyService
-      .updateBookCopy(
-        this.selectedBookCopy.id.book.id,
-        this.selectedBookCopy.id.branch.id,
-        this.selectedBookCopy
-      )
-      .subscribe((data: BookCopy) => {
-        this.modalRef.close();
-        this.isLoading = false;
-      });
-  }
-
-  open(content, bookCopy: BookCopy) {
+  open(content, bookCopy: BookCopy): Promise<any> {
     this.selectedBookCopy = bookCopy;
     this.modalRef = this.modalService.open(content);
-    this.modalRef.result.then(
+    return this.modalRef.result.then(
       (result) => {
         this.errMsg = '';
         this.closeResult = `Closed with ${result}`;
