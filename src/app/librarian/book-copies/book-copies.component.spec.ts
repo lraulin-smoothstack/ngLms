@@ -128,8 +128,6 @@ describe('BookCopiesComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BookCopiesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

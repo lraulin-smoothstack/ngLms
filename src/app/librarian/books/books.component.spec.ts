@@ -126,8 +126,6 @@ describe('BooksComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BooksComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
