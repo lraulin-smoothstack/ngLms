@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
 
 import { BookCopyService } from '../services/book-copy.service';
 import { BookService } from '../services/book.service';
@@ -38,27 +39,30 @@ export class BooksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadBooks();
+  }
+
+  loadBooks(): Observable<Book[]> {
     if (this.activatedRoute.snapshot.paramMap.has('id')) {
       const tempId: string = this.activatedRoute.snapshot.paramMap.get('id');
       this.branchId = parseInt(tempId, 10);
 
       if (this.branchId) {
-        this.loadBooks();
+        this.isLoading = true;
+        const observable = this.bookService.getBooks(this.branchId);
+        observable.subscribe((data: Book[]) => {
+          this.books = data;
+          this.totalItems = data.length;
+          this.setPage(1);
+          this.isLoading = false;
+        });
+        return observable;
       }
     }
+    return null;
   }
 
-  loadBooks(): void {
-    this.isLoading = true;
-    this.bookService.getBooks(this.branchId).subscribe((data) => {
-      this.books = data;
-      this.totalItems = data.length;
-      this.setPage(1);
-      this.isLoading = false;
-    });
-  }
-
-  addBookCopy(): void {
+  addBookCopy(): Observable<BookCopy> {
     const bookCopy: BookCopy = {
       id: {
         book: {
@@ -74,7 +78,8 @@ export class BooksComponent implements OnInit {
     };
 
     this.isLoading = true;
-    this.bookCopyService.addBookCopy(bookCopy).subscribe((data: BookCopy) => {
+    const observable = this.bookCopyService.addBookCopy(bookCopy);
+    observable.subscribe((data: BookCopy) => {
       this.amount = 0;
       this.modalRef.close();
       this.isLoading = false;
@@ -82,12 +87,13 @@ export class BooksComponent implements OnInit {
         relativeTo: this.activatedRoute,
       });
     });
+    return observable;
   }
 
-  open(content, book: Book) {
+  open(content, book: Book): Promise<any> {
     this.selectedBook = book;
     this.modalRef = this.modalService.open(content);
-    this.modalRef.result.then(
+    return this.modalRef.result.then(
       (result) => {
         this.errMsg = '';
         this.closeResult = `Closed with ${result}`;

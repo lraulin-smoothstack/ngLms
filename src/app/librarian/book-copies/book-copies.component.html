@@ -4,11 +4,15 @@
 </h4>
 <p *ngIf="branch">{{ branch.address }}</p>
 
-<div *ngIf="isLoading" class="spinner-border" role="status">
+<div
+  *ngIf="isLoading.branch || isLoading.bookCopies"
+  class="spinner-border"
+  role="status"
+>
   <span className="sr-only">Loading...</span>
 </div>
 
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoading.branch && !isLoading.bookCopies">
   <table class="table table-dark">
     <thead>
       <tr>
