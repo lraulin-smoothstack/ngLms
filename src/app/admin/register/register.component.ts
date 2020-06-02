@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { AuthenticationService, UserService } from 'src/app/common/services';
 
 @Component({
   selector: 'app-register',
@@ -15,9 +16,10 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router // private authenticationService: AuthenticationService, // private userService: UserService,
-  ) // private alertService: AlertService
-  {}
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private userService: UserService // private alertService: AlertService
+  ) {}
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -46,18 +48,19 @@ export class RegisterComponent implements OnInit {
     }
 
     this.loading = true;
-    // this.userService
-    //   .register(this.registerForm.value)
-    //   .pipe(first())
-    //   .subscribe(
-    //     (data) => {
-    //       this.alertService.success('Registration successful', true);
-    //       this.router.navigate(['/login']);
-    //     },
-    //     (error) => {
-    //       this.alertService.error(error);
-    //       this.loading = false;
-    //     }
-    //   );
+    this.userService
+      .register(this.registerForm.value)
+      .pipe(first())
+      .subscribe(
+        (data) => {
+          // this.alertService.success('Registration successful', true);
+          alert('Success!');
+          this.router.navigate(['/admin']);
+        },
+        (error) => {
+          // this.alertService.error(error);
+          this.loading = false;
+        }
+      );
   }
 }
