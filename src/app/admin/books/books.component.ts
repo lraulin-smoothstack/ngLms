@@ -10,7 +10,7 @@ import {
 import { Book } from 'src/app/common/interfaces/book.interface';
 import { Author, newAuthor } from 'src/app/common/interfaces/author.interface';
 import { Publisher } from 'src/app/common/interfaces/publisher.interface';
-import { Genre } from 'src/app/common/interfaces/genre.interface';
+import { Genre } from 'src/app/common/interfaces';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({

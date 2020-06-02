@@ -1,6 +1,6 @@
-import { NgbModal, NgbModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminService } from './../admin.service';
-import { Author } from 'src/app/common/interfaces/author.interface';
+import { Author } from 'src/app/common/interfaces';
 import { Observable, of } from 'rxjs';
 import {
   async,
@@ -10,7 +10,6 @@ import {
   fakeAsync,
 } from '@angular/core/testing';
 import { AuthorsComponent } from './authors.component';
-import { By } from '@angular/platform-browser';
 
 const mockData: Author[] = [
   { id: 1, name: 'JR Tolkein' },

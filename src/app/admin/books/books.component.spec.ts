@@ -10,9 +10,7 @@ import {
   fakeAsync,
 } from '@angular/core/testing';
 import { BooksComponent } from './books.component';
-import { Author } from 'src/app/common/interfaces/author.interface';
-import { Publisher } from 'src/app/common/interfaces/publisher.interface';
-import { Genre } from 'src/app/common/interfaces/genre.interface';
+import { Author, Publisher, Genre } from 'src/app/common/interfaces';
 
 const mockAuthors: Author[] = [{ id: 1, name: 'James S. A. Corey' }];
 const mockPublishers: Publisher[] = [

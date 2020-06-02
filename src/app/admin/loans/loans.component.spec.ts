@@ -10,12 +10,14 @@ import {
   fakeAsync,
 } from '@angular/core/testing';
 import { LoansComponent } from './loans.component';
-import { Borrower } from 'src/app/common/interfaces/borrower.interface';
-import { Branch } from 'src/app/common/interfaces/branch.interface';
-import { Author } from 'src/app/common/interfaces/author.interface';
-import { Publisher } from 'src/app/common/interfaces/publisher.interface';
-import { Genre } from 'src/app/common/interfaces/genre.interface';
-import { Book } from 'src/app/common/interfaces/book.interface';
+import {
+  Author,
+  Book,
+  Borrower,
+  Branch,
+  Genre,
+  Publisher,
+} from 'src/app/common/interfaces';
 
 const mockAuthors: Author[] = [{ id: 1, name: 'James S. A. Corey' }];
 const mockPublishers: Publisher[] = [

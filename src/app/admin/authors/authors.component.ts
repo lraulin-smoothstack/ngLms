@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Author } from 'src/app/common/interfaces/author.interface';
+import { Author } from 'src/app/common/interfaces';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({

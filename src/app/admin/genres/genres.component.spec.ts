@@ -1,6 +1,6 @@
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminService } from './../admin.service';
-import { Genre } from 'src/app/common/interfaces/genre.interface';
+import { Genre } from 'src/app/common/interfaces';
 import { Observable, of } from 'rxjs';
 import {
   async,

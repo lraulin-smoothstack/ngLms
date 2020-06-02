@@ -2,7 +2,7 @@ import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Pager, PagerService } from 'src/app/common/services/pager.service';
-import { Publisher } from 'src/app/common/interfaces/publisher.interface';
+import { Publisher } from 'src/app/common/interfaces';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({

@@ -1,6 +1,6 @@
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminService } from './../admin.service';
-import { Borrower } from 'src/app/common/interfaces/borrower.interface';
+import { Borrower } from 'src/app/common/interfaces';
 import { Observable, of } from 'rxjs';
 import {
   async,
