@@ -3,20 +3,18 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-import { PagerService, Pager } from '../../common/services/pager.service';
+import { PagerService } from '../../common/services/pager.service';
 import { Branch } from '../entity/branch';
-
-
+import { Pager } from 'src/app/common/interfaces';
 
 @Component({
   selector: 'app-branches',
   templateUrl: './branches.component.html',
-  styleUrls: ['./branches.component.css']
+  styleUrls: ['./branches.component.css'],
 })
 export class BranchesComponent implements OnInit {
-
   @Input() branches$;
-  @Output("selectBranch") selectBranch: EventEmitter<any> = new EventEmitter();
+  @Output('selectBranch') selectBranch: EventEmitter<any> = new EventEmitter();
 
   searchBranches$: Observable<Branch[]>;
   searchTerms$ = new Subject<string>();
@@ -26,13 +24,12 @@ export class BranchesComponent implements OnInit {
   pager: Pager;
   itemsPerPage: number;
 
-  constructor( private pagerSvc: PagerService ) {
+  constructor(private pagerSvc: PagerService) {
     this.itemsPerPage = 5;
   }
 
   ngOnInit(): void {
-
-    this.branches$.subscribe( branches => {
+    this.branches$.subscribe((branches) => {
       this.setPage(1, branches);
       this.search('');
     });
@@ -42,9 +39,9 @@ export class BranchesComponent implements OnInit {
       switchMap((term: string) => this.searchBranches(term))
     );
 
-    this.searchBranches$.subscribe( branches => {
+    this.searchBranches$.subscribe((branches) => {
       this.setPage(this.pager.currentPage, branches);
-    })
+    });
   }
 
   search(term: string): void {
@@ -55,12 +52,17 @@ export class BranchesComponent implements OnInit {
     if (!term.trim()) {
       return this.branches$;
     }
-    return of(this.branches$.getValue().filter( branch =>
-      branch.name.includes(term) || branch.address.includes(term)
-    ));
+    return of(
+      this.branches$
+        .getValue()
+        .filter(
+          (branch) =>
+            branch.name.includes(term) || branch.address.includes(term)
+        )
+    );
   }
 
-  setPage(page: number, branches: Branch[] ): void {
+  setPage(page: number, branches: Branch[]): void {
     this.pager = this.pagerSvc.getPager(
       branches.length,
       page,
@@ -71,9 +73,8 @@ export class BranchesComponent implements OnInit {
       return;
     }
 
-    this.pagedBranches$.next(branches.slice(
-      this.pager.startIndex,
-      this.pager.endIndex + 1
-    ));
+    this.pagedBranches$.next(
+      branches.slice(this.pager.startIndex, this.pager.endIndex + 1)
+    );
   }
 }

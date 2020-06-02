@@ -1,6 +1,6 @@
 import { ConfirmComponent } from './../confirm/confirm.component';
 import { SortableDirective, SortEvent } from './../sortable.directive';
-import { PagerService, Pager } from './../../common/services/pager.service';
+import { PagerService } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
 import {
   Component,
@@ -11,8 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Author } from 'src/app/common/interfaces';
-import { NgTemplateOutlet } from '@angular/common';
+import { Author, Pager } from 'src/app/common/interfaces';
 
 @Component({
   selector: 'app-authors',

@@ -1,9 +1,9 @@
 import { SortableDirective, SortEvent } from './../sortable.directive';
-import { PagerService, Pager } from './../../common/services/pager.service';
+import { PagerService } from './../../common/services/pager.service';
 import { AdminService } from './../admin.service';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Genre } from 'src/app/common/interfaces';
+import { Genre, Pager } from 'src/app/common/interfaces';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({

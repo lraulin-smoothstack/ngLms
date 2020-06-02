@@ -3,20 +3,18 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-import { PagerService, Pager } from '../../common/services/pager.service';
+import { PagerService } from '../../common/services/pager.service';
 import { Loan } from '../entity/loan';
-
-
+import { Pager } from 'src/app/common/interfaces';
 
 @Component({
   selector: 'app-return',
   templateUrl: './return.component.html',
-  styleUrls: ['./return.component.css']
+  styleUrls: ['./return.component.css'],
 })
 export class ReturnComponent implements OnInit {
-
   @Input() loans$;
-  @Output("checkinLoan") checkinLoan: EventEmitter<any> = new EventEmitter();
+  @Output('checkinLoan') checkinLoan: EventEmitter<any> = new EventEmitter();
 
   loan: Loan;
 
@@ -28,22 +26,21 @@ export class ReturnComponent implements OnInit {
   pager: Pager;
   itemsPerPage: number;
 
-  constructor( private pagerSvc: PagerService ) {
+  constructor(private pagerSvc: PagerService) {
     this.itemsPerPage = 5;
   }
 
   ngOnInit(): void {
-
     this.searchLoans$ = this.searchTerms$.pipe(
       debounceTime(300),
       switchMap((term: string) => this.searchLoans(term))
     );
 
-    this.searchLoans$.subscribe( loans => {
+    this.searchLoans$.subscribe((loans) => {
       this.setPage(this.pager.currentPage, loans);
-    })
+    });
 
-    this.loans$.subscribe( loans => {
+    this.loans$.subscribe((loans) => {
       this.setPage(1, loans);
       this.search('');
     });
@@ -54,29 +51,26 @@ export class ReturnComponent implements OnInit {
   }
 
   searchLoans(term: string): Observable<Loan[]> {
-
     if (!term.trim()) {
       return this.loans$;
     }
-    return of(this.loans$.getValue().filter( loan =>
-      loan.id.book.title.includes(term)
-      ||
-      loan.id.book.authors.join().includes(term)
-    ));
+    return of(
+      this.loans$
+        .getValue()
+        .filter(
+          (loan) =>
+            loan.id.book.title.includes(term) ||
+            loan.id.book.authors.join().includes(term)
+        )
+    );
   }
 
-  setPage(page: number, loans: Loan[] ): void {
+  setPage(page: number, loans: Loan[]): void {
+    this.pager = this.pagerSvc.getPager(loans.length, page, this.itemsPerPage);
 
-    this.pager = this.pagerSvc.getPager(
-      loans.length,
-      page,
-      this.itemsPerPage
+    this.pagedLoans$.next(
+      loans.slice(this.pager.startIndex, this.pager.endIndex + 1)
     );
-
-    this.pagedLoans$.next(loans.slice(
-      this.pager.startIndex,
-      this.pager.endIndex + 1
-    ));
   }
 
   selectLoan(loan: Loan) {
@@ -84,10 +78,10 @@ export class ReturnComponent implements OnInit {
   }
 
   getBookAuthors(book) {
-    return book.authors.map( author => author.name );
+    return book.authors.map((author) => author.name);
   }
 
   getBookGenres(book) {
-    return book.genres.map( genre => genre.name );
+    return book.genres.map((genre) => genre.name);
   }
 }

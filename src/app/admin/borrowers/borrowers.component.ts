@@ -1,8 +1,8 @@
 import { AdminService } from './../admin.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Pager, PagerService } from 'src/app/common/services/pager.service';
-import { Borrower } from 'src/app/common/interfaces';
+import { PagerService } from 'src/app/common/services/pager.service';
+import { Borrower, Pager } from 'src/app/common/interfaces';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({

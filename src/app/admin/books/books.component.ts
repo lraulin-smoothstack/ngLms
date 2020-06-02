@@ -1,16 +1,19 @@
 import { AdminService } from './../admin.service';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Pager, PagerService } from 'src/app/common/services/pager.service';
+import { PagerService } from 'src/app/common/services/pager.service';
 import { SortableDirective, SortEvent } from '../sortable.directive';
 import {
   faTimesCircle,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
-import { Book } from 'src/app/common/interfaces/book.interface';
-import { Author, newAuthor } from 'src/app/common/interfaces/author.interface';
-import { Publisher } from 'src/app/common/interfaces/publisher.interface';
-import { Genre } from 'src/app/common/interfaces';
+import {
+  Author,
+  Book,
+  Genre,
+  Pager,
+  Publisher,
+} from 'src/app/common/interfaces';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
