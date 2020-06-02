@@ -1,5 +1,17 @@
 <h2>Register</h2>
+<p>
+  As an administrator, you can create an Administrator or Librarian account for
+  a new user.
+</p>
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="accountType">Account Type</label>
+    <select class="custom-select" formControlName="accountType">
+      <option [ngValue]="null" disabled>Select account type</option>
+      <option [ngValue]="'librarian'">Librarian</option>
+      <option [ngValue]="'admin'">Administrator</option>
+    </select>
+  </div>
   <div class="form-group">
     <label for="firstName">First Name</label>
     <input

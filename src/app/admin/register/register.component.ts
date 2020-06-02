@@ -15,13 +15,13 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router // private authenticationService: AuthenticationService,
-  ) // private userService: UserService,
-  // private alertService: AlertService
+    private router: Router // private authenticationService: AuthenticationService, // private userService: UserService,
+  ) // private alertService: AlertService
   {}
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
+      accountType: [null, Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],

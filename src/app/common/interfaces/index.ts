@@ -1,3 +1,4 @@
+import { User } from './user.interface';
 import { Author } from './author.interface';
 import { Book } from './book.interface';
 import { BookCopy } from './book-copy.interface';
@@ -18,4 +19,5 @@ export {
   Loan,
   Pager,
   Publisher,
+  User,
 };
