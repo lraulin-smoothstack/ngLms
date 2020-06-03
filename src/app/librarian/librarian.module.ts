@@ -20,13 +20,7 @@ import { BookService } from './services/book.service';
     BookCopiesComponent,
     BooksComponent,
   ],
-  imports: [
-    CommonModule,
-    LibrarianRoutingModule,
-    HttpClientModule,
-    NgbModule,
-    FormsModule,
-  ],
+  imports: [CommonModule, LibrarianRoutingModule, NgbModule, FormsModule],
   providers: [BranchService, BookCopyService, BookService],
 })
 export class LibrarianModule {}
