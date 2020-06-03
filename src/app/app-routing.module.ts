@@ -1,3 +1,4 @@
+import { AuthGuard } from './common/helpers/auth.guard';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
@@ -9,13 +10,16 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () =>
       import(`./admin/admin.module`).then((m) => m.AdminModule),
+    canActivate: [AuthGuard],
   },
   {
     path: 'librarian',
     loadChildren: () =>
       import('./librarian/librarian.module').then((m) => m.LibrarianModule),
+    canActivate: [AuthGuard],
   },
-  { path: 'borrower',
+  {
+    path: 'borrower',
     loadChildren: () =>
       import('./borrower/borrower.module').then((m) => m.BorrowerModule),
   },
