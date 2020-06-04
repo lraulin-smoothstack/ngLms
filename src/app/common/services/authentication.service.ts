@@ -1,7 +1,7 @@
 ﻿import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 import { User } from '../interfaces/user.interface';
 
@@ -26,7 +26,7 @@ export class AuthenticationService {
 
   login(credentials: Object): Observable<User> {
     return this.http
-      .post<User>(`${this.domain}/lms/authenticate`, credentials)
+      .post<User>(`${this.domain}/lms/users/authenticate`, credentials)
       .pipe(
         tap((user: User) => {
           sessionStorage.setItem('currentUser', JSON.stringify(user));

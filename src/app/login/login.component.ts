@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
     if (role == 'ROLE_LIBRARIAN') {
       this.router.navigate(['/librarian']);
     } else if (role == 'ROLE_ADMIN') {
-      this.router.navigate(['/librarian']);
+      this.router.navigate(['/admin']);
     }
   }
 
