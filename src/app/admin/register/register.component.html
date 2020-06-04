@@ -6,8 +6,8 @@
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="role">Account Type</label>
-    <select class="form-control" formControlName="role">
-      <option [ngValue]="" disabled>Select account type</option>
+    <select id="role" class="form-control" formControlName="role">
+      <option [ngValue]="''" disabled>Select account type</option>
       <option [ngValue]="'ROLE_ADMIN'">Administrator</option>
       <option [ngValue]="'ROLE_LIBRARIAN'">Librarian</option>
     </select>
