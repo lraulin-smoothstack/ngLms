@@ -18,14 +18,10 @@ export class UserService {
   }
 
   registerAdmin(user: UserRegistrationDetails) {
-    console.log('Registering Admin:');
-    console.log(user);
     return this.http.post(`${this.usersUrl}/register/admin`, user);
   }
 
   registerLibrarian(user: UserRegistrationDetails) {
-    console.log('Registering Librarian:');
-    console.log(user);
     return this.http.post(`${this.usersUrl}/register/librarian`, user);
   }
 
