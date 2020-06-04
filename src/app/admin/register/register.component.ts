@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { AuthenticationService, UserService } from 'src/app/common/services';
-import { User } from 'src/app/common/interfaces';
+import { UserService } from 'src/app/common/services';
+import { UserRegistrationDetails } from 'src/app/common/interfaces';
 
 @Component({
   selector: 'app-register',
@@ -23,11 +23,11 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      role: [null, Validators.required],
+      role: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
 
@@ -40,12 +40,26 @@ export class RegisterComponent implements OnInit {
     this.submitted = true;
     // stop here if form is invalid
     if (this.registerForm.invalid) {
+      console.log(this.registerForm.value);
+      console.log('Form is invalid');
       return;
     }
     this.loading = true;
 
-    const newUser: User = this.registerForm.value;
-    switch (newUser.role) {
+    const {
+      role,
+      firstName,
+      lastName,
+      email,
+      password,
+    } = this.registerForm.value;
+    const newUser: UserRegistrationDetails = {
+      firstName,
+      lastName,
+      email,
+      password,
+    };
+    switch (role) {
       case 'ROLE_ADMIN':
         this.userService
           .registerAdmin(newUser)
@@ -57,6 +71,7 @@ export class RegisterComponent implements OnInit {
             },
             (error) => {
               this.loading = false;
+              alert('Something went wrong...');
               console.log(error);
             }
           );
@@ -72,12 +87,13 @@ export class RegisterComponent implements OnInit {
             },
             (error) => {
               this.loading = false;
+              alert('Something went wrong...');
               console.log(error);
             }
           );
         break;
       default:
-        console.log(`Error: Selected role ${newUser.role} not recognized.`);
+        console.log(`Error: Selected role ${role} not recognized.`);
     }
   }
 }
