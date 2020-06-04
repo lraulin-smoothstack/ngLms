@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private router: Router
   ) {
-    if (this.authenticationService.currentUserValue) {
-      this.navigateHome(this.authenticationService.currentUserValue.role);
+    if (this.authenticationService.currentUser) {
+      this.navigateHome(this.authenticationService.currentUser.role);
     }
   }
 
