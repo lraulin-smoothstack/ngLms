@@ -1,9 +1,11 @@
-import { AuthGuard } from './common/helpers/auth.guard';
+import { Routes, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { AuthGuard } from './interceptors/auth.guard';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
@@ -23,6 +25,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./borrower/borrower.module').then((m) => m.BorrowerModule),
   },
+  { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
