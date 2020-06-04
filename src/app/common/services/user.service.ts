@@ -1,4 +1,4 @@
-import { UserRegistrationDetails } from './../interfaces/userRegistrationDetails.interface';
+import { UserRegistrationDetails } from './../interfaces';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../interfaces';
