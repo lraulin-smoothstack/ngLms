@@ -13,8 +13,12 @@ export class UserService {
     return this.http.get<User[]>(`${this.domain}/users`);
   }
 
-  register(user: User) {
-    return this.http.post(`${this.domain}/users/register`, user);
+  registerAdmin(user: User) {
+    return this.http.post(`${this.domain}/users/register/admin`, user);
+  }
+
+  registerLibrarian(user: User) {
+    return this.http.post(`${this.domain}/users/register/librarian`, user);
   }
 
   delete(id: number) {

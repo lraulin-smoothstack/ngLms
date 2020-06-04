@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthenticationService, UserService } from 'src/app/common/services';
+import { User } from 'src/app/common/interfaces';
 
 @Component({
   selector: 'app-register',
@@ -17,16 +18,15 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService,
-    private userService: UserService // private alertService: AlertService
+    private userService: UserService
   ) {}
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      accountType: [null, Validators.required],
+      role: [null, Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -38,29 +38,46 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-
-    // reset alerts on submit
-    // this.alertService.clear();
-
     // stop here if form is invalid
     if (this.registerForm.invalid) {
       return;
     }
-
     this.loading = true;
-    this.userService
-      .register(this.registerForm.value)
-      .pipe(first())
-      .subscribe(
-        (data) => {
-          // this.alertService.success('Registration successful', true);
-          alert('Success!');
-          this.router.navigate(['/admin']);
-        },
-        (error) => {
-          // this.alertService.error(error);
-          this.loading = false;
-        }
-      );
+
+    const newUser: User = this.registerForm.value;
+    switch (newUser.role) {
+      case 'ROLE_ADMIN':
+        this.userService
+          .registerAdmin(newUser)
+          .pipe(first())
+          .subscribe(
+            (data) => {
+              alert('Success!');
+              this.router.navigate(['/admin']);
+            },
+            (error) => {
+              this.loading = false;
+              console.log(error);
+            }
+          );
+        break;
+      case 'ROLE_LIBRARIAN':
+        this.userService
+          .registerLibrarian(newUser)
+          .pipe(first())
+          .subscribe(
+            (data) => {
+              alert('Success!');
+              this.router.navigate(['/admin']);
+            },
+            (error) => {
+              this.loading = false;
+              console.log(error);
+            }
+          );
+        break;
+      default:
+        console.log(`Error: Selected role ${newUser.role} not recognized.`);
+    }
   }
 }
