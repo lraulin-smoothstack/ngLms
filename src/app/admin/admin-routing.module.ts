@@ -1,3 +1,4 @@
+import { RegisterComponent } from './register/register.component';
 import { GenresComponent } from './genres/genres.component';
 import { CommonModule } from '@angular/common';
 import { PublishersComponent } from './publishers/publishers.component';
@@ -42,6 +43,10 @@ const routes: Routes = [
       {
         path: 'publishers',
         component: PublishersComponent,
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
       },
     ],
   },

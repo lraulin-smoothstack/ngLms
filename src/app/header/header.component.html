@@ -15,13 +15,28 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/admin']">Admin</a>
+        <a
+          *ngIf="!authenticationService.currentUser"
+          class="nav-link"
+          [routerLink]="['/borrower']"
+          >Borrower</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/borrower']">Borrower</a>
+        <a
+          *ngIf="!authenticationService.currentUser"
+          class="nav-link"
+          [routerLink]="['/login']"
+          >Administration Login</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/librarian']">Librarian</a>
+        <a
+          *ngIf="authenticationService.currentUser"
+          class="nav-link"
+          (click)="logout()"
+          >Logout</a
+        >
       </li>
     </ul>
   </div>

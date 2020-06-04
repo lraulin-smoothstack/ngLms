@@ -16,6 +16,7 @@ import { SortableDirective } from './sortable.directive';
 import { GenresComponent } from './genres/genres.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ConfirmComponent } from './confirm/confirm.component';
     SortableDirective,
     GenresComponent,
     ConfirmComponent,
+    RegisterComponent,
   ],
   imports: [
     AdminRoutingModule,

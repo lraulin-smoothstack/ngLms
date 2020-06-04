@@ -7,6 +7,8 @@ import { Genre } from './genre.interface';
 import { Loan } from './loan.interface';
 import { Pager } from './pager.interface';
 import { Publisher } from './publisher.interface';
+import { User } from './user.interface';
+import { UserRegistrationDetails } from './userRegistrationDetails.interface';
 
 export {
   Author,
@@ -18,4 +20,6 @@ export {
   Loan,
   Pager,
   Publisher,
+  User,
+  UserRegistrationDetails,
 };
