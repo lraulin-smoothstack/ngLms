@@ -1,7 +1,6 @@
-import { UserRegistrationDetails } from './../interfaces';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../interfaces';
+import { User, UserRegistrationDetails } from '../interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
