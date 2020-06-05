@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../common/services/authentication.service';
 import { Router } from '@angular/router';
-import { first } from 'rxjs/operators';
 import { User } from '../common/interfaces/user.interface';
-import { NgForOf } from '@angular/common';
 import { NgForm } from '@angular/forms';
-import { Observable, observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +10,7 @@ import { Observable, observable } from 'rxjs';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  isLoading: boolean = false;
+  isLoading = false;
   email: string;
   password: string;
   error: string;
@@ -30,9 +27,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   navigateHome(role: string) {
-    if (role == 'ROLE_LIBRARIAN') {
+    if (role === 'ROLE_LIBRARIAN') {
       this.router.navigate(['/librarian']);
-    } else if (role == 'ROLE_ADMIN') {
+    } else if (role === 'ROLE_ADMIN') {
       this.router.navigate(['/admin']);
     }
   }
