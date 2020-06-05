@@ -1,9 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ValidatorFn,
+  AbstractControl,
+} from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { UserService } from 'src/app/common/services';
 import { UserRegistrationDetails } from 'src/app/common/interfaces';
+
+function roleValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    return ['ROLE_ADMIN', 'ROLE_LIBRARIAN'].includes(control.value)
+      ? { forbiddenName: { value: control.value } }
+      : null;
+  };
+}
 
 @Component({
   selector: 'app-register',
@@ -23,7 +37,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      role: ['', Validators.required],
+      role: ['', roleValidator],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
