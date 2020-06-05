@@ -7,7 +7,7 @@ import { User } from '../interfaces/user.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  #currentUser: User;
+  private user: User;
 
   constructor(
     private http: HttpClient,
@@ -15,19 +15,19 @@ export class AuthenticationService {
   ) {}
 
   public get currentUser(): User {
-    if (!this.#currentUser) {
+    if (!this.user) {
       const storageUser = window.sessionStorage.getItem('currentUser');
 
       if (storageUser) {
         try {
-          this.#currentUser = JSON.parse(storageUser);
+          this.user = JSON.parse(storageUser);
         } catch (e) {
           window.sessionStorage.removeItem('currentUser');
         }
       }
     }
 
-    return this.#currentUser;
+    return this.user;
   }
 
   login(credentials: object): Observable<User> {
@@ -36,13 +36,13 @@ export class AuthenticationService {
       .pipe(
         tap((user: User) => {
           window.sessionStorage.setItem('currentUser', JSON.stringify(user));
-          this.#currentUser = user;
+          this.user = user;
         })
       );
   }
 
   logout(): void {
     window.sessionStorage.removeItem('currentUser');
-    this.#currentUser = null;
+    this.user = null;
   }
 }
