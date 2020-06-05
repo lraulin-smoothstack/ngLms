@@ -11,7 +11,10 @@
       <option [ngValue]="'ROLE_ADMIN'">Administrator</option>
       <option [ngValue]="'ROLE_LIBRARIAN'">Librarian</option>
     </select>
-    <p *ngIf="submitted && f.role.value === ''" class="alert alert-danger">
+    <p
+      *ngIf="submitted && f.role.value === ''"
+      class="alert alert-danger dd-warning"
+    >
       You must select a user type.
     </p>
   </div>
@@ -74,10 +77,10 @@
     />
     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
       <p class="alert alert-danger" *ngIf="f.password.errors.required">
-        Password is required
+        Password is required.
       </p>
       <p class="alert alert-danger" *ngIf="f.password.errors.minlength">
-        Password must be at least 3 characters
+        Password must be at least 3 characters.
       </p>
     </div>
   </div>
