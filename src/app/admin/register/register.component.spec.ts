@@ -1,7 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserService } from 'src/app/common/services';
-import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
