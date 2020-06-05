@@ -41,7 +41,7 @@ export class AuthenticationService {
       );
   }
 
-  logout() {
+  logout(): void {
     window.sessionStorage.removeItem('currentUser');
     this.#currentUser = null;
   }
