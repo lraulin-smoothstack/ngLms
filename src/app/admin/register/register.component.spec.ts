@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserService } from 'src/app/common/services';
 import { Router } from '@angular/router';
@@ -13,8 +14,12 @@ describe('RegisterComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
-      imports: [RouterTestingModule],
-      providers: [FormBuilder, UserService],
+      imports: [RouterTestingModule, HttpClientModule],
+      providers: [
+        FormBuilder,
+        UserService,
+        { provide: 'domain', useValue: 'http://fake-url' },
+      ],
     }).compileComponents();
   }));
 
